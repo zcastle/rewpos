@@ -1,0 +1,396 @@
+* {
+	font-family: 'Roboto';
+}
+
+.btn_accion {
+	background: #33b5e5;
+}
+
+.btn_accion:hover {
+	background: #0099cc;
+	cursor: pointer;
+}
+
+.ico_accion_descto {
+	background: url('../images/ic_action_edit.png');
+}
+
+.ico_accion_liberar {
+	background: url('../images/ic_action_delete.png');
+}
+.ico_accion_resumen {
+	background: url('../images/resumen.png');
+}
+
+.ico_accion_precuenta {
+	background: url('../images/precuenta.png');
+}
+
+.ico_accion_enviar {
+	background: url('../images/envio.png');
+}
+
+.btn_accion_pagar {
+	background: #f44;
+	color: #fff;
+	font-size: 2em;
+	padding: 9px 5px;
+}
+
+.btn_accion_pagar:hover {
+	background: #cc0000;
+	cursor: pointer;
+}
+
+.btn_accion_pagar_pressed {
+
+}
+
+.background_seleccion {
+	background-color: #ffbb33;
+}
+
+.btn_seleccion {
+	text-align: center;
+    font-size: 1em;
+    color: #fff;
+    border: 1px solid #fff;
+    background: transparent;
+    border-radius: 0px;
+}
+
+.btn_seleccion:hover {
+	color: #000;
+	cursor: pointer;
+}
+
+.btn_seleccion_mozo {
+	border: 1px solid #fff;
+	background-color: #ffbb33;
+}
+
+.btn_seleccion_mozo .x-field-mask{
+	width: 0px;
+	height: 0px;
+}
+
+.btn_seleccion_mozo .x-form-field {
+	width: 100%;
+	background-color: #ffbb33;
+	color: #fff;
+	font-size: 1em;
+	font-weight: bold;
+	text-align: center;
+}
+
+.btn_seleccion_mozo .x-form-field:hover {
+	cursor: pointer;
+}
+
+.lbl_totales {
+	text-align: right;
+	padding: 0.3em 0.6em;
+	/*font-size: 0.8em;*/
+	color: #fff;
+	background-color: #ff4444;
+}
+
+.padd {
+	font-size: 1em;
+    color: #fff;	
+}
+
+.lbl_ob {
+    text-align: left;
+}
+
+.lbl_cia {
+    text-align: center;
+}
+
+.lbl_usuario {
+    text-align: right;
+}
+
+.background_editar {
+	background-color: #669900;
+}
+
+.btn_editar {
+	background: url('../images/edit_file-48.png') no-repeat center;
+}
+
+.btn_editar:hover {
+	background-color: #ff8800;
+	cursor: pointer;
+}
+
+.btn_editar_pressed {
+	background: url('../images/tap-48.png') no-repeat center;
+}
+
+.btn_eliminar {
+	background: url('../images/delete_file-48.png') no-repeat center; 
+}
+
+.btn_eliminar:hover {
+	background-color: #cc0000;
+	cursor: pointer;
+}
+
+.btn_eliminar_pressed {
+	background: url('../images/tap-48.png') no-repeat center;
+}
+
+.btn_eliminar_pressed {
+	background: url('../images/tap-48.png') no-repeat center;
+}
+
+#pedido .field {
+	float: left;
+}
+
+#pedido .estado {
+	width: 0.5%;
+}
+
+#pedido .enviado {
+	background: #f44;
+}
+
+#pedido .noenviado {
+	background: #c00;
+}
+
+#pedido .nombre {
+	width: 64%;
+	padding-left: 5px;
+}
+
+#pedido .cantidad {
+	width: 10%;
+	text-align: right;
+}
+
+#pedido .unitario {
+	width: 10%;
+	text-align: right;
+}
+
+#pedido .total {
+	width: 15%;
+	text-align: right;
+}
+
+.background_comando {
+	background-color: #aaa;
+}
+
+.btn_comando_buscar {
+	background: url('../images/ic_action_search.png') no-repeat center;
+}
+
+.btn_comando_buscar:hover {
+	background-color: #2e64fe; /*669900*/
+	cursor: pointer;
+}
+
+.btn_comando_buscar_pressed {
+	background: url('../images/tap-48.png') no-repeat center;
+}
+
+.btn_comando_codigo {
+	background: url('../images/ic_action_share.png') no-repeat center;
+}
+
+.btn_comando_codigo:hover {
+	background-color: #c00;
+	cursor: pointer;
+}
+
+.btn_comando_mas {
+	background: url('../images/plus2_math-48.png') no-repeat center;
+}
+
+.btn_comando_mas:hover {
+	background-color: #99cc00;
+	cursor: pointer;
+}
+
+.center {
+	text-align: center;
+}
+
+#producto .field {
+	float: left;
+}
+
+#producto .nombre {
+	width: 80%;
+}
+
+#producto .precio {
+	width: 20%;
+	text-align: right;
+}
+
+#teclado .x-button {
+	padding: 20px 10px;
+}
+
+#teclado .x-button-label {
+	color: #000;
+}
+
+/*#dataViewMesas .x-dataview-container {
+	margin: 0px auto;
+	width: 1024px;
+}*/
+
+#dataViewMesas .x-dataview-item {
+   width : 6.66%;
+   height : 65px;
+}
+
+#dataViewMesas .x-dataview-item .mesa {
+	font-size: 1.2em;
+	width: 100%;
+	/*height: 70px;*/
+	border: 1px solid #fff;
+	color: #fff;
+	text-align: center;
+	padding: 17px 0px;
+}
+
+#dataViewMesas .x-dataview-item .mesa:hover {
+	cursor: pointer;
+	opacity: 0.5;
+	font-weight: bold;
+}
+
+#dataViewMesas .x-dataview-item .libre {
+	background-color: #669900;
+}
+
+#dataViewMesas .x-dataview-item .ocupada {
+	background-color: #ff4444;
+}
+
+#dataViewUsuarios .x-dataview-item {
+	padding: 5px;
+	width: 150px;
+	height: 214px;
+	margin-bottom: 10px;
+}
+
+#dataViewUsuarios .x-dataview-item:hover {
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+#dataViewUsuarios .x-dataview-item .usuario {
+	font-size: 1.2em;
+	width: 100%;
+	border: 1px solid #fff;
+	color: #000;
+	text-align: center;
+	padding: 10px;
+}
+
+#dataViewUsuarios .x-dataview-item .usuario .nombre {
+	max-width: 128px;
+	height: 58px;
+}
+
+.button-label-align-left {
+	border: 1px solid #fff;
+}
+
+.button-label-align-left .x-button-label {
+	text-align: left;
+}
+
+.label {
+	max-height: 36px;
+	padding: 0.3em 0.6em;
+	color: #fff;
+	background-color: #f44;
+	border: 1px solid #fff;
+}
+
+.label-fin {
+	border-bottom: 0px;
+}
+
+#pagosList {
+	display: -webkit-flex;
+	display: flex;
+}
+
+.flex-1 {
+	-webkit-flex: 1;
+    flex: 1;
+}
+
+.propina {
+	color: #09c;
+}
+
+.tipoPago.x-stretched.x-container > .x-inner,
+.valoresPago.x-stretched.x-container > .x-inner{
+	display: block;
+}
+
+.tipoPago .x-button {
+	background: #084b8a;
+	padding: 0.5em 0.6em;
+	float: left;
+	border: 1px solid #fff;
+	-webkit-border-radius: 0em;
+	-moz-border-radius: 0em;
+	-ms-border-radius: 0em;
+	-o-border-radius: 0em;
+	border-radius: 0em;
+}
+
+.tipoPago .x-button.x-first,
+.tipoPago .x-button.x-last {
+	border-radius: 0em;
+}
+
+.tipoPago .x-button:hover {
+	cursor: pointer;
+}
+
+.tipoPago .x-button-pressed {
+	background: indigo;
+}
+
+.tipoPago .x-button .x-button-label {
+	font-weight: normal;
+}
+
+.valoresPago .x-button {
+	background: purple;
+	padding: 0.5em 0.6em;
+	float: left;
+	border: 1px solid #fff;
+	-webkit-border-radius: 0em;
+	-moz-border-radius: 0em;
+	-ms-border-radius: 0em;
+	-o-border-radius: 0em;
+	border-radius: 0em;
+}
+
+.valoresPago .x-button:hover {
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+.valoresPago .x-button:active {
+	opacity: 1;
+}
+
+.estilo-dolar {
+	font-size: 0.5em;
+}

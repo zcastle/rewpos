@@ -1,0 +1,21 @@
+Ext.define('rewpos.AppGlobals', {
+    singleton: true,
+    CIA: 'OPENBUSINESS',
+    ANIMACION: true,
+    DEBUG: false,
+    HOST: 'http://localhost:2385/',
+    HOST_SYNC: '',
+    PORT_SYNC: '',
+    DB_SYNC: '',
+    USER_SYNC: '',
+    PASS_SYC: '',
+    CABECERA: null,
+    DETALLE: null,
+    ROL_ID_MOZO: 6,
+    ROL_ID_VENTA: 2,
+    ROL_ID_VENTA_JEFE: 4,
+    MONEDA_SIMBOLO: 'S/.&nbsp;&nbsp;',
+    USUARIO: null,
+    CAJA: null,
+    TIPO_CAMBIO: 2.8
+});
