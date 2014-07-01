@@ -27,27 +27,29 @@ Ext.define('rewpos.view.Teclado', {
                 }]
             },{
                 layout: 'vbox',
-                defaults: {
+                /*defaults: {
                     xtype: 'radiofield',
                     labelWidth: 100,
                     labelAlign: 'right'
-                },
-                items: [{
+                },*/
+                xtype: 'segmentedbutton',
+                items: [/*{
                     label: 'NOMBRE',
                     name: 'textFieldName',
                     value: 'nombre'
-                },{
-                    label: 'CANTIDAD',
+                },*/{
+                    text: 'CANTIDAD',
                     name: 'textFieldName',
-                    value: 'cantidad'
+                    //value: 'cantidad',
+                    pressed: true
                 },{
-                    label: 'PRECIO',
-                    name: 'textFieldName',
-                    value: 'precio'
+                    text: 'PRECIO',
+                    name: 'textFieldName'
+                    //value: 'precio'
                 },{
-                    label: 'MENSAJE',
-                    name: 'textFieldName',
-                    value: 'mensaje'
+                    text: 'MENSAJE',
+                    name: 'textFieldName'
+                    //value: 'mensaje'
                 }]
             }]
         }]

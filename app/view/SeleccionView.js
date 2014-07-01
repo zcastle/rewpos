@@ -1,6 +1,6 @@
-Ext.define('rewpos.view.Seleccion', {
+Ext.define('rewpos.view.SeleccionView', {
 	extend: 'Ext.Container',
-    xtype: 'seleccion',
+    xtype: 'seleccionView',
     config: {
     	layout: 'hbox',
         cls: 'background_seleccion',
@@ -13,15 +13,15 @@ Ext.define('rewpos.view.Seleccion', {
             text: 'M: 0',
             width: 100
         },{
+            xtype: 'selectfield',
             name: 'cboPax',
-            text: 'P: 1',
-            value: 1,
-            width: 100
+            width: 100,
+            baseCls: 'btn_seleccion'
         },{
             xtype: 'selectfield',
             name: 'cboMozos',
             flex: 1,
-            baseCls: 'btn_seleccion_mozo'
+            baseCls: 'btn_seleccion'
         }]
     }
 });

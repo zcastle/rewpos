@@ -3,6 +3,9 @@ Ext.define('rewpos.view.ProductoList', {
     xtype: 'productoList',
     config: {
         align: 'center',
+        grouped: true,
+        //indexBar: true,
+        //hideOnMaskTap: false,
         //plugins: ['listpaging', 'pullrefresh'],
         /*plugins: [{
             xclass: 'Ext.plugin.PullRefresh',

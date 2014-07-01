@@ -10,14 +10,9 @@ Ext.define('rewpos.view.AccionesView', {
         },
         items: [{
             flex: 1,
-            iconCls: 'ico_accion_descto'
-        },{
-            flex: 1,
-            iconCls: 'ico_accion_liberar'
-        },{
-            flex: 1,
             iconCls: 'ico_accion_resumen'
         },{
+            name: 'lblPrecuenta',
             flex: 1,
             iconCls: 'ico_accion_precuenta'
         },{

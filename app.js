@@ -22,13 +22,15 @@ Ext.application({
         'Ext.field.Radio',
         'Ext.field.Select',
         'Ext.field.Hidden',
+        'Ext.field.Password',
         'Ext.Button',
         'Ext.Menu',
         'Ext.plugin.PullRefresh',
         'Ext.MessageBox',
-        'Ext.SegmentedButton'
+        'Ext.SegmentedButton',
+        'Ext.Img'
     ],
-    controllers: ['Main','Toolbar','Acciones','Comando','Pedido','Mesas','Editar','Pagos','Acceso'],
+    controllers: ['Main','Toolbar','Acciones','Comando','Pedido','Mesas','Editar','Pagos','Acceso','Auth'],
     views: [
         'Main',
         'MainOld',
@@ -36,7 +38,7 @@ Ext.application({
         'MesasView',
         'ToolbarView',
         'AccionesView',
-        'Seleccion',
+        'SeleccionView',
         'Totales',
         'PedidoList',
         'Comandos',
@@ -47,7 +49,10 @@ Ext.application({
         'Teclado',
         'TecladoNumerico',
         'PagosView',
-        'AccesoView'
+        'AccesoView',
+        'AuthView',
+        'TecladoPass',
+        'ChatView'
     ],
 
     icon: {
@@ -70,9 +75,9 @@ Ext.application({
 
     launch: function() {
         // Destroy the #appLoadingIndicator element
-        Ext.fly('appLoadingIndicator').destroy();
+        //Ext.fly('appLoadingIndicator').destroy();
+        Ext.fly('canvasloader-container').destroy();
 
-        //Ext.MessageBox.buttons = { yes: "Sí", no: "No", cancel: "Cancelar" };   
         // Initialize the main view
         Ext.Viewport.add(Ext.create('rewpos.view.Main'));
     },

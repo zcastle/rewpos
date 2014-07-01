@@ -3,7 +3,7 @@ Ext.define('rewpos.AppGlobals', {
     CIA: 'OPENBUSINESS',
     ANIMACION: true,
     DEBUG: false,
-    HOST: 'http://localhost:2385/',
+    HOST: 'http://192.168.1.5:2385/',
     HOST_SYNC: '',
     PORT_SYNC: '',
     DB_SYNC: '',
@@ -17,5 +17,6 @@ Ext.define('rewpos.AppGlobals', {
     MONEDA_SIMBOLO: 'S/.&nbsp;&nbsp;',
     USUARIO: null,
     CAJA: null,
-    TIPO_CAMBIO: 2.8
+    TIPO_CAMBIO: 2.8,
+    CORPORACION: null
 });

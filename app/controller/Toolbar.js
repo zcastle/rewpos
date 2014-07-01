@@ -1,9 +1,6 @@
 Ext.define('rewpos.controller.Toolbar', {
     extend: 'Ext.app.Controller',
     config: {
-        refs: {
-            //myContainer: 'comandos'
-        },
         control: {
             'toolbarView': {
                 activate: 'activate'
@@ -18,16 +15,12 @@ Ext.define('rewpos.controller.Toolbar', {
         switch(btn.id) {
             case 'backToPedido':
                 Ext.getCmp('backToPedido').setHidden(true);
-                if(rewpos.AppGlobals.ANIMACION) {
-                    Ext.getCmp('mainCard').animateActiveItem('pedidoView', {
-                            type: 'slide',
-                            direction: 'right'
-                        }
-                    );
-                } else {
-                    Ext.getCmp('mainCard').setActiveItem('pedidoView');
-                }
-            break;
+                rewpos.Util.showPanel('mainCard', 'pedidoView', 'right');
+                break;
+            case 'usuarioLogin':
+                //Ext.getCmp('backToPedido').setHidden(false);
+                //rewpos.Util.showPanel('mainCard', 'chatView', 'left');
+                break;
         }
     }
 });

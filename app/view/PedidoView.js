@@ -11,7 +11,7 @@ Ext.define('rewpos.view.PedidoView', {
                 id: 'accion',
                 xtype: 'accionesView'
             },{
-                xtype: 'seleccion'
+                xtype: 'seleccionView'
             },{
                 flex: 1,
                 xtype: 'pedidoList'

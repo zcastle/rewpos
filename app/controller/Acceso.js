@@ -40,14 +40,6 @@ Ext.define('rewpos.controller.Acceso', {
         })
     },
     chageViewToPedido: function() {
-        if(rewpos.AppGlobals.ANIMACION) {
-            Ext.getCmp('mainCard').animateActiveItem('pedidoView', {
-                    type: 'slide',
-                    direction: 'left'
-                }
-            );
-        } else {
-            Ext.getCmp('mainCard').setActiveItem('pedidoView');
-        }
+        rewpos.Util.showPanel('mainCard', 'authView', 'left');
     }
 });

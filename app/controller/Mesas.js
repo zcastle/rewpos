@@ -4,7 +4,7 @@ Ext.define('rewpos.controller.Mesas', {
         stores: ['Pedido'],
         models: ['Pedido'],
         refs: {
-            seleccion: 'seleccion'
+            seleccionView: 'seleccionView'
         },
         control: {
             'mesasView': {
@@ -20,24 +20,18 @@ Ext.define('rewpos.controller.Mesas', {
         Ext.getStore('Pedido').load({
             params: {
                 mesa: record.get('id')
-            }
+            },
+            callback: function(records) {
+                if(records.length>0){
+                    this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
+                    this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
+                }
+            },
+            scope: this
         });
-        this.getSeleccion().down('button[name=btnSeleccionMesa]').setText('M: '+record.get('id'));
+        this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+record.get('id'));
         Ext.getCmp('backToPedido').setHidden(true);
-        if(rewpos.AppGlobals.ANIMACION) {
-            Ext.getCmp('comando').animateActiveItem('buscarView', {
-                    type: 'slide',
-                    direction: 'left'
-                }
-            );
-            Ext.getCmp('mainCard').animateActiveItem('pedidoView', {
-                    type: 'slide',
-                    direction: 'right'
-                }
-            );
-        } else {
-            Ext.getCmp('comando').setActiveItem('buscarView');
-            Ext.getCmp('mainCard').setActiveItem('pedidoView');
-        }
+        rewpos.Util.showPanel('comando', 'buscarView', 'left');
+        rewpos.Util.showPanel('mainCard', 'pedidoView', 'right');
     }
 });

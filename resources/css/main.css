@@ -1,5 +1,12 @@
-* {
+@font-face {
 	font-family: 'Roboto';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Roboto Regular'), local('Roboto-Regular'), url(../font/roboto.woff) format('woff');
+}
+
+* {
+	font-family: 'Roboto', sans-serif;
 }
 
 .btn_accion {
@@ -64,17 +71,17 @@
 	cursor: pointer;
 }
 
-.btn_seleccion_mozo {
+.btn_seleccion {
 	border: 1px solid #fff;
 	background-color: #ffbb33;
 }
 
-.btn_seleccion_mozo .x-field-mask{
+.btn_seleccion .x-field-mask{
 	width: 0px;
 	height: 0px;
 }
 
-.btn_seleccion_mozo .x-form-field {
+.btn_seleccion .x-form-field {
 	width: 100%;
 	background-color: #ffbb33;
 	color: #fff;
@@ -83,7 +90,7 @@
 	text-align: center;
 }
 
-.btn_seleccion_mozo .x-form-field:hover {
+.btn_seleccion .x-form-field:hover {
 	cursor: pointer;
 }
 
@@ -393,4 +400,25 @@
 
 .estilo-dolar {
 	font-size: 0.5em;
+}
+
+#chatContainer {
+    /*bottom: 0;
+    position: fixed;
+    clear: both;
+    z-index: 11000;*/
+    right: 0;
+}
+
+#chatContainer .x-dock {
+    margin: 1px;
+}
+
+#chatContainer .x-toolbar {
+    min-height: 1.5em;
+}
+
+#chatContainer .x-title {
+	line-height: normal;
+	font-size: 1em;
 }

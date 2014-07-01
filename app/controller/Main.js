@@ -1,10 +1,10 @@
 Ext.define('rewpos.controller.Main', {
     extend: 'Ext.app.Controller',
     config: {
-        stores: ['Usuario', 'Pedido', 'Pago'],
+        stores: ['Usuario'],
         models: ['Usuario', 'Corporacion', 'Caja'],
         refs: {
-            seleccion: 'seleccion'
+            seleccionView: 'seleccionView'
         },
         control: {
             'main': {
@@ -16,11 +16,13 @@ Ext.define('rewpos.controller.Main', {
         //alert('activate');
         console.log('Sistema iniciado');
         console.log('Debug is '+rewpos.AppGlobals.DEBUG);
+        //Ext.getStore('Producto').load();
         Ext.Msg.defaultAllowedConfig.showAnimation = rewpos.AppGlobals.ANIMACION;
         Ext.Msg.defaultAllowedConfig.hideAnimation = rewpos.AppGlobals.ANIMACION;
         Ext.ModelManager.getModel('rewpos.model.Corporacion').load('',{
             success: function(corporacion) {
-                Ext.getCmp('empresaLogin').setText(corporacion.get('nombre'));
+                rewpos.AppGlobals.CORPORACION = corporacion.get('nombre');
+                Ext.getCmp('empresaLogin').setText(rewpos.AppGlobals.CORPORACION);
                 this.loadDefault();
             },
             scope: this
@@ -35,15 +37,25 @@ Ext.define('rewpos.controller.Main', {
                 Ext.Array.forEach(records, function(item) {
                     if (item.get('rol_id')==rewpos.AppGlobals.ROL_ID_MOZO) {
                         options.push({
-                            text: item.get('usuario'),
+                            text: item.get('nombre')+' '+item.get('apellido'),
                             value: item.get('id')
                         })
                     }
                 }, this);
-                this.getSeleccion().down('selectfield[name=cboMozos]').setOptions(options);
+                this.getSeleccionView().down('selectfield[name=cboMozos]').setOptions(options);
             },
             scope: this
         });
+        //PAX
+        var options = new Array();
+        for (var i = 1; i <= 50; i++) {
+            options.push({
+                text: 'PAX: '+i,
+                value: i
+            });
+        };
+        this.getSeleccionView().down('selectfield[name=cboPax]').setOptions(options);
+        //
         var menu = Ext.create('Ext.Menu', {
             id: 'menupos',
             items: [{
@@ -51,21 +63,45 @@ Ext.define('rewpos.controller.Main', {
             },{
                 text: 'Unir Mesas'
             },{
-                text: 'Liberar Mesa'
+                text: 'Liberar Mesa',
+                handler: rewpos.app.getController('Pedido').liberar
             },{
                 text: 'Resumen Diario'
             },{
                 text: 'Pagar',
-                handler: this.pagar
+                handler: rewpos.app.getController('Pedido').pagar
             },{
-                text: 'Configuracion'
+                text: '' //Configuracion
             },{
-                text: 'Cerrar Sesion'
+                text: 'Cerrar Sesion',
+                handler: function(){
+                    Ext.Viewport.toggleMenu('right');
+                    Ext.Msg.show({
+                        title: "Confirmacion",
+                        message: "Desea cerrar su sesion?",
+                        buttons:  [{
+                            itemId: 'no',
+                            text: 'No'
+                        },{
+                            itemId: 'yes',
+                            text: 'Si'
+                        }],
+                        fn: function(btn) {
+                            if(btn=='yes'){
+                                Ext.getCmp('empresaLogin').setText(rewpos.AppGlobals.CORPORACION);
+                                Ext.getCmp('usuarioLogin').setText('');
+                                rewpos.Util.showPanel('mainCard', 'accesoView', 'right');
+                            }
+                        },
+                        scope: this
+                    });
+                }
             }]
         });
         Ext.Viewport.setMenu(menu, {
             side: 'right',
-            reveal: true
+            reveal: false,
+            cover: false
         });
     },
     loadDefault: function() {
@@ -90,63 +126,7 @@ Ext.define('rewpos.controller.Main', {
             });
             Ext.getCmp('empresaLogin').setText(rewpos.AppGlobals.CAJA.get('empresa_name')+' - '+rewpos.AppGlobals.CAJA.get('centrocosto_name'));
             Ext.getCmp('usuarioLogin').setText(rewpos.AppGlobals.USUARIO.get('nombre'));
-            if(rewpos.AppGlobals.ANIMACION) {
-                Ext.getCmp('mainCard').animateActiveItem('pedidoView', {
-                        type: 'slide',
-                        direction: 'left'
-                    }
-                );
-            } else {
-                Ext.getCmp('mainCard').setActiveItem('pedidoView');
-            }
-        }
-    },
-    pagar: function() {
-        if(Ext.getStore('Pedido').getCount()>0){
-            var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
-            var mensaje = 'Pagar cuenta';
-            if(Ext.getStore('Pago').getCount()==0){
-                mensaje = 'La cuenta se pagara con el monto exacto, desea continuar?';
-            }
-            Ext.Msg.show({
-                title: "Confirmacion",
-                message: mensaje,
-                buttons:  [{
-                    itemId: 'no',
-                    text: 'No'
-                },{
-                    itemId: 'yes',
-                    text: 'Si'
-                }],
-                fn: function(btn) {
-                    if(btn=='yes'){
-                        Ext.Viewport.setMasked(true);
-                        Ext.Ajax.request({
-                            url: rewpos.AppGlobals.HOST+'pedido/pagar',
-                            method: 'POST',
-                            params: {
-                                nroatencion: nroatencion
-                            },
-                            callback: function(request, success, response){
-                                var text = Ext.JSON.decode(response.responseText);
-                                if(text.success){
-                                    Ext.getStore('Pago').removeAll();
-                                    Ext.getStore('Pedido').removeAll();
-                                    Ext.getCmp('lblTotalItems').setHtml('TOTAL ITEMS: 0');
-                                    Ext.getCmp('lblTotalMonto').setText('S/. 0.00');
-                                }
-                                Ext.Viewport.setMasked(false);
-                            }
-                        });
-                    }
-                    Ext.Viewport.toggleMenu('right');
-                },
-                scope: this
-            });
-        } else {
-            Ext.Msg.alert('', 'No hay un pedido para procesar', function(){
-                Ext.Viewport.toggleMenu('right');   
-            });
+            rewpos.Util.showPanel('mainCard', 'pedidoView', 'left');
         }
     }
 });
