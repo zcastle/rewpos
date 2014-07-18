@@ -9,13 +9,17 @@
     changes and its generated code, it will produce a "merge conflict" that you
     will need to resolve manually.
 */
+Ext.Loader.setConfig({
+    enabled: true,
+    disableCaching: false
+});
 
 Ext.application({
     name: 'rewpos',
     requires: [
-        'rewpos.AppGlobals',
-        'rewpos.Util',
+        'rewpos.AppGlobals', 'rewpos.Util', 'rewpos.Print',
         'Ext.form.Panel',
+        'Ext.form.FieldSet',
         'Ext.Label',
         'Ext.field.Text',
         'Ext.field.Spinner',
@@ -23,6 +27,7 @@ Ext.application({
         'Ext.field.Select',
         'Ext.field.Hidden',
         'Ext.field.Password',
+        'Ext.field.Search',
         'Ext.Button',
         'Ext.Menu',
         'Ext.plugin.PullRefresh',
@@ -30,62 +35,51 @@ Ext.application({
         'Ext.SegmentedButton',
         'Ext.Img'
     ],
-    controllers: ['Main','Toolbar','Acciones','Comando','Pedido','Mesas','Editar','Pagos','Acceso','Auth'],
+    controllers: [
+        'Main','Toolbar','Comando','Pedido','Mesas','Editar','Pagos',
+        'Acceso','Auth', 'PasswordModal', 'Producto', 'ClienteModal'
+    ],
+    //'Acciones',
     views: [
-        'Main',
-        'MainOld',
-        'PedidoView',
-        'MesasView',
-        'ToolbarView',
-        'AccionesView',
-        'SeleccionView',
-        'Totales',
-        'PedidoList',
-        'Comandos',
-        'CategoriaList',
-        'ProductoList',
-        'BuscarView',
-        'EditarForm',
-        'Teclado',
-        'TecladoNumerico',
-        'PagosView',
-        'AccesoView',
-        'AuthView',
-        'TecladoPass',
-        'ChatView'
+        'Main','MainOld','PedidoView','MesasView','ToolbarView','AccionesView','SeleccionView',
+        'Totales','PedidoList','Comandos','CategoriaList','ProductoList','ProductoView',
+        'EditarForm', 'Teclado','TecladoNumerico',
+        'PagosView','AccesoView','AuthView','TecladoPass','ChatView','PasswordModal',
+        'ClienteModal'
     ],
 
     icon: {
-        '57': 'resources/icons/Icon.png',
-        '72': 'resources/icons/Icon~ipad.png',
-        '114': 'resources/icons/Icon@2x.png',
-        '144': 'resources/icons/Icon~ipad@2x.png'
+        '57': 'resources/icons/57.jpg',
+        '72': 'resources/icons/72.jpg',
+        '114': 'resources/icons/114.jpg',
+        '144': 'resources/icons/144.jpg'
     },
 
     isIconPrecomposed: true,
 
     startupImage: {
         '320x460': 'resources/startup/320x460.jpg',
-        '640x920': 'resources/startup/640x920.png',
-        '768x1004': 'resources/startup/768x1004.png',
-        '748x1024': 'resources/startup/748x1024.png',
-        '1536x2008': 'resources/startup/1536x2008.png',
-        '1496x2048': 'resources/startup/1496x2048.png'
+        '640x920': 'resources/startup/640x920.jpg',
+        '768x1004': 'resources/startup/768x1004.jpg',
+        '748x1024': 'resources/startup/748x1024.jpg',
+        '1536x2008': 'resources/startup/1536x2008.jpg',
+        '1496x2048': 'resources/startup/1496x2048.jpg'
     },
 
     launch: function() {
         // Destroy the #appLoadingIndicator element
+        Ext.Ajax.setDisableCaching(false);
+        Ext.Ajax.setUseDefaultXhrHeader(false);
         //Ext.fly('appLoadingIndicator').destroy();
         Ext.fly('canvasloader-container').destroy();
-
         // Initialize the main view
         Ext.Viewport.add(Ext.create('rewpos.view.Main'));
     },
 
     onUpdated: function() {
         Ext.Msg.confirm(
-            "Application Update",
-            "This application has just successfully been updated to the latest version. Reload now?",
+            "Actualización de la aplicación", //Application Update
+            "Esta aplicación ha sido actualizada con éxito a la última versión. Actualizar ahora?",//"This application has just successfully been updated to the latest version. Reload now?",
             function(buttonId) {
                 if (buttonId === 'yes') {
                     window.location.reload();

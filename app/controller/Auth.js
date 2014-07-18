@@ -2,7 +2,8 @@ Ext.define('rewpos.controller.Auth', {
     extend: 'Ext.app.Controller',
     config: {
         refs: {
-            passwordLogin: '#passwordLogin'
+            passwordLogin: '#passwordLogin',
+            toolbarView: 'toolbarView'
         },
         control: {
             'authView': {
@@ -43,8 +44,8 @@ Ext.define('rewpos.controller.Auth', {
                 Ext.Msg.alert('Advertencia', 'Clave incorrecta', Ext.emptyFn);
             }
         } else if(btn.getText()=='CANCELAR'){
-            Ext.getCmp('empresaLogin').setText(rewpos.AppGlobals.CORPORACION);
-            Ext.getCmp('usuarioLogin').setText('');
+            this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CORPORACION);
+            this.getToolbarView().down('button[name=usuarioLogin]').setText('');
             rewpos.Util.showPanel('mainCard', 'accesoView', 'right');
         }
     }

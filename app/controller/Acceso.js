@@ -2,6 +2,9 @@ Ext.define('rewpos.controller.Acceso', {
     extend: 'Ext.app.Controller',
     config: {
         stores: ['Usuario','Caja'],
+        refs: {
+            toolbarView: 'toolbarView'
+        },
         control: {
             'accesoView': {
                 activate: 'onActivate'
@@ -12,6 +15,7 @@ Ext.define('rewpos.controller.Acceso', {
         } 
     },
     onActivate: function() {
+        Ext.getStore('Usuario').clearFilter();
         Ext.getStore('Usuario').filter(function(record) {
             if (record.get('rol_id')==rewpos.AppGlobals.ROL_ID_VENTA || record.get('rol_id')==rewpos.AppGlobals.ROL_ID_VENTA_JEFE) {
                 return true;
@@ -27,8 +31,8 @@ Ext.define('rewpos.controller.Acceso', {
             callback: function(records, operation, success) {
                 if(records.length==1){
                     rewpos.AppGlobals.CAJA = records[0];
-                    Ext.getCmp('empresaLogin').setText(records[0].get('empresa_name')+' - '+records[0].get('centrocosto_name'));
-                    Ext.getCmp('usuarioLogin').setText(record.get('nombre')+' '+record.get('apellido'));
+                    this.getToolbarView().down('button[name=empresaLogin]').setText(records[0].get('empresa_name')+' - '+records[0].get('centrocosto_name'));
+                    this.getToolbarView().down('button[name=usuarioLogin]').setText(record.get('nombre')+' '+record.get('apellido'));
                     this.chageViewToPedido();
                 } else {
                     Ext.Array.forEach(records, function(item) {

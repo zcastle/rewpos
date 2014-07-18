@@ -13,6 +13,8 @@ Ext.define('rewpos.view.PagosView', {
                 xtype: 'button'
             },
             items: [{
+                name: 'btnCliente',
+                //id: 'btnCliente',
                 text: 'Cliente',
                 cls: 'button-label-align-left'
             },/*{
@@ -40,19 +42,19 @@ Ext.define('rewpos.view.PagosView', {
                     html: rewpos.AppGlobals.MONEDA_SIMBOLO
                 },{
                     xtype: 'label',
-                    id: 'lblTotalMontoPagar',
+                    name: 'lblTotalMontoPagar',
                     html: '0.00'
                 }]
             },{
                 xtype: 'list',
                 store: 'Pago',
-                disableSelection: true,
+                //disableSelection: true,
                 flex: 1,
                 itemTpl: new Ext.XTemplate(
                     '<tpl if="this.isPropina(tipopago)">',
-                        '<div id="pagosList" class="propina">',
+                        '<div class="pagos-row-list" class="propina">',
                     '<tpl else>',
-                        '<div id="pagosList">',
+                        '<div class="pagos-row-list">',
                     '</tpl>',
                         '{tipopago}&nbsp;',
                         '<div class="estilo-dolar">{tipocambio:this.complete}</div>',

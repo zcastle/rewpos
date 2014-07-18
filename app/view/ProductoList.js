@@ -1,9 +1,10 @@
 Ext.define('rewpos.view.ProductoList', {
 	extend: 'Ext.dataview.List',
     xtype: 'productoList',
+    id: 'productoList',
     config: {
-        align: 'center',
-        grouped: true,
+        //align: 'center',
+        //grouped: true,
         //indexBar: true,
         //hideOnMaskTap: false,
         //plugins: ['listpaging', 'pullrefresh'],
@@ -13,6 +14,19 @@ Ext.define('rewpos.view.ProductoList', {
             releaseText: 'Suelta'
         }],*/
         store: 'Producto',
-    	itemTpl: '<div id="producto"><div class="nombre field">{nombre}</div><div class="precio field">{precio}</div></div>'
+    	itemTpl: new Ext.XTemplate(
+            '<div class="producto-row-list">',
+            '<div class="nombre field">{nombre:this.toUpper}</div>'+
+            '<div class="precio field">{precio:this.formatNumer}</div>'+
+            '</div>',
+            {
+                toUpper: function(item) {
+                    return item.toUpperCase();
+                },
+                formatNumer: function(item) {
+                    return rewpos.Util.toFixed(item, 2);
+                }
+            }
+        )
     }
 });

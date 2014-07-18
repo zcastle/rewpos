@@ -5,7 +5,7 @@ Ext.define('rewpos.view.Totales', {
     	layout: 'hbox',
         items: [{
             xtype: 'label',
-            id: 'lblTotalItems',
+            name: 'lblTotalItems',
             cls: 'lbl_totales',
             flex: 1,
             html: 'TOTAL ITEMS: 0'

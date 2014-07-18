@@ -7,10 +7,10 @@ Ext.define('rewpos.view.PedidoView', {
         items: [{
             flex: 1,
             layout: 'vbox',
-            items: [{
+            items: [/*{
                 id: 'accion',
                 xtype: 'accionesView'
-            },{
+            },*/{
                 xtype: 'seleccionView'
             },{
                 flex: 1,
@@ -29,12 +29,16 @@ Ext.define('rewpos.view.PedidoView', {
                 id: 'comando',
                 flex: 1,
                 layout: 'card',
-                animation:{type:'flip'},
+                animation:{
+                    type: 'flip'
+                },
                 items: [{
-                    xtype: 'buscarView'
-                }, {
-                    xtype: 'editarForm'
-                }, {
+                    xtype: 'productoView'
+                },{
+                    xtype: 'editarForm',
+                    scrollable: false,
+                    height: '100%'
+                },{
                     xtype: 'pagosView'
                 }]
             }]

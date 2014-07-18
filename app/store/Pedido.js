@@ -19,9 +19,9 @@ Ext.define('rewpos.store.Pedido', {
 	    }
     },
     setHeader: function() {
-    	Ext.getCmp('lblTotalItems').setHtml('TOTAL ITEMS: '+this.getCount());
-    	Ext.getCmp('lblTotalMonto').setText('S/. '+rewpos.Util.toFixed(this.getTotales(), 2));
-        Ext.getCmp('lblTotalMontoPagar').setHtml(rewpos.Util.toFixed(this.getTotales(), 2));
+    	rewpos.app.getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: '+this.getCount());
+        rewpos.app.getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+rewpos.Util.toFixed(this.getTotales(), 2));
+        rewpos.app.getController('Pedido').getPagosView().down('label[name=lblTotalMontoPagar]').setHtml(rewpos.Util.toFixed(this.getTotales(), 2));
     },
     getTotales: function() {
     	var total = 0.0;

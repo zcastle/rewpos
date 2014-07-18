@@ -12,7 +12,7 @@ Ext.define('rewpos.view.TecladoPass', {
                     xtype: 'button',
                     flex: 1,
                     height: 60
-                },
+                }
             },
             items: [{
                 items: [{

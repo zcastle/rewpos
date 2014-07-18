@@ -6,6 +6,6 @@ Ext.define('rewpos.store.Producto', {
 			groupFn: function(record) {
 				return record.get('nombre')[0];
 			}
-		},
+		}
     }
 });

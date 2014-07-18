@@ -4,6 +4,8 @@ Ext.define('rewpos.AppGlobals', {
     ANIMACION: true,
     DEBUG: false,
     HOST: 'http://192.168.1.5:2385/',
+    //HOST_PRINT: 'http://192.168.1.5:8084/REWPrinterPool/',
+    HOST_PRINT: 'http://192.168.1.5:8523/',
     HOST_SYNC: '',
     PORT_SYNC: '',
     DB_SYNC: '',
@@ -14,9 +16,14 @@ Ext.define('rewpos.AppGlobals', {
     ROL_ID_MOZO: 6,
     ROL_ID_VENTA: 2,
     ROL_ID_VENTA_JEFE: 4,
-    MONEDA_SIMBOLO: 'S/.&nbsp;&nbsp;',
+    ROL_ID_ADMINISTRADOR: 1,
+    MONEDA_SIMBOLO: 'S/.&nbsp;',
     USUARIO: null,
     CAJA: null,
     TIPO_CAMBIO: 2.8,
-    CORPORACION: null
+    DEFAULT_CORPORACION: 1,
+    CORPORACION: null,
+    MAX_MESAS: 100,
+    MASK: false,
+    LIST_SELECTED: null
 });

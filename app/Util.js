@@ -5,7 +5,19 @@ Ext.define('rewpos.Util', {
     currencyAtEnd: false,
     decimalSeparator: '.',
     thousandSeparator: ',',
- 
+
+    doAjaxCall: function(pUrl, pMethod, pParams, pCallback, pScope) {
+        Ext.Ajax.request({
+            url: pUrl,
+            method: pMethod,
+            params: pParams,
+            callback: function(request, success, response) {
+                if (Ext.isFunction(pCallback)){
+                    pCallback.call(pScope, request, success, response);
+                }
+            }
+        });
+    },
     formatCurrency: function (v, currencySign, decimals, end) {
         var negativeSign = '',
             format = ",0",
@@ -63,6 +75,27 @@ Ext.define('rewpos.Util', {
             );
         } else {
             Ext.getCmp(card).setActiveItem(panel);
+        }
+    },
+    mask: function() {
+        if(rewpos.AppGlobals.MASK){
+            //Ext.Viewport.setMasked(true);
+            Ext.Viewport.setMasked({
+              xtype: 'loadmask',
+              message: 'Cargando...'
+            });
+        }
+    },
+    unmask: function() {
+        if(rewpos.AppGlobals.MASK){
+            Ext.Viewport.unmask();
+        }
+    },
+    scroll: function() {
+        if(rewpos.AppGlobals.SCROLL){
+            return true;
+        } else {
+            return false;
         }
     },
     MD5: function(s,raw,hexcase,chrsz) {

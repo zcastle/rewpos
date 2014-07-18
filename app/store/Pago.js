@@ -24,7 +24,12 @@ Ext.define('rewpos.store.Pago', {
     getTotales: function() {
     	var totalIngresado = 0.0;
         var total = 0.0;
-        var montoPagar = Ext.data.Types.NUMBER.convert(Ext.getCmp('lblTotalMonto').getText().substr(4));
+        var montoPagar = 0.0; //Ext.data.Types.NUMBER.convert(Ext.getCmp('lblTotalMonto').getText().substr(4));
+        
+        Ext.getStore('Pedido').each(function(item){
+            montoPagar += item.get('cantidad')*item.get('precio');
+        });
+        
     	this.each(function(item, index, length){
             //console.log(item.get('valorpago'));
             //if(!Ext.isNumber(item.get('valorpago'))) return;

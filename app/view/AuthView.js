@@ -11,7 +11,7 @@ Ext.define('rewpos.view.AuthView', {
             items: [{
                 xtype: 'passwordfield',
                 label: 'Contraseña',
-                labelWidth: 110,
+                labelWidth: 120,
                 id: 'passwordLogin',
                 readOnly: true
             },{

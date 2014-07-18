@@ -4,7 +4,8 @@ Ext.define('rewpos.controller.Mesas', {
         stores: ['Pedido'],
         models: ['Pedido'],
         refs: {
-            seleccionView: 'seleccionView'
+            seleccionView: 'seleccionView',
+            toolbarView: 'toolbarView'
         },
         control: {
             'mesasView': {
@@ -25,13 +26,16 @@ Ext.define('rewpos.controller.Mesas', {
                 if(records.length>0){
                     this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
                     this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
+                } else {
+                    this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(0);
+                    this.getSeleccionView().down('selectfield[name=cboPax]').setValue(1);
                 }
             },
             scope: this
         });
         this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+record.get('id'));
-        Ext.getCmp('backToPedido').setHidden(true);
-        rewpos.Util.showPanel('comando', 'buscarView', 'left');
+        this.getToolbarView().down('button[name=backToPedido]').setHidden(true);
+        rewpos.Util.showPanel('comando', 'productoView', 'left');
         rewpos.Util.showPanel('mainCard', 'pedidoView', 'right');
     }
 });

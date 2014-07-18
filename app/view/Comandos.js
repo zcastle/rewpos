@@ -7,18 +7,25 @@ Ext.define('rewpos.view.Comandos', {
         height: 65,
         defaults: {
             xtype: 'button',
+            cls: 'btn_accion',
             flex: 1
         },
         items: [{
-            id: 'btnComandoBuscar',
-            cls: 'btn_comando_buscar bordeado_c',
-            pressedCls: 'btn_comando_buscar_pressed'
+            name: 'btnComandoBuscar',
+            iconCls: 'ico_buscar'
+            /*cls: 'btn_comando_buscar bordeado_c',
+            pressedCls: 'btn_comando_buscar_pressed'*/
         },{
-            id: 'btnComandoBuscarBarra',
-            cls: 'btn_comando_codigo bordeado_c'
+            name: 'btnComandoPrecuenta',
+            iconCls: 'ico_precuenta'
         },{
-            id: 'btnComandoMas',
-            cls: 'btn_comando_mas bordeado_c'
+            name: 'btnComandoEnviar',
+            iconCls: 'ico_enviar'
+            /*cls: 'btn_comando_codigo bordeado_c'*/
+        },{
+            name: 'btnComandoMas',
+            iconCls: 'ico_mas'
+            /*cls: 'btn_comando_mas bordeado_c'*/
         }]
     }
 });

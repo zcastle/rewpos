@@ -18,12 +18,6 @@ Ext.define('rewpos.view.AccionesView', {
         },{
             flex: 1,
             iconCls: 'ico_accion_enviar'
-        },{
-            id: 'lblTotalMonto',
-            name: 'lblTotalMonto',
-            text: 'S/. 0.00',
-            cls: 'btn_accion_pagar',
-            pressedCls: 'btn_accion_pagar_pressed'
         }]
     }
 });

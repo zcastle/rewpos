@@ -11,8 +11,11 @@ Ext.define('rewpos.controller.Pagos', {
             'pagosView button[name=valorPago]': {
                 tap: 'ontapValorPago'
             },
+            'pagosView button[name=btnCliente]': {
+                tap: 'ontapBtnCliente'
+            },
             'pagosView list': {
-                itemtap: 'onItemTapPagoList'
+                itemdoubletap: 'onItemTapPagoList'
             }
         } 
     },
@@ -45,11 +48,14 @@ Ext.define('rewpos.controller.Pagos', {
             });
         }
     },
+    ontapBtnCliente: function() {
+        Ext.Viewport.add({xtype: 'clienteModal', scrollable: false});
+    },
     onItemTapPagoList: function(item, index, target, record) {
         var mensaje = 'Desea eliminar el pago con '+record.get('tipopago');
         if(record.get('tipopago')=='PROPINA') mensaje = 'Desea eliminar la PROPINA';
         Ext.Msg.show({
-            //title: "Confirmacion", 
+            title: "Confirmacion", 
             message: mensaje,
             buttons:  [{
                 itemId: 'no',
