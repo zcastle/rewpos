@@ -11,6 +11,9 @@ Ext.define('rewpos.controller.Pagos', {
             'pagosView button[name=valorPago]': {
                 tap: 'ontapValorPago'
             },
+            'pagosView segmentedbutton': {
+                toggle: 'onToggleTipoPago'
+            },
             'pagosView button[name=btnCliente]': {
                 tap: 'ontapBtnCliente'
             },
@@ -18,6 +21,45 @@ Ext.define('rewpos.controller.Pagos', {
                 itemdoubletap: 'onItemTapPagoList'
             }
         } 
+    },
+    onToggleTipoPago: function(container, btn, pressed){
+        if(pressed) {
+            if(btn.getText()=='PROPINA' || btn.getText()=='OTROS') return;
+            var existe = false;
+            var cuenta = 0.0;
+            var pagado = 0.0;
+            Ext.getStore('Pago').each(function(record, index, length){
+                pagado += record.get('valorpago');
+                if(record.get('tipopago')==btn.getText()) {
+                    existe = true;
+                }
+            }, this)
+            if(!existe){
+                Ext.getStore('Pedido').each(function(record, index, length){
+                    cuenta += record.get('precio')*record.get('cantidad');
+                }, this)
+                var saldo = cuenta - pagado;
+                if(saldo>0) {
+                    var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
+                    var tipoPago = btn.getText();
+                    var orden = btn.orden;
+                    var valorPago = saldo;
+                    var tipoCambio = tipoPago=='DOLARES' ? rewpos.AppGlobals.TIPO_CAMBIO : '';
+                    Ext.create('rewpos.model.Pago', {
+                        nroatencion: nroatencion,
+                        tipopago: tipoPago,
+                        valorpago: valorPago,
+                        tipocambio: tipoCambio,
+                        orden: orden
+                    }).save({
+                        success: function(record) {
+                            Ext.getStore('Pago').add(record);
+                        },
+                        scope: this
+                    });
+                }
+            }
+        }
     },
     ontapValorPago: function(btn) {
         var tipoPago = this.getBtnPagos().getPressedButtons()[0].getText();
@@ -41,7 +83,6 @@ Ext.define('rewpos.controller.Pagos', {
                 orden: orden
             }).save({
                 success: function(record) {
-                    //newRecord.set('id', record.get('id'));
                     Ext.getStore('Pago').add(record);
                 },
                 scope: this

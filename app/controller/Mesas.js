@@ -8,19 +8,18 @@ Ext.define('rewpos.controller.Mesas', {
             toolbarView: 'toolbarView'
         },
         control: {
-            'mesasView': {
-                activate: 'activate'
-            },
             'mesasView dataview': {
                 itemtap: 'onItemTap'
             }
         } 
     },
-    activate: function(view) {},
     onItemTap: function(view, index, target, record) {
+        this.loadPedido(record.get('id'));
+    },
+    loadPedido: function(mesa) {
         Ext.getStore('Pedido').load({
             params: {
-                mesa: record.get('id')
+                mesa: mesa
             },
             callback: function(records) {
                 if(records.length>0){
@@ -33,9 +32,9 @@ Ext.define('rewpos.controller.Mesas', {
             },
             scope: this
         });
-        this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+record.get('id'));
+        this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+mesa);
         this.getToolbarView().down('button[name=backToPedido]').setHidden(true);
-        rewpos.Util.showPanel('comando', 'productoView', 'left');
+        rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
         rewpos.Util.showPanel('mainCard', 'pedidoView', 'right');
     }
 });

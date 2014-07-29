@@ -30,6 +30,11 @@ Ext.define('rewpos.view.ToolbarView', {
             hidden: true,
             badgeText: 2,
             style: 'background: transparent; border: 0px;'
+        },{
+            text: 'MENU',
+            itemId: 'showMenu',
+            name: 'showmenu',
+            style: 'background: transparent; border: 0px;'
         }]
     }
 });

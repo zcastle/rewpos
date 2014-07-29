@@ -8,7 +8,7 @@ Ext.define('rewpos.view.AccesoView', {
         },{
             xtype: 'dataview',
             flex: 1,
-            id: 'dataViewUsuarios',
+            cls: 'dataViewUsuarios',
             store: 'Usuario',
             inline: true,
             itemTpl: new Ext.XTemplate(

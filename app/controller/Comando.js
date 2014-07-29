@@ -3,15 +3,17 @@ Ext.define('rewpos.controller.Comando', {
     config: {
         stores: ['Pedido'],
         control: {
-            'comandos button': {
+            'comandosView button': {
                 tap: 'ontap'
             }
         } 
     },
     ontap: function(btn) {
-        switch(btn.name) {
+        //console.log(btn);
+        //console.log(btn.getItemId());
+        switch(btn.getItemId()) {
             case 'btnComandoBuscar':
-                rewpos.Util.showPanel('comando', 'productoView', 'left');
+                rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                 break;
             case 'btnComandoPrecuenta':
                 this.precuenta();
@@ -25,14 +27,14 @@ Ext.define('rewpos.controller.Comando', {
         }
     },
     precuenta: function() {
-        /*if(rewpos.AppGlobals.DEBUG) {
+        if(rewpos.AppGlobals.DEBUG) {
             Ext.Msg.alert('Advertencia', 'No se puede enviar PRECUENTA en modo DEBUG', Ext.emptyFn);
             return;
-        }*/
+        }
         console.log('Enviando Precuenta');
-        //rewpos.Print.precuenta('');
-        //console.log('Fin');
-        //return;
+        rewpos.Print.precuenta('');
+        console.log('Fin');
+        return;
         if(Ext.getStore('Pedido').getCount()>0){
             var cajaId = Ext.getStore('Pedido').getAt(0).get('caja_id');
             var nroAtencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
@@ -42,8 +44,12 @@ Ext.define('rewpos.controller.Comando', {
                 //method: 'GET',
                 callback: function(request, success, response){
                     rewpos.Util.unmask();
-                    var text = Ext.JSON.decode(response.responseText);
-                    if(!text.success) {
+                    if(success){
+                        var text = Ext.JSON.decode(response.responseText);
+                        if(!text.success) {
+                            Ext.Msg.alert('Advertencia', 'Error al imprimir PRECUENTA', Ext.emptyFn);
+                        }
+                    } else {
                         Ext.Msg.alert('Advertencia', 'Error al imprimir PRECUENTA', Ext.emptyFn);
                     }
                 }
@@ -89,13 +95,17 @@ Ext.define('rewpos.controller.Comando', {
             url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/'+cajaId+'/'+nroAtencion,
             callback: function(request, success, response){
                 rewpos.Util.unmask();
-                var text = Ext.JSON.decode(response.responseText);
-                if(!text.success) {
-                    Ext.Msg.alert('Advertencia', 'Error al ENVIAR PEDIDO', Ext.emptyFn);
+                if(success){
+                    var text = Ext.JSON.decode(response.responseText);
+                    if(!text.success) {
+                        Ext.Msg.alert('Advertencia', 'Error al ENVIAR PEDIDO', Ext.emptyFn);
+                    } else {
+                        Ext.getStore('Pedido').each(function(item){
+                            item.set('enviado', "S");
+                        });
+                    }
                 } else {
-                    Ext.getStore('Pedido').each(function(item){
-                        item.set('enviado', "S");
-                    });
+                    Ext.Msg.alert('Advertencia', 'Error al ENVIAR PEDIDO', Ext.emptyFn);
                 }
             }
         });

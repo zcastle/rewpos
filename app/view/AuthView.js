@@ -1,9 +1,9 @@
 Ext.define('rewpos.view.AuthView', {
-	extend: 'Ext.Container',
+	extend: 'Ext.Panel',
     xtype: 'authView',
     config: {
         items: [{
-            xtype: 'container',
+            //xtype: 'container',
             style: {
                 'margin': '20px auto 0'
             },
@@ -12,7 +12,7 @@ Ext.define('rewpos.view.AuthView', {
                 xtype: 'passwordfield',
                 label: 'Contraseña',
                 labelWidth: 120,
-                id: 'passwordLogin',
+                name: 'passwordLogin',
                 readOnly: true
             },{
                 layout: 'hbox',
@@ -30,22 +30,8 @@ Ext.define('rewpos.view.AuthView', {
                         xtype: 'label'
                     }]
                 },{
-                    xtype: 'tecladoPass'
-                },{
-                    width: 5
-                },{
-                    layout: 'vbox',
-                    defaults: {
-                        xtype: 'button',
-                        flex: 1
-                    },
-                    items: [{
-                        text: 'OK',
-                        name: 'action'
-                    },{
-                        text : 'CANCELAR',
-                        name: 'action'
-                    }]
+                    xtype: 'tecladoNumerico',
+                    flex: 1
                 }]
             }]
         }]

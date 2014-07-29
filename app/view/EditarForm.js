@@ -4,15 +4,12 @@ Ext.define('rewpos.view.EditarForm', {
     config: {
         items: [{
             xtype: 'fieldset',
-            //title: 'Edicion de producto',
             defaults: {
                 xtype: 'textfield',
                 labelWidth: 110
             },
             items: [{
-                //label: 'NOMBRE',
                 name: 'producto_name'
-                //readOnly: true
             },{
                 xtype: 'spinnerfield',
                 label: 'CANTIDAD',
@@ -20,27 +17,33 @@ Ext.define('rewpos.view.EditarForm', {
                 minValue: 1,
                 stepValue: 1,
                 component: {
-                    disabled: false
+                    disabled: true
                 }
-                //readOnly: true
             },{
-                xtype: 'spinnerfield',
-                label: 'PRECIO',
-                name: 'precio',
-                minValue: 0.1,
-                stepValue: 0.5,
-                component: {
-                    disabled: false
-                }
-                //readOnly: true
+                xtype: 'container', 
+                layout: 'hbox', 
+                items: [{
+                    xtype: 'spinnerfield',
+                    name: 'precio',
+                    minValue: 0.1,
+                    stepValue: 0.5,
+                    labelWidth: 110,
+                    label: 'PRECIO', 
+                    flex: 1,
+                    component: {
+                        disabled: true
+                    }
+                }, {
+                    xtype: 'button',
+                    name: 'btnTecladoCantidad',
+                    iconCls: 'ico_teclado'
+                }]
             },{
-                //label: 'MENSAJE',
+                xtype: 'textareafield',
                 name: 'mensaje',
-                //readOnly: true,
                 placeHolder: 'MENSAJE'
             }]
         },{
-            //xtype: 'container',
             layout: {
                 type: 'hbox'
             },
@@ -48,26 +51,16 @@ Ext.define('rewpos.view.EditarForm', {
                 xtype: 'button',
                 flex: 1
             },
-            //cls: 'background_editar',
             height: 65,
             items: [{
                 name: 'btnEditar',
                 iconCls: 'ico_editar',
-                cls: 'btn_editar'/*,
-                pressedCls: 'btn_editar_pressed'*/
+                cls: 'btn_editar'
             },{
                 name: 'btnEliminar',
                 iconCls: 'ico_eliminar',
-                cls: 'btn_eliminar'/*,
-                pressedCls: 'btn_eliminar_pressed'*/
+                cls: 'btn_eliminar'
             }]
-        }/*,{
-            label: 'EDITAR',
-            id: 'textEditado',
-            readOnly: true,
-            value: ''
-        },{
-            xtype: 'teclado'
-        }*/]
+        }]
     }
 });

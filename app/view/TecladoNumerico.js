@@ -2,16 +2,19 @@ Ext.define('rewpos.view.TecladoNumerico', {
 	extend: 'Ext.Container',
     xtype: 'tecladoNumerico',
     config: {
-    	layout: 'vbox',
-        flex: 1,
+        layout: 'hbox',
+        cls: 'teclado',
         items: [{
+            flex: 1,
             layout: 'vbox',
-            items: [{
+            defaults: {
                 layout: 'hbox',
                 defaults: {
                     xtype: 'button',
                     flex: 1
-                },
+                }
+            },
+            items: [{
                 items: [{
                     text: '1',
                     name: 'num'
@@ -23,11 +26,6 @@ Ext.define('rewpos.view.TecladoNumerico', {
                     name: 'num'
                 }]
             },{
-                layout: 'hbox',
-                defaults: {
-                    xtype: 'button',
-                    flex: 1
-                },
                 items: [{
                     text: '4',
                     name: 'num'
@@ -39,11 +37,6 @@ Ext.define('rewpos.view.TecladoNumerico', {
                     name: 'num'
                 }]
             },{
-                layout: 'hbox',
-                defaults: {
-                    xtype: 'button',
-                    flex: 1
-                },
                 items: [{
                     text: '7',
                     name: 'num'
@@ -54,20 +47,29 @@ Ext.define('rewpos.view.TecladoNumerico', {
                     text: '9',
                     name: 'num'
                 }]
+            },{
+                items: [{
+                    text: '0',
+                    flex: 2,
+                    name: 'num'
+                },{
+                    text: '<<',
+                    flex: 1,
+                    name: 'num'
+                }]
             }]
         },{
-            layout: 'hbox',
+            layout: 'vbox',
             defaults: {
-                xtype: 'button'
+                xtype: 'button',
+                flex: 1
             },
             items: [{
-                text: '0',
-                flex: 2,
-                name: 'num'
+                text: 'OK',
+                action: 'ok'
             },{
-                text: '.',
-                flex: 1,
-                name: 'num'
+                text : 'CANCELAR',
+                action: 'cancelar'
             }]
         }]
     }

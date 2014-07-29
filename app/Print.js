@@ -20,8 +20,8 @@ Ext.define('rewpos.Print', {
         var request = builder.toString();
         console.log(request);
         //Set the end point address
-        //var address = 'http://192.168.192.168/cgi-bin/epos/service.cgi?devid=local_printer&timeout=10000';
-        var address = '//192.168.1.100/TMAVANCEC';
+        var address = 'http://192.168.1.50/cgi-bin/epos/service.cgi?devid=local_printer&timeout=10000';
+        //var address = '//192.168.1.100/TMAVANCEC';
         //Create an ePOS-Print object
         var epos = new epson.ePOSPrint(address);
         //Set a response receipt callback function

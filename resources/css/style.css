@@ -57,7 +57,9 @@
   color: white;
 }
 
-.x-button .x-button-icon {
+.background_comando .x-button .x-button-icon,
+.btn_editar .x-button-icon,
+.btn_eliminar .x-button-icon {
   /*width: 1.5em;
   height: 1.5em;*/
   width: 3em;
@@ -65,15 +67,18 @@
   /*REW*/
 }
 
-#menupos {
-  padding: 0.5em;
+.x-form-fieldset {
+  margin: 0.3em;
 }
 
-#menupos .x-button {
-  min-height: 3em;
-  margin-bottom: 0.5em;
+.x-form-fieldset .x-form-fieldset-inner {
+  -moz-border-radius: 0em;
+  -ms-border-radius: 0em;
+  -o-border-radius: 0em;
+  border-radius: 0em; *
 }
 
-#menupos .x-button .x-button-label {
-  color: #000;
+.x-field-search .x-field-input .x-form-field {
+  margin-left: 0em;
+  padding-left: 1.5em;
 }

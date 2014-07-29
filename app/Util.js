@@ -46,6 +46,7 @@ Ext.define('rewpos.Util', {
     },
  
     formatValue: function (nVal) {
+        nVal = rewpos.Util.toFixed(nVal, rewpos.Util.currencyPrecision);
         nVal += '';
         x = nVal.split(rewpos.Util.decimalSeparator);
         x1 = x[0];
@@ -59,7 +60,7 @@ Ext.define('rewpos.Util', {
     },
     toFixed: function(value, precision) {
         //if (isToFixedBroken) {
-            precision = precision || 0;
+            precision = precision || rewpos.Util.currencyPrecision;
             var pow = Math.pow(10, precision);
             return (Math.round(value * pow) / pow).toFixed(precision);
         //}

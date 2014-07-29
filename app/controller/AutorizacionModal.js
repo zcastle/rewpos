@@ -1,19 +1,19 @@
-Ext.define('rewpos.controller.PasswordModal', {
+Ext.define('rewpos.controller.AutorizacionModal', {
     extend: 'Ext.app.Controller',
     config: {
         stores: ['Usuario'],
         refs: {
-            passwordLogin: '#passwordLoginAdmin'
+            autorizacionModal: 'autorizacionModal'
         },
         control: {
-            'passwordModal': {
+            'autorizacionModal': {
                 initialize: 'onInitialize',
                 hide: 'onHide'
             },
-            'passwordModal button[action=cancelar]': {
+            'autorizacionModal button[action=cancelar]': {
                 tap: 'onTapButtonCancelar'
             },
-            'passwordModal button[name=num]': {
+            'autorizacionModal button[name=num]': {
                 tap: 'onTapNum'
             }
         } 
@@ -21,7 +21,7 @@ Ext.define('rewpos.controller.PasswordModal', {
     onInitialize: function(view) {
         var administradores = new Array();
         administradores.push({
-            text: 'Elegir Administrador',
+            text: 'Seleccionar',
             value: 0
         });
         Ext.getStore('Usuario').clearFilter();
@@ -33,6 +33,12 @@ Ext.define('rewpos.controller.PasswordModal', {
                 })
             }
         });
+        Ext.getStore('Usuario').clearFilter();
+        Ext.getStore('Usuario').filter(function(record) {
+            if (record.get('rol_id')==rewpos.AppGlobals.ROL_ID_VENTA || record.get('rol_id')==rewpos.AppGlobals.ROL_ID_VENTA_JEFE) {
+                return true;
+            }
+        });
         view.down('selectfield[name=cboAdministradores]').setOptions(administradores);
     },
     onHide: function(view) {
@@ -42,10 +48,11 @@ Ext.define('rewpos.controller.PasswordModal', {
         Ext.Viewport.remove(btn.up('panel'));
     },
     onTapNum: function(btn) {
+        var txtPassword = this.getAutorizacionModal().down('passwordfield[name=passwordLoginAdmin]');
         if(btn.getText()=='<<') {
-            this.getPasswordLogin().setValue('');
+            txtPassword.setValue('');
         } else {
-            this.getPasswordLogin().setValue(this.getPasswordLogin().getValue()+btn.getText());
+            txtPassword.setValue(txtPassword.getValue()+btn.getText());
         }
     }
 });

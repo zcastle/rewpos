@@ -1,17 +1,17 @@
-Ext.define('rewpos.view.TecladoPass', {
+Ext.define('rewpos.view.TecladoMoneda', {
 	extend: 'Ext.Container',
-    xtype: 'tecladoPass',
+    xtype: 'tecladoMoneda',
     config: {
-    	layout: 'vbox',
-        flex: 1,
+        layout: 'hbox',
+        cls: 'teclado',
         items: [{
+            flex: 1,
             layout: 'vbox',
             defaults: {
                 layout: 'hbox',
                 defaults: {
                     xtype: 'button',
-                    flex: 1,
-                    height: 60
+                    flex: 1
                 }
             },
             items: [{
@@ -47,21 +47,30 @@ Ext.define('rewpos.view.TecladoPass', {
                     text: '9',
                     name: 'num'
                 }]
+            },{
+                items: [{
+                    text: '0',
+                    name: 'num'
+                },{
+                    text: '.',
+                    name: 'num'
+                },{
+                    text: '<<',
+                    name: 'num'
+                }]
             }]
         },{
-            layout: 'hbox',
+            layout: 'vbox',
             defaults: {
                 xtype: 'button',
-                height: 60
+                flex: 1
             },
             items: [{
-                text: '0',
-                flex: 2,
-                name: 'num'
+                text: 'OK',
+                action: 'ok'
             },{
-                text: '<<',
-                flex: 1,
-                name: 'num'
+                text : 'CANCELAR',
+                action: 'cancelar'
             }]
         }]
     }

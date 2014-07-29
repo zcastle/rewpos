@@ -37,6 +37,10 @@
 	background: url('../images/envio.png');
 }
 
+.ico_teclado {
+	background: url('../images/keyboard-2-27.png');
+}
+
 .btn_accion_pagar {
 	background: #f44;
 	color: #fff;
@@ -283,11 +287,33 @@
 	text-align: right;
 }
 
-#teclado .x-button {
-	padding: 20px 10px;
+.modal.x-panel.x-floating {
+	padding: 2px;
 }
 
-#teclado .x-button-label {
+.teclado {
+	background-color: #fff;
+}
+
+.teclado .x-toolbar-dark.x-toolbar {
+	width: 499px;
+}
+
+.teclado .x-button {
+	margin: 0px 3px;
+	padding: 20px;
+	border-top-color: #fff;/*#a6a6a6;*/
+	border-bottom-color: #ddd;
+	background-color: #fff;
+	background-image: none;
+}
+
+.teclado .x-button:hover {
+	cursor: pointer;
+	background-color: #f7f7f7;
+}
+
+.teclado .x-button-label {
 	color: #000;
 }
 
@@ -325,19 +351,19 @@
 	background-color: #ff4444;
 }
 
-#dataViewUsuarios .x-dataview-item {
+.dataViewUsuarios .x-dataview-item {
 	padding: 5px;
 	width: 150px;
 	height: 214px;
 	margin-bottom: 10px;
 }
 
-#dataViewUsuarios .x-dataview-item:hover {
+.dataViewUsuarios .x-dataview-item:hover {
 	cursor: pointer;
 	opacity: 0.5;
 }
 
-#dataViewUsuarios .x-dataview-item .usuario {
+.dataViewUsuarios .x-dataview-item .usuario {
 	font-size: 1.2em;
 	width: 100%;
 	border: 1px solid #fff;
@@ -346,7 +372,7 @@
 	padding: 10px;
 }
 
-#dataViewUsuarios .x-dataview-item .usuario .nombre {
+.dataViewUsuarios .x-dataview-item .usuario .nombre {
 	max-width: 128px;
 	height: 58px;
 }
@@ -476,4 +502,43 @@
 
 #resumenMessage .valor {
 	float: right;
+}
+
+.menupos {
+  padding: 0.4em;
+}
+
+.menupos .x-button {
+  min-height: 3em;
+  margin-bottom: 0.5em;
+}
+
+.menupos .x-button .x-button-label {
+  color: #000;
+}
+
+.titulo-modal {
+	text-align: center;
+	color: #fff;
+	background-image: none;
+	background-color: #1468a2;
+	background-image: -webkit-linear-gradient(top, #1e93e4, #1676b9 3%, #11598c);
+	background-image: -moz-linear-gradient(top, #1e93e4, #1676b9 3%, #11598c);
+	background-image: -o-linear-gradient(top, #1e93e4, #1676b9 3%, #11598c);
+	background-image: linear-gradient(top, #1e93e4, #1676b9 3%, #11598c);
+	border-color: black;
+	padding: 0.5em 0em;
+}
+
+.documentos-row-list {
+	display: -webkit-flex;
+	display: flex;
+}
+
+.documentos-row-list .field-left {
+	margin-right: 20px;
+}
+
+.anulado {
+	color: #c00;
 }

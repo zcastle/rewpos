@@ -16,6 +16,9 @@ Ext.define('rewpos.controller.Toolbar', {
             case 'usuarioLogin':
                 //rewpos.Util.showPanel('mainCard', 'chatView', 'left');
                 break;
+            case 'showMenu':
+                Ext.Viewport.toggleMenu('right');
+                break;
         }
     }
 });

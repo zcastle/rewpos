@@ -12,7 +12,7 @@ Ext.define('rewpos.controller.Pedido', {
         },
         control: {
             'pedidoView': {
-                activate: 'activate'
+                activate: 'onActivate'
             },
             'seleccionView button': {
                 tap: 'ontapSeleccion'
@@ -26,15 +26,12 @@ Ext.define('rewpos.controller.Pedido', {
             }
         } 
     },
-    activate: function(view) {
-        /*Ext.create('rewpos.model.Categoria', {
-            nombre: 'NUEVO'
-        }).save({
-            success: function(record) {
-                console.log(record);
-            },
-            scope: this
-        });*/
+    onActivate: function(){
+        Ext.Viewport.setMenu(rewpos.Menu.USUARIO, {
+            side: 'right',
+            reveal: false,
+            cover: false
+        });
     },
     ontapSeleccion: function(btn) {
         switch(btn.getItemId()) {
@@ -57,7 +54,7 @@ Ext.define('rewpos.controller.Pedido', {
                     Ext.getStore('Pago').load({
                         url: rewpos.AppGlobals.HOST+'pedido/pago/'+nroatencion,
                         callback: function() {
-                            rewpos.Util.showPanel('comando', 'pagosView', 'right');
+                            rewpos.Util.showPanel('comandoCard', 'pagosView', 'right');
                         }
                     });
                 }
@@ -99,7 +96,7 @@ Ext.define('rewpos.controller.Pedido', {
     onItemTapPedidoList: function(list, index, target, record) {
         rewpos.AppGlobals.LIST_SELECTED = list;
         this.getEditarForm().setRecord(record);
-        rewpos.Util.showPanel('comando', 'editarForm', 'right');
+        rewpos.Util.showPanel('comandoCard', 'editarForm', 'right');
     },
     pagar: function(){
         Ext.Viewport.toggleMenu('right');
@@ -176,12 +173,15 @@ Ext.define('rewpos.controller.Pedido', {
                                     rewpos.Util.unmask();
                                     var text = Ext.JSON.decode(response.responseText);
                                     if(text.success){
-                                        //console.log(text.data.id);
                                         console.log('Enviando Comprobante');
                                         Ext.Ajax.request({
                                             url: rewpos.AppGlobals.HOST_PRINT+'print/factura/'+text.data.id,
-                                            callback: function(){
-                                                console.log('Enviado');
+                                            callback: function(request, success, response){
+                                                if(success){
+
+                                                } else {
+                                                    Ext.Msg.alert('Advertencia', 'Error al imprimir TICKET', Ext.emptyFn);
+                                                }
                                             }
                                         });
                                         Ext.getStore('Pago').removeAll();
@@ -219,15 +219,14 @@ Ext.define('rewpos.controller.Pedido', {
                 }],
                 fn: function(btn) {
                     if(btn=='yes'){
-
-                        Ext.Viewport.add({xtype: 'passwordModal'});
-                        var btnOk = Ext.getCmp('btnOkPassword');
-                        var cboAdministradores = Ext.getCmp('cboAdministradores');
-                        var passwordLoginAdmin = Ext.getCmp('passwordLoginAdmin');
+                        var modal = Ext.Viewport.add({xtype: 'passwordModal'});
+                        var btnOk = modal.down('button[action=ok]');
+                        var cbo = modal.down('selectfield[name=cboAdministradores]');
+                        var pass = modal.down('passwordfield[name=passwordLoginAdmin]');
                         btnOk.addListener('tap', function(btn){
-                            var adminId = cboAdministradores.getValue();
+                            var adminId = cbo.getValue();
                             if(adminId>0) {
-                                var pass1 = rewpos.Util.MD5(passwordLoginAdmin.getValue()).toUpperCase();
+                                var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
                                 var pass2 = Ext.getStore('Usuario').findRecord('id', adminId).get('clave').toUpperCase();
                                 if(pass1==pass2){
                                     Ext.Viewport.remove(btnOk.up('panel'));
@@ -246,13 +245,17 @@ Ext.define('rewpos.controller.Pedido', {
                                                 Ext.getStore('Pedido').removeAll();
                                                 rewpos.app.getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
                                                 rewpos.app.getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
-                                                rewpos.Util.showPanel('comando', 'productoView', 'left');
+                                                rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                                                 //console.log(res.data.id);
                                                 Ext.Ajax.request({
                                                     url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/liberar/'+res.data.id,
                                                     callback: function(request, success, response){
-                                                        var text = Ext.JSON.decode(response.responseText);
-                                                        if(!text.success) {
+                                                        if(success){
+                                                            var text = Ext.JSON.decode(response.responseText);
+                                                            if(!text.success) {
+                                                                Ext.Msg.alert('Advertencia', 'Error al imprimir LIBERADO', Ext.emptyFn);
+                                                            }
+                                                        }else{
                                                             Ext.Msg.alert('Advertencia', 'Error al imprimir LIBERADO', Ext.emptyFn);
                                                         }
                                                     }
@@ -263,7 +266,7 @@ Ext.define('rewpos.controller.Pedido', {
                                         }
                                     });
                                 } else {
-                                    passwordLoginAdmin.setValue('');
+                                    pass.setValue('');
                                     Ext.Msg.alert('Advertencia', 'Clave incorrecta', Ext.emptyFn);
                                 }
                             } else {
@@ -283,72 +286,112 @@ Ext.define('rewpos.controller.Pedido', {
         Ext.Viewport.toggleMenu('right');
         if(Ext.getStore('Pedido').getCount()>0){
             var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
-            Ext.Msg.show({
-                title: 'Cambiar Mesa', 
-                message: 'Ingrese el numero de mesa de destino:', 
-                fn: function(btn, nrodestino) {
-                    if(btn=='ok' && nrodestino!=null) {
-                        if(nrodestino==nroatencion) return;
-                        //nrodestino = text; //Ext.data.Types.NUMBER.convert(text)
-                        //Ext.isNumber(nrodestino)
-                        if(Ext.isNumber(nrodestino) && (nrodestino>=1 && nrodestino<=rewpos.AppGlobals.MAX_MESAS)) {
-                            rewpos.Util.mask();
-                            Ext.Ajax.request({
-                                url: rewpos.AppGlobals.HOST+'pedido/cambiar',
-                                method: 'POST',
-                                params: {
-                                    nroatencion: nroatencion,
-                                    nrodestino: nrodestino
-                                },
-                                callback: function(request, success, response){
-                                    rewpos.Util.unmask();
-                                    Ext.getStore('Pedido').each(function(record){
-                                        record.set('nroatencion', nrodestino);
-                                    });
-                                    var res = Ext.JSON.decode(response.responseText);
-                                    if(res.success){
-                                        //Ext.getCmp('btnSeleccionMesa').setText('M: '+nrodestino);
-                                        rewpos.app.getController('Pedido').getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+nrodestino);
-                                    } else {
-                                        if(res.error=='destinoexiste') {
-                                            Ext.Msg.alert('Advertencia', 'La mesa de destino esta ocupada', Ext.emptyFn);
-                                        }else{
-                                            Ext.Msg.alert('Advertencia', 'Error al cambiar mesa', Ext.emptyFn);
-                                        }
-                                    }
-                                }
+            var modal = Ext.Viewport.add({xtype: 'cambiarMesaModal'});
+            var mesaOrigen = modal.down('numberfield[name=mesaOrigen]');
+            var mesaDestino = modal.down('numberfield[name=mesaDestino]');
+            var btnOk = modal.down('button[action=ok]');
+            modal.down('label[name=titulo]').setHtml('Cambiar Mesa');
+            mesaOrigen.setValue(nroatencion);
+            btnOk.addListener('tap', function(){
+                var nrodestino = mesaDestino.getValue() || 0;
+                if(nrodestino==nroatencion) {
+                    Ext.Msg.alert('Advertencia', 'La mesa de destino no debe ser igual a la de origen', Ext.emptyFn);
+                    mesaDestino.setValue('');
+                    return;
+                }
+                //nrodestino = text; //Ext.data.Types.NUMBER.convert(text)
+                //Ext.isNumber(nrodestino)
+                if(nrodestino>=1 && nrodestino<=rewpos.AppGlobals.MAX_MESAS) {
+                    
+                    rewpos.Util.mask();
+                    Ext.Ajax.request({
+                        url: rewpos.AppGlobals.HOST+'pedido/cambiar',
+                        method: 'POST',
+                        params: {
+                            nroatencion: nroatencion,
+                            nrodestino: nrodestino
+                        },
+                        callback: function(request, success, response){
+                            rewpos.Util.unmask();
+                            Ext.getStore('Pedido').each(function(record){
+                                record.set('nroatencion', nrodestino);
                             });
-                        } else {
-                            Ext.Msg.alert('Advertencia', 'Debe ingresar un numero de mesa valido entre 1 y 100', Ext.emptyFn);
+                            var res = Ext.JSON.decode(response.responseText);
+                            if(res.success){
+                                Ext.Viewport.remove(btnOk.up('panel'));
+                                rewpos.app.getController('Pedido').getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+nrodestino);
+                            } else {
+                                mesaDestino.setValue('');
+                                if(res.error=='destinoexiste') {
+                                    Ext.Msg.alert('Advertencia', 'La mesa de destino esta ocupada', Ext.emptyFn);
+                                }else{
+                                    Ext.Msg.alert('Advertencia', 'Error al cambiar mesa', Ext.emptyFn);
+                                }
+                            }
                         }
-                    }
-                },
-                buttons:  [{
-                    itemId: 'ok',
-                    text: 'Aceptar'
-                },{
-                    itemId: 'cancel',
-                    text: 'Cancelar'
-                }],
-                prompt: {
-                    xtype: 'spinnerfield',
-                    component: {
-                        disabled: false
-                    },
-                    minValue: 1,
-                    maxValue: rewpos.AppGlobals.MAX_MESAS,
-                    stepValue: 1,
-                    cycle: true,
-                    listeners: {
-                        painted: function(sf) {
-                            this.setValue(nroatencion);
-                        }
-                    }
-                },
-                scope: this
+                    });
+                } else {
+                    Ext.Msg.alert('Advertencia', 'Debe ingresar un numero de mesa valido entre 1 y 100', Ext.emptyFn);
+                    mesaDestino.setValue('');
+                }
             });
         } else {
             Ext.Msg.alert('', 'No hay un mesa para cambiar', Ext.emptyFn);
+        }
+    },
+    unir: function() {
+        Ext.Viewport.toggleMenu('right');
+        if(Ext.getStore('Pedido').getCount()>0){
+            var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
+            var modal = Ext.Viewport.add({xtype: 'cambiarMesaModal'});
+            var mesaOrigen = modal.down('numberfield[name=mesaOrigen]');
+            var mesaDestino = modal.down('numberfield[name=mesaDestino]');
+            var btnOk = modal.down('button[action=ok]');
+            modal.down('label[name=titulo]').setHtml('Unir Mesa');
+            mesaOrigen.setValue(nroatencion);
+            btnOk.addListener('tap', function(){
+                var nrodestino = mesaDestino.getValue() || 0;
+                if(nrodestino==nroatencion) {
+                    Ext.Msg.alert('Advertencia', 'La mesa de destino no debe ser igual a la de origen', Ext.emptyFn);
+                    mesaDestino.setValue('');
+                    return;
+                }
+                if(nrodestino>=1 && nrodestino<=rewpos.AppGlobals.MAX_MESAS) {
+                    
+                    rewpos.Util.mask();
+                    Ext.Ajax.request({
+                        url: rewpos.AppGlobals.HOST+'pedido/unir',
+                        method: 'POST',
+                        params: {
+                            nroatencion: nroatencion,
+                            nrodestino: nrodestino
+                        },
+                        callback: function(request, success, response){
+                            rewpos.Util.unmask();
+                            Ext.getStore('Pedido').each(function(record){
+                                record.set('nroatencion', nrodestino);
+                            });
+                            var res = Ext.JSON.decode(response.responseText);
+                            if(res.success){
+                                Ext.Viewport.remove(btnOk.up('panel'));
+                                rewpos.app.getController('Mesas').loadPedido(nrodestino);
+                            } else {
+                                mesaDestino.setValue('');
+                                if(res.error=='destinovacio') {
+                                    Ext.Msg.alert('Advertencia', 'La mesa de destino esta vacia', Ext.emptyFn);
+                                }else{
+                                    Ext.Msg.alert('Advertencia', 'Error al unir mesa', Ext.emptyFn);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    Ext.Msg.alert('Advertencia', 'Debe ingresar un numero de mesa valido entre 1 y 100', Ext.emptyFn);
+                    mesaDestino.setValue('');
+                }
+            });
+        } else {
+            Ext.Msg.alert('', 'No hay un mesa para unir', Ext.emptyFn);
         }
     },
     resumen: function() {
@@ -359,8 +402,9 @@ Ext.define('rewpos.controller.Pedido', {
         }
         rewpos.Util.mask();
         var cajaId = rewpos.AppGlobals.CAJA.get('id');
+        var cajeroId = rewpos.AppGlobals.USUARIO.get('id');
         Ext.Ajax.request({
-            url: rewpos.AppGlobals.HOST+'pedido/resumen/'+cajaId,
+            url: rewpos.AppGlobals.HOST+'pedido/resumen/'+cajaId+'/'+cajeroId,
             callback: function(request, success, response){
                 rewpos.Util.unmask();
                 var text = Ext.JSON.decode(response.responseText);
@@ -368,9 +412,9 @@ Ext.define('rewpos.controller.Pedido', {
                 var ventas = Ext.data.Types.NUMBER.convert(text.data[0].Ventas);
                 var total = atenciones+ventas;
 
-                var atenciones = rewpos.Util.toFixed(atenciones, 2);
-                var ventas = rewpos.Util.toFixed(ventas, 2);
-                var total = rewpos.Util.toFixed(total, 2);
+                var atenciones = rewpos.Util.formatValue(atenciones);
+                var ventas = rewpos.Util.formatValue(ventas);
+                var total = rewpos.Util.formatValue(total);
                 Ext.Msg.show({
                     title: 'Resumen Diario', 
                     message: '<div id="resumenMessage">'+
@@ -384,33 +428,80 @@ Ext.define('rewpos.controller.Pedido', {
             }
         });
     },
+    anularDocumento: function() {
+        Ext.Viewport.toggleMenu('right');
+        Ext.Viewport.add({xtype: 'anularDocumentoModal'});
+    },
     cierreParcial: function() {
         Ext.Viewport.toggleMenu('right');
-        Ext.Viewport.add({xtype: 'passwordModal'});
-        var btnOk = Ext.getCmp('btnOkPassword');
-        var cboAdministradores = Ext.getCmp('cboAdministradores');
-        var passwordLoginAdmin = Ext.getCmp('passwordLoginAdmin');
+        var modal = Ext.Viewport.add({xtype: 'autorizacionModal'});
+        var cbo = modal.down('selectfield[name=cboAdministradores]');
+        var pass = modal.down('passwordfield[name=passwordLoginAdmin]');
+        var btnOk = modal.down('button[action=ok]');
         btnOk.addListener('tap', function(btn){
-            var adminId = cboAdministradores.getValue();
+            var adminId = cbo.getValue();
             if(adminId>0) {
-                var pass1 = rewpos.Util.MD5(passwordLoginAdmin.getValue()).toUpperCase();
+                var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
                 var pass2 = Ext.getStore('Usuario').findRecord('id', adminId).get('clave').toUpperCase();
                 if(pass1==pass2){
                     Ext.Viewport.remove(btnOk.up('panel'));
                     rewpos.Util.mask();
-                    var cajaId = rewpos.AppGlobals.CAJA.get('id');
-                    var cajeroId = rewpos.AppGlobals.USUARIO.get('id');
-                    Ext.Ajax.request({
-                        url: rewpos.AppGlobals.HOST_PRINT+'print/cierre/'+cajaId+'/'+cajeroId,
-                        callback: function(request, success, response){
-                            var text = Ext.JSON.decode(response.responseText);
-                            if(!text.success) {
-                                Ext.Msg.alert('Advertencia', 'Error en cierre PARCIAL', Ext.emptyFn);
+                    var cajaId;
+                    var urlCierre;
+                    if(rewpos.AppGlobals.USUARIO==null){
+                        var centrocostoId = Ext.getStore('Usuario').findRecord('id', adminId).get('centrocosto_id')
+                        var urlCaja = Ext.getStore('Caja').getProxy().getUrl()+'/'+centrocostoId;
+                        Ext.getStore('Caja').load({
+                            url: urlCaja,
+                            callback: function(records, operation, success) {
+                                if(records.length==1){
+                                    cajaId = records[0].get('id');
+                                    urlCierre = rewpos.AppGlobals.HOST_PRINT+'print/cierre/'+cajaId;
+                                    Ext.Ajax.request({
+                                        url: urlCierre,
+                                        callback: function(request, success, response){
+                                            if(success){
+                                                var text = Ext.JSON.decode(response.responseText);
+                                                if(text.success) {
+                                                    Ext.Ajax.request({
+                                                        url: rewpos.AppGlobals.HOST+'caja/cierre/'+cajaId,
+                                                        callback: function(request, success, response) {
+
+                                                        }
+                                                    });
+                                                } else {
+                                                    Ext.Msg.alert('Advertencia', 'Error en CIERRE', Ext.emptyFn);
+                                                }
+                                            } else {
+                                                Ext.Msg.alert('Advertencia', 'Error al Imprimir CIERRE', Ext.emptyFn);
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Ext.Array.forEach(records, function(item) {
+                                        
+                                    }, this);
+                                }
+                            },
+                            scope: this
+                        })
+                        urlCierre = rewpos.AppGlobals.HOST_PRINT+'print/cierre/'+cajaId;
+                    } else {
+                        cajaId = rewpos.AppGlobals.CAJA.get('id');
+                        var cajeroId = rewpos.AppGlobals.USUARIO.get('id');
+                        urlCierre = rewpos.AppGlobals.HOST_PRINT+'print/cierre/'+cajaId+'/'+cajeroId
+                        Ext.Ajax.request({
+                            url: urlCierre,
+                            callback: function(request, success, response){
+                                var text = Ext.JSON.decode(response.responseText);
+                                if(!text.success) {
+                                    Ext.Msg.alert('Advertencia', 'Error en cierre PARCIAL', Ext.emptyFn);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 } else {
-                    passwordLoginAdmin.setValue('');
+                    pass.setValue('');
                     Ext.Msg.alert('Advertencia', 'Clave incorrecta', Ext.emptyFn);
                 }
             } else {

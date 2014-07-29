@@ -15,6 +15,7 @@ Ext.define('Ext.device.SQLite', {
 
     constructor: function() {
         var browserEnv = Ext.browser.is;
+        console.log(browserEnv);
         if(browserEnv.Sencha) {
             return Ext.create('Ext.device.sqlite.Sencha');
         }

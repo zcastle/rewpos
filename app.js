@@ -9,15 +9,15 @@
     changes and its generated code, it will produce a "merge conflict" that you
     will need to resolve manually.
 */
-Ext.Loader.setConfig({
+/*Ext.Loader.setConfig({
     enabled: true,
     disableCaching: false
-});
+});*/
 
 Ext.application({
     name: 'rewpos',
     requires: [
-        'rewpos.AppGlobals', 'rewpos.Util', 'rewpos.Print',
+        'rewpos.AppGlobals','rewpos.Util','rewpos.Print','rewpos.Menu',
         'Ext.form.Panel',
         'Ext.form.FieldSet',
         'Ext.Label',
@@ -37,15 +37,16 @@ Ext.application({
     ],
     controllers: [
         'Main','Toolbar','Comando','Pedido','Mesas','Editar','Pagos',
-        'Acceso','Auth', 'PasswordModal', 'Producto', 'ClienteModal'
+        'Acceso','Auth','AutorizacionModal','Producto','ClienteModal',
+        'CambiarMesaModal','TecladoPrecioModal','AnularDocumentoModal'
     ],
     //'Acciones',
     views: [
-        'Main','MainOld','PedidoView','MesasView','ToolbarView','AccionesView','SeleccionView',
-        'Totales','PedidoList','Comandos','CategoriaList','ProductoList','ProductoView',
-        'EditarForm', 'Teclado','TecladoNumerico',
-        'PagosView','AccesoView','AuthView','TecladoPass','ChatView','PasswordModal',
-        'ClienteModal'
+        'Main','PedidoView','MesasView','ToolbarView','SeleccionView',
+        'Totales','PedidoList','ComandosView','CategoriaList','ProductoList','ProductoView',
+        'EditarForm','TecladoMoneda','PagosView','AccesoView','AuthView','TecladoNumerico',
+        'ChatView','AutorizacionModal','ClienteModal','CambiarMesaModal','TecladoPrecioModal',
+        'AnularDocumentoModal'
     ],
 
     icon: {

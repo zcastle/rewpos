@@ -14,22 +14,9 @@ Ext.define('rewpos.view.PagosView', {
             },
             items: [{
                 name: 'btnCliente',
-                //id: 'btnCliente',
                 text: 'Cliente',
                 cls: 'button-label-align-left'
-            },/*{
-                xtype: 'container',
-                layout: 'hbox',
-                cls: 'label',
-                items: [{
-                    xtype: 'label',
-                    html: 'No. Documento',
-                    flex: 1
-                },{
-                    xtype: 'label',
-                    html: 'BV-001-0000100'
-                }]
-            },*/{
+            },{
                 xtype: 'container',
                 layout: 'hbox',
                 cls: 'label',
@@ -52,7 +39,7 @@ Ext.define('rewpos.view.PagosView', {
                 flex: 1,
                 itemTpl: new Ext.XTemplate(
                     '<tpl if="this.isPropina(tipopago)">',
-                        '<div class="pagos-row-list" class="propina">',
+                        '<div class="pagos-row-list propina">',
                     '<tpl else>',
                         '<div class="pagos-row-list">',
                     '</tpl>',
@@ -72,8 +59,8 @@ Ext.define('rewpos.view.PagosView', {
                            return tipopago == 'PROPINA';
                         },
                         getDolar: function(valorpago, tipopago) {
-                        return tipopago == 'DOLARES' ? rewpos.Util.toFixed(valorpago/rewpos.AppGlobals.TIPO_CAMBIO, 2) : '';
-                    }
+                            return tipopago == 'DOLARES' ? rewpos.Util.toFixed(valorpago/rewpos.AppGlobals.TIPO_CAMBIO, 2) : '';
+                        }
                     }
                 )
             },{
@@ -130,7 +117,6 @@ Ext.define('rewpos.view.PagosView', {
         },{
             width: 5
         },{
-            //id: 'pagosRight',
             scrollable: {
                 direction: 'vertical',
                 directionLock: true

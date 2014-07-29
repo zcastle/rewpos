@@ -3,9 +3,9 @@ Ext.define('rewpos.AppGlobals', {
     CIA: 'OPENBUSINESS',
     ANIMACION: true,
     DEBUG: false,
-    HOST: 'http://192.168.1.5:2385/',
+    HOST: 'http://localhost:2385/',
     //HOST_PRINT: 'http://192.168.1.5:8084/REWPrinterPool/',
-    HOST_PRINT: 'http://192.168.1.5:8523/',
+    HOST_PRINT: 'http://localhost:8523/',
     HOST_SYNC: '',
     PORT_SYNC: '',
     DB_SYNC: '',
@@ -25,5 +25,6 @@ Ext.define('rewpos.AppGlobals', {
     CORPORACION: null,
     MAX_MESAS: 100,
     MASK: false,
-    LIST_SELECTED: null
+    LIST_SELECTED: null,
+    DB: null
 });
