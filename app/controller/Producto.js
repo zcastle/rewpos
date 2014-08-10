@@ -18,20 +18,34 @@ Ext.define('rewpos.controller.Producto', {
             'productoList': {
                 itemdoubletap: 'onItemDoubleTapProductoList',
                 select: 'onSelectProductoList'
+            },
+            'productoTouchView button': {
+                tap: 'onTapButtonCategorias'
+            },
+            'productoTouchView searchfield': {
+                keyup: 'onSearchKeyUp',
+                clearicontap: 'onSearchClearIconTap'
+            },
+            'categoriaDataView': {
+                itemtap: 'onItemTapCategoria'
+            },
+            'productoDataView': {
+                itemtap: 'onItemTapProducto'
             }
         } 
     },
     onSearchKeyUp: function(field, e) {
         //e.event.preventDefault();
         var keyCode = e.event.keyCode;
-        //console.log(keyCode);
         if(keyCode == 13) {
             var value = field.getValue();
             if(value.length>=3) {
                 Ext.getStore('Producto').load({
                     url: rewpos.AppGlobals.HOST+'producto/pos/buscar/'+value,
                     callback: function(records) {
+                        rewpos.Util.showPanel('productosCard', 'productoDataView', 'right');
                         if(records.length>0){
+                            if(this.getProductoList()==undefined || this.getProductoList()==null) return;
                             if(this.getProductoList().getSelection().length==0){
                                 this.getProductoList().select(0);
                             }
@@ -51,6 +65,7 @@ Ext.define('rewpos.controller.Producto', {
         }
     },
     onSearchClearIconTap: function() {
+        rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
         Ext.getStore('Producto').setData([]);
     },
     onSelectCategoriaList: function(list, record){
@@ -82,7 +97,6 @@ Ext.define('rewpos.controller.Producto', {
                     fn: function(btn) {
                         if(btn=='yes'){
                             this.existProducto(existRecord, list, clienteId)
-                            //var atencionId = Ext.getStore('Pedido').getAt(0).get('id');
                             rewpos.Util.mask();
                             Ext.Ajax.request({
                                 url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/add/'+existRecord.get('id')+'/1',
@@ -143,5 +157,15 @@ Ext.define('rewpos.controller.Producto', {
             },
             scope: this
         });
+    },
+    onTapButtonCategorias: function() {
+        rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
+    },
+    onItemTapCategoria: function(view, index, target, record) {
+        this.onSelectCategoriaList(null, record);
+        rewpos.Util.showPanel('productosCard', 'productoDataView', 'right');
+    },
+    onItemTapProducto: function(view, index, target, record) {
+        this.onItemDoubleTapProductoList(null, null, null, record)
     }
 });

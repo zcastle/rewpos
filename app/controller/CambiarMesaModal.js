@@ -24,7 +24,7 @@ Ext.define('rewpos.controller.CambiarMesaModal', {
     },
     onTapNum: function(btn) {
         var mesaDestino = this.getCambiarMesaModal().down('numberfield[name=mesaDestino]');
-        if(btn.getText()=='<<') {
+        if(btn.getItemId()=='borrar') {
             mesaDestino.setValue('');
         } else {
             if(mesaDestino.getValue()==null){

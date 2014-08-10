@@ -3,12 +3,13 @@ Ext.define('rewpos.view.AccesoView', {
     xtype: 'accesoView',
     config: {
         layout: 'hbox',
-        items: [{
-            width: 300
-        },{
+        //cls: 'fondo-cia',
+        items: [/*{
+            width: 500
+        },*/{
             xtype: 'dataview',
             flex: 1,
-            cls: 'dataViewUsuarios',
+            cls: 'dvUsuarios',
             store: 'Usuario',
             inline: true,
             itemTpl: new Ext.XTemplate(

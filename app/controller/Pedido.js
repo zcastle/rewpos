@@ -89,6 +89,7 @@ Ext.define('rewpos.controller.Pedido', {
         }*/
     },
     onSelectPedidoList: function(list, record) {
+        if(rewpos.AppGlobals.LIST_SELECTED==null) return;
         if(rewpos.AppGlobals.LIST_SELECTED.getId()=='pedidoList'){
             this.onItemTapPedidoList(list, null, null, record);
         }
@@ -132,72 +133,97 @@ Ext.define('rewpos.controller.Pedido', {
         }
         var mensaje = 'Pagar cuenta';
         var valorPedido = 0.0;
+        var valorPago = 0.0;
         Ext.getStore('Pedido').each(function(record, index, length){
             valorPedido += record.get('cantidad')*record.get('precio')
         }, this)
-        Ext.getStore('Pago').load({
-            url: rewpos.AppGlobals.HOST+'pedido/pago/'+nroatencion,
-            callback: function(records, operation, success) {
-                if(records.length==0) {
-                    mensaje = 'La cuenta se pagara con el monto exacto, desea continuar?';
-                } else {
-                    var valorPago = 0.0;
-                    Ext.Array.forEach(records, function(record) {
-                        valorPago += record.get('valorpago')
-                    }, this);
-                    if((valorPedido-valorPago)>0) {
-                        Ext.Msg.alert('Advertencia', 'Debe terminar de pagar la cuenta', Ext.emptyFn);
-                        return;
-                    }
-                }
-                Ext.Msg.show({
-                    title: "Confirmacion",
-                    message: mensaje,
-                    buttons:  [{
-                        itemId: 'no',
-                        text: 'No'
-                    },{
-                        itemId: 'yes',
-                        text: 'Si'
-                    }],
-                    fn: function(btn) {
-                        if(btn=='yes'){
-                            rewpos.Util.mask();
-                            Ext.Ajax.request({
-                                url: rewpos.AppGlobals.HOST+'pedido/pagar',
-                                method: 'POST',
-                                params: {
-                                    nroatencion: nroatencion
-                                },
-                                callback: function(request, success, response){
-                                    rewpos.Util.unmask();
-                                    var text = Ext.JSON.decode(response.responseText);
-                                    if(text.success){
-                                        console.log('Enviando Comprobante');
-                                        Ext.Ajax.request({
-                                            url: rewpos.AppGlobals.HOST_PRINT+'print/factura/'+text.data.id,
-                                            callback: function(request, success, response){
-                                                if(success){
+        Ext.getStore('Pago').each(function(item){
+            valorPago += item.get('valorpago')
+        });
 
-                                                } else {
-                                                    Ext.Msg.alert('Advertencia', 'Error al imprimir TICKET', Ext.emptyFn);
-                                                }
-                                            }
-                                        });
-                                        Ext.getStore('Pago').removeAll();
-                                        Ext.getStore('Pedido').removeAll();
-                                        rewpos.app.getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
-                                        rewpos.app.getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
-                                    } else {
-                                        Ext.Msg.alert('Advertencia', 'Error al pagar la cuenta', Ext.emptyFn);
-                                    }
-                                    
+        if(valorPago==0.0) {
+            mensaje = 'La cuenta se pagara con el monto exacto, desea continuar?';
+        } else if((valorPedido-valorPago)>0) {
+            Ext.Msg.alert('Advertencia', 'Debe terminar de pagar la cuenta', Ext.emptyFn);
+            return;
+        }
+        Ext.Msg.show({
+            title: "Confirmacion",
+            message: mensaje,
+            buttons:  [{
+                itemId: 'no',
+                text: 'No'
+            },{
+                itemId: 'yes',
+                text: 'Si'
+            }],
+            fn: function(btn) {
+                if(btn=='yes'){
+                    rewpos.Util.mask();
+                    Ext.Ajax.request({
+                        url: rewpos.AppGlobals.HOST+'pedido/pagar',
+                        method: 'POST',
+                        params: {
+                            nroatencion: nroatencion
+                        },
+                        callback: function(request, success, response){
+                            rewpos.Util.unmask();
+                            var text = Ext.JSON.decode(response.responseText);
+                            if(text.success){
+                                rewpos.app.getController('Pedido').imprimirTiket(text.data.id);
+                                Ext.getStore('Pago').removeAll();
+                                Ext.getStore('Pedido').removeAll();
+                                rewpos.app.getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
+                                rewpos.app.getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
+                                if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
+                                    rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
+                                } else {
+                                    rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                                 }
-                            });
+                                
+                            } else {
+                                Ext.Msg.alert('Advertencia', 'Error al pagar la cuenta', Ext.emptyFn);
+                            }
                         }
-                    },
-                    scope: this
-                });
+                    });
+                }
+            },
+            scope: this
+        });
+    },
+    imprimirTiket: function(id){
+        rewpos.Util.mask('imprimiendo comprobante, porfavor espere.', true);
+        Ext.Ajax.request({
+            url: rewpos.AppGlobals.HOST_PRINT+'print/factura/'+id,
+            callback: function(request, success, response){
+                rewpos.Util.unmask(true);
+                if(success){
+                    var text = Ext.JSON.decode(response.responseText);
+                    console.log(text);
+                    if(!text.success) {
+                        rewpos.app.getController('Pedido').imprimirTiketQ(id);
+                    }
+                } else {
+                    rewpos.app.getController('Pedido').imprimirTiketQ(id);
+                }
+            }
+        });
+    },
+    imprimirTiketQ: function(id) {
+        Ext.Msg.show({
+            title: "Confirmacion",
+            message: rewpos.AppGlobals.MSG_PRINTER_ERROR+"\nReintentar Impresion?",
+            buttons:  [{
+                itemId: 'no',
+                text: 'Cancelar'
+            },{
+                itemId: 'yes',
+                text: 'Reintentar'
+            }],
+            fn: function(btn) {
+                if(btn=='yes'){
+                    this.imprimirTiket(id);
+                }
             },
             scope: this
         });
@@ -219,7 +245,7 @@ Ext.define('rewpos.controller.Pedido', {
                 }],
                 fn: function(btn) {
                     if(btn=='yes'){
-                        var modal = Ext.Viewport.add({xtype: 'passwordModal'});
+                        var modal = Ext.Viewport.add({xtype: 'autorizacionModal'});
                         var btnOk = modal.down('button[action=ok]');
                         var cbo = modal.down('selectfield[name=cboAdministradores]');
                         var pass = modal.down('passwordfield[name=passwordLoginAdmin]');
@@ -245,8 +271,12 @@ Ext.define('rewpos.controller.Pedido', {
                                                 Ext.getStore('Pedido').removeAll();
                                                 rewpos.app.getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
                                                 rewpos.app.getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
-                                                rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
-                                                //console.log(res.data.id);
+                                                if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
+                                                    rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
+                                                    rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
+                                                } else {
+                                                    rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
+                                                }
                                                 Ext.Ajax.request({
                                                     url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/liberar/'+res.data.id,
                                                     callback: function(request, success, response){
@@ -473,7 +503,7 @@ Ext.define('rewpos.controller.Pedido', {
                                                     Ext.Msg.alert('Advertencia', 'Error en CIERRE', Ext.emptyFn);
                                                 }
                                             } else {
-                                                Ext.Msg.alert('Advertencia', 'Error al Imprimir CIERRE', Ext.emptyFn);
+                                                Ext.Msg.alert('Advertencia', rewpos.AppGlobals.MSG_PRINTER_ERROR, Ext.emptyFn);
                                             }
                                         }
                                     });

@@ -50,10 +50,13 @@ Ext.define('rewpos.view.TecladoNumerico', {
             },{
                 items: [{
                     text: '0',
+                    cls: 'ultimo-panel',
                     flex: 2,
                     name: 'num'
                 },{
-                    text: '<<',
+                    iconCls: 'ico_backspace',
+                    cls: 'ultimo-panel',
+                    itemId: 'borrar',
                     flex: 1,
                     name: 'num'
                 }]
@@ -65,10 +68,11 @@ Ext.define('rewpos.view.TecladoNumerico', {
                 flex: 1
             },
             items: [{
-                text: 'OK',
+                text: 'ACEPTAR',
                 action: 'ok'
             },{
                 text : 'CANCELAR',
+                cls: 'ultimo-panel',
                 action: 'cancelar'
             }]
         }]

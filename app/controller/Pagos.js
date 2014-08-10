@@ -24,7 +24,7 @@ Ext.define('rewpos.controller.Pagos', {
     },
     onToggleTipoPago: function(container, btn, pressed){
         if(pressed) {
-            if(btn.getText()=='PROPINA' || btn.getText()=='OTROS') return;
+            if(btn.getText()=='SOLES' || btn.getText()=='DOLARES' || btn.getText()=='PROPINA' || btn.getText()=='OTROS') return;
             var existe = false;
             var cuenta = 0.0;
             var pagado = 0.0;

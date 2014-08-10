@@ -18,6 +18,10 @@
 	cursor: pointer;
 }
 
+.btn_accion .x-button-icon {
+	margin-top: -6px;
+}
+
 .ico_accion_descto {
 	background: url('../images/ic_action_edit.png');
 }
@@ -41,10 +45,14 @@
 	background: url('../images/keyboard-2-27.png');
 }
 
+.ico_backspace {
+	background: url('../images/backspace-27.png');
+}
+
 .btn_accion_pagar {
 	background: #f44;
 	color: #fff;
-	font-size: 2em;
+	font-size: 1.2em;
 	padding: 9px 5px;
 }
 
@@ -63,7 +71,7 @@
 
 .btn_seleccion {
 	text-align: center;
-    font-size: 1.4em;
+    font-size: 1.2em;
     color: #fff;
     border: 1px solid #fff;
     background: transparent;
@@ -100,8 +108,8 @@
 
 .lbl_totales {
 	text-align: right;
-	padding: 0.3em 0.6em;
-	/*font-size: 0.8em;*/
+	padding: 0.2em 0.4em;
+	font-size: 0.8em;
 	color: #fff;
 	background-color: #ff4444;
 }
@@ -188,6 +196,7 @@
 
 .pedido-row-list .field {
 	float: left;
+	font-size: 0.8em;
 }
 
 .pedido-row-list .estado {
@@ -317,6 +326,10 @@
 	color: #000;
 }
 
+.teclado .ultimo-panel {
+	border-bottom-color: #fff;
+}
+
 /*#dataViewMesas .x-dataview-container {
 	margin: 0px auto;
 	width: 1024px;
@@ -351,19 +364,19 @@
 	background-color: #ff4444;
 }
 
-.dataViewUsuarios .x-dataview-item {
+.dvUsuarios .x-dataview-item {
 	padding: 5px;
 	width: 150px;
 	height: 214px;
 	margin-bottom: 10px;
 }
 
-.dataViewUsuarios .x-dataview-item:hover {
+.dvUsuarios .x-dataview-item:hover {
 	cursor: pointer;
-	opacity: 0.5;
+	opacity: 0.6;
 }
 
-.dataViewUsuarios .x-dataview-item .usuario {
+.dvUsuarios .x-dataview-item .usuario {
 	font-size: 1.2em;
 	width: 100%;
 	border: 1px solid #fff;
@@ -372,9 +385,11 @@
 	padding: 10px;
 }
 
-.dataViewUsuarios .x-dataview-item .usuario .nombre {
+.dvUsuarios .x-dataview-item .usuario .nombre {
 	max-width: 128px;
 	height: 58px;
+	font-size: 1em;
+	font-weight: bold;
 }
 
 .button-label-align-left {
@@ -541,4 +556,73 @@
 
 .anulado {
 	color: #c00;
+}
+
+.mascara .x-mask-message {
+	color: #fff;
+}
+
+#productosCard {
+	margin-top: 3px;
+}
+
+.dvProductos .x-dataview-item, .dvCategorias .x-dataview-item{
+	width: 25%;
+	border-left: 1px solid #fff;
+	border-right: 1px solid #fff;
+	/*box-shadow: 5px 5px 40px;*/
+
+}
+
+.dvProductos .x-dataview-item {
+	background: #6085c4;
+}
+
+.dvCategorias .x-dataview-item {
+	background: #0067a6; /*#e05f20;*/
+}
+
+.dvProductos .x-dataview-item .boton, .dvCategorias .x-dataview-item .boton {
+	display: table-cell;
+	color: #fff;
+	height : 60px;
+	width: 300px;
+	padding: 0 10px;
+	text-align: center;
+    vertical-align: middle;
+    line-height: 1.2em;
+    text-transform: uppercase;
+}
+
+.dvProductos .x-dataview-item .boton {
+	font-size: 0.7em;
+}
+
+.dvCategorias .x-dataview-item .boton {
+	font-size: 1em;
+}
+
+.dvProductos .x-dataview-item:hover, .dvCategorias .x-dataview-item:hover {
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+.optShowCategorias {
+	border: 0px;
+	background: #ffbb33;
+	color: #fff;
+	text-align: center;
+	padding-top: 10px;
+}
+
+.optShowCategorias:hover {
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+.fondo-cia {
+	background: url('../images/logo-dogia.png');
+	background-repeat: no-repeat;
+	background-size: 591px 509px;
+	background-position: center;
 }

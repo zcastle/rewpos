@@ -1,7 +1,7 @@
 Ext.define('rewpos.controller.Main', {
     extend: 'Ext.app.Controller',
     config: {
-        stores: ['Usuario', 'Pedido'],
+        stores: ['Usuario', 'Pago', 'Pedido'],
         models: ['Usuario', 'Corporacion', 'Caja'],
         refs: {
             seleccionView: 'seleccionView',
@@ -44,29 +44,31 @@ Ext.define('rewpos.controller.Main', {
                 var store = rewpos.AppGlobals.LIST_SELECTED.getStore();
                 var record = list.getSelection()[0];
                 var totalIndex = store.getCount()-1;
-                var index = store.findExact('id', record.get('id'));
-                if(event.which==38) { //KEY UP
-                    if(index>0) {
-                        selectList(list, index-1);
-                    }
-                } else if(event.which==40) { //KEY DOWN
-                    if(index<totalIndex) {
-                        selectList(list, index+1);
-                    }
-                } else if(event.which==13) { //KEY ENTER
-                    switch(list.getId()) {
-                        case 'pedidoList':
-                            break;
-                        case 'categoriaList':
-                            break;
-                        case 'productoList':
-                            var record = list.getSelection()[0];
-                            rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
-                            break;
-                    }
-                } else if(event.which==37) { //KEY LEFT
-                    if(list.getId()=='categoriaList') {
-                        rewpos.app.getController('Main').getProductoList().select(0);
+                if(record) {
+                    var index = store.findExact('id', record.get('id'));
+                    if(event.which==38) { //KEY UP
+                        if(index>0) {
+                            selectList(list, index-1);
+                        }
+                    } else if(event.which==40) { //KEY DOWN
+                        if(index<totalIndex) {
+                            selectList(list, index+1);
+                        }
+                    } else if(event.which==13) { //KEY ENTER
+                        switch(list.getId()) {
+                            case 'pedidoList':
+                                break;
+                            case 'categoriaList':
+                                break;
+                            case 'productoList':
+                                var record = list.getSelection()[0];
+                                rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
+                                break;
+                        }
+                    } else if(event.which==37) { //KEY LEFT
+                        if(list.getId()=='categoriaList') {
+                            rewpos.app.getController('Main').getProductoList().select(0);
+                        }
                     }
                 }
             });
@@ -159,6 +161,8 @@ Ext.define('rewpos.controller.Main', {
             }],
             fn: function(btn) {
                 if(btn=='yes'){
+                    Ext.getStore('Pago').removeAll();
+                    Ext.getStore('Pedido').removeAll();
                     this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CORPORACION);
                     this.getToolbarView().down('button[name=usuarioLogin]').setText('');
                     rewpos.Util.showPanel('mainCard', 'accesoView', 'right');

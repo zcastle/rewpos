@@ -46,7 +46,7 @@ Ext.application({
         'Totales','PedidoList','ComandosView','CategoriaList','ProductoList','ProductoView',
         'EditarForm','TecladoMoneda','PagosView','AccesoView','AuthView','TecladoNumerico',
         'ChatView','AutorizacionModal','ClienteModal','CambiarMesaModal','TecladoPrecioModal',
-        'AnularDocumentoModal'
+        'AnularDocumentoModal','ProductoTouchView','CategoriaDataView','ProductoDataView'
     ],
 
     icon: {

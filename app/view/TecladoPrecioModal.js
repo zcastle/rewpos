@@ -15,7 +15,7 @@ Ext.define('rewpos.view.TecladoPrecioModal', {
             xtype: 'fieldset',
             defaults: {
                 xtype: 'textfield',
-                labelWidth: 120
+                labelWidth: 150
             },
             items: [{
                 label: 'Producto',

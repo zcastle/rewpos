@@ -49,7 +49,7 @@ Ext.define('rewpos.controller.AutorizacionModal', {
     },
     onTapNum: function(btn) {
         var txtPassword = this.getAutorizacionModal().down('passwordfield[name=passwordLoginAdmin]');
-        if(btn.getText()=='<<') {
+        if(btn.getItemId()=='borrar') {
             txtPassword.setValue('');
         } else {
             txtPassword.setValue(txtPassword.getValue()+btn.getText());

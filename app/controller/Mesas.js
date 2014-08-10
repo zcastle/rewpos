@@ -29,12 +29,17 @@ Ext.define('rewpos.controller.Mesas', {
                     this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(0);
                     this.getSeleccionView().down('selectfield[name=cboPax]').setValue(1);
                 }
+                if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
+                    rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
+                    rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
+                } else {
+                    rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
+                }
+                this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+mesa);
+                this.getToolbarView().down('button[name=backToPedido]').setHidden(true);
+                rewpos.Util.showPanel('mainCard', 'pedidoView', 'right');
             },
             scope: this
         });
-        this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+mesa);
-        this.getToolbarView().down('button[name=backToPedido]').setHidden(true);
-        rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
-        rewpos.Util.showPanel('mainCard', 'pedidoView', 'right');
     }
 });

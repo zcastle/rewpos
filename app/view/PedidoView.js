@@ -16,8 +16,6 @@ Ext.define('rewpos.view.PedidoView', {
                 xtype: 'totales'
             }]
         },{
-            width: 5
-        },{
             flex: 1,
             layout: 'vbox',
             items: [{
@@ -30,7 +28,7 @@ Ext.define('rewpos.view.PedidoView', {
                     type: 'flip'
                 },
                 items: [{
-                    xtype: 'productoView'
+                    xtype: 'productoTouchView'
                 },{
                     xtype: 'editarForm',
                     scrollable: false,

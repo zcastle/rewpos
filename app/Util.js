@@ -78,17 +78,19 @@ Ext.define('rewpos.Util', {
             Ext.getCmp(card).setActiveItem(panel);
         }
     },
-    mask: function() {
-        if(rewpos.AppGlobals.MASK){
+    mask: function(msg, force) {
+        if(rewpos.AppGlobals.MASK || force){
             //Ext.Viewport.setMasked(true);
+            var message = msg || 'Cargando...';
             Ext.Viewport.setMasked({
               xtype: 'loadmask',
-              message: 'Cargando...'
+              message: message,
+              cls: 'mascara'
             });
         }
     },
-    unmask: function() {
-        if(rewpos.AppGlobals.MASK){
+    unmask: function(force) {
+        if(rewpos.AppGlobals.MASK || force){
             Ext.Viewport.unmask();
         }
     },

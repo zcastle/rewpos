@@ -82,3 +82,11 @@
   margin-left: 0em;
   padding-left: 1.5em;
 }
+
+.x-toolbar {
+  min-height: 2em;
+}
+
+.x-toolbar .x-button {
+  margin: 3px 0.2em;
+}

@@ -1,7 +1,7 @@
 Ext.define('rewpos.AppGlobals', {
     singleton: true,
     CIA: 'OPENBUSINESS',
-    ANIMACION: true,
+    ANIMACION: false,
     DEBUG: false,
     HOST: 'http://localhost:2385/',
     //HOST_PRINT: 'http://192.168.1.5:8084/REWPrinterPool/',
@@ -26,5 +26,7 @@ Ext.define('rewpos.AppGlobals', {
     MAX_MESAS: 100,
     MASK: false,
     LIST_SELECTED: null,
-    DB: null
+    DB: null,
+    MSG_PRINTER_ERROR: 'Error al imprimir, verificar estado de impresora.',
+    PRODUCTO_TOUCH: true
 });

@@ -50,12 +50,16 @@ Ext.define('rewpos.view.TecladoMoneda', {
             },{
                 items: [{
                     text: '0',
+                    cls: 'ultimo-panel',
                     name: 'num'
                 },{
                     text: '.',
+                    cls: 'ultimo-panel',
                     name: 'num'
                 },{
-                    text: '<<',
+                    iconCls: 'ico_backspace',
+                    cls: 'ultimo-panel',
+                    itemId: 'borrar',
                     name: 'num'
                 }]
             }]
@@ -66,10 +70,11 @@ Ext.define('rewpos.view.TecladoMoneda', {
                 flex: 1
             },
             items: [{
-                text: 'OK',
+                text: 'ACEPTAR',
                 action: 'ok'
             },{
                 text : 'CANCELAR',
+                cls: 'ultimo-panel',
                 action: 'cancelar'
             }]
         }]

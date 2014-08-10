@@ -24,7 +24,7 @@ Ext.define('rewpos.controller.TecladoPrecioModal', {
     },
     onTapNum: function(btn) {
         var precioNew = this.getTecladoPrecioModal().down('textfield[name=precioNew]');
-        if(btn.getText()=='<<') {
+        if(btn.getItemId()=='borrar') {
             precioNew.setValue('');
         } else {
             if(btn.getText()=='.' && precioNew.getValue().indexOf(".")>-1) return;

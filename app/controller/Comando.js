@@ -9,11 +9,13 @@ Ext.define('rewpos.controller.Comando', {
         } 
     },
     ontap: function(btn) {
-        //console.log(btn);
-        //console.log(btn.getItemId());
         switch(btn.getItemId()) {
             case 'btnComandoBuscar':
-                rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
+                if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
+                    rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
+                } else {
+                    rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
+                }
                 break;
             case 'btnComandoPrecuenta':
                 this.precuenta();
@@ -47,10 +49,10 @@ Ext.define('rewpos.controller.Comando', {
                     if(success){
                         var text = Ext.JSON.decode(response.responseText);
                         if(!text.success) {
-                            Ext.Msg.alert('Advertencia', 'Error al imprimir PRECUENTA', Ext.emptyFn);
+                            Ext.Msg.alert('Advertencia', rewpos.AppGlobals.MSG_PRINTER_ERROR, Ext.emptyFn);
                         }
                     } else {
-                        Ext.Msg.alert('Advertencia', 'Error al imprimir PRECUENTA', Ext.emptyFn);
+                        Ext.Msg.alert('Advertencia', rewpos.AppGlobals.MSG_PRINTER_ERROR, Ext.emptyFn);
                     }
                 }
             });

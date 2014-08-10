@@ -4,7 +4,7 @@ Ext.define('rewpos.view.ComandosView', {
     config: {
     	layout: 'hbox',
         cls: 'background_comando',
-        height: 65,
+        height: 57,
         defaults: {
             xtype: 'button',
             cls: 'btn_accion',
