@@ -111,8 +111,6 @@ Ext.define('rewpos.controller.ClienteModal', {
                     record.save({
                         callback: function(cliente, operation) {
                             this.actualizarCliente();
-                            //rewpos.Util.unmask();
-                            //console.log(cliente);
                             var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
                             Ext.Ajax.request({
                                 url: rewpos.AppGlobals.HOST+'pedido/actualizar/cliente',
@@ -123,8 +121,7 @@ Ext.define('rewpos.controller.ClienteModal', {
                                 },
                                 callback: function(){
                                     rewpos.Util.unmask();
-                                    //rewpos.app.getController('Pedido')
-                                    rewpos.app.getController('Pedido').getPagosView().down('button[name=btnCliente]').setText(cliente.get('nombre'));
+                                    this.getApplication().getController('Pedido').getPagosView().down('button[name=btnCliente]').setText(cliente.get('nombre'));
                                     Ext.getStore('Pedido').each(function(pedido){
                                         pedido.set('cliente_id', cliente.get('id'));
                                         pedido.set('cliente_name', cliente.get('nombre'));

@@ -35,10 +35,24 @@ Ext.define('rewpos.controller.Main', {
             var record = list.getSelection()[0];
             list.scrollToRecord(record);
         }
+
+        function pagar(){
+            this.getApplication().getController('Pedido').pagar;
+        }
+
+        $(document.body).keydown(function(event) {
+            console.log(event.which);
+            if(event.which==119) { //F8 PRECUENTA ESPECIAL
+
+            } else if(event.which==120) { //F9 PAGAR
+                //pagar();
+            }
+        });
+
         if(Ext.os.deviceType=='Desktop') {
             $(document.body).keydown(function(event) {
                 //console.log(event);
-                var list = rewpos.AppGlobals.LIST_SELECTED; //rewpos.app.getController('Main').getPedidoList();
+                var list = rewpos.AppGlobals.LIST_SELECTED;
                 if(list==null) return;
                 //console.log(event.which);
                 var store = rewpos.AppGlobals.LIST_SELECTED.getStore();
@@ -62,12 +76,12 @@ Ext.define('rewpos.controller.Main', {
                                 break;
                             case 'productoList':
                                 var record = list.getSelection()[0];
-                                rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
+                                this.getApplication().getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
                                 break;
                         }
                     } else if(event.which==37) { //KEY LEFT
                         if(list.getId()=='categoriaList') {
-                            rewpos.app.getController('Main').getProductoList().select(0);
+                            this.getApplication().getController('Main').getProductoList().select(0);
                         }
                     }
                 }
@@ -118,32 +132,32 @@ Ext.define('rewpos.controller.Main', {
             cls: 'menupos',
             items: [{
                 text: 'Cambiar Mesa',
-                handler: rewpos.app.getController('Pedido').cambiar
+                handler: this.getApplication().getController('Pedido').cambiar
             },{
                 text: 'Unir Mesas',
-                handler: rewpos.app.getController('Pedido').unir
+                handler: this.getApplication().getController('Pedido').unir
             },{
                 text: 'Liberar Mesa',
-                handler: rewpos.app.getController('Pedido').liberar
+                handler: this.getApplication().getController('Pedido').liberar
             },/*{
                 text: 'Descuento'
             },*/{
                 text: 'Resumen Diario',
-                handler: rewpos.app.getController('Pedido').resumen
+                handler: this.getApplication().getController('Pedido').resumen
             },{
                 text: 'Pagar',
-                handler: rewpos.app.getController('Pedido').pagar
+                handler: this.getApplication().getController('Pedido').pagar
             },{
                 text: 'Anular Documento',
-                handler: rewpos.app.getController('Pedido').anularDocumento
+                handler: this.getApplication().getController('Pedido').anularDocumento
             },{
                 text: 'Cierre Parcial',
-                handler: rewpos.app.getController('Pedido').cierreParcial
+                handler: this.getApplication().getController('Pedido').cierreParcial
             },{
                 text: '' //Configuracion
             },{
                 text: 'Cerrar Sesion',
-                handler: rewpos.app.getController('Main').cerraSesion
+                handler: this.getApplication().getController('Main').cerraSesion
             }]
         });
     },
@@ -168,7 +182,7 @@ Ext.define('rewpos.controller.Main', {
                     rewpos.Util.showPanel('mainCard', 'accesoView', 'right');
                 }
             },
-            scope: rewpos.app.getController('Main')
+            scope: this.getApplication().getController('Main')
         });
     },
     loadDefault: function() {

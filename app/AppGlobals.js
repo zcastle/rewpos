@@ -2,7 +2,7 @@ Ext.define('rewpos.AppGlobals', {
     singleton: true,
     CIA: 'OPENBUSINESS',
     ANIMACION: false,
-    DEBUG: false,
+    DEBUG: true,
     HOST: 'http://localhost:2385/',
     //HOST_PRINT: 'http://192.168.1.5:8084/REWPrinterPool/',
     HOST_PRINT: 'http://localhost:8523/',

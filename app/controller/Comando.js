@@ -34,9 +34,9 @@ Ext.define('rewpos.controller.Comando', {
             return;
         }
         console.log('Enviando Precuenta');
-        rewpos.Print.precuenta('');
-        console.log('Fin');
-        return;
+        //rewpos.Print.precuenta('');
+        //console.log('Fin');
+        //return;
         if(Ext.getStore('Pedido').getCount()>0){
             var cajaId = Ext.getStore('Pedido').getAt(0).get('caja_id');
             var nroAtencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');

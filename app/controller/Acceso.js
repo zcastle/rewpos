@@ -22,10 +22,10 @@ Ext.define('rewpos.controller.Acceso', {
                 cls: 'menupos',
                 items: [{
                     text: 'Anular Documento',
-                    handler: rewpos.app.getController('Pedido').anularDocumento
+                    handler: this.getApplication().getController('Pedido').anularDocumento
                 },{
                     text: 'Cierre Total',
-                    handler: rewpos.app.getController('Pedido').cierreParcial
+                    handler: this.getApplication().getController('Pedido').cierreParcial
                 }]
             });
         }

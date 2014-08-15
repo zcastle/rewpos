@@ -77,7 +77,7 @@ Ext.define('rewpos.controller.Producto', {
     },
     onItemDoubleTapProductoList: function(item, index, target, record) {
         var existRecord = Ext.getStore('Pedido').findRecord('producto_id', record.getId());
-        var list = rewpos.app.getController('Producto').getPedidoList();
+        var list = this.getApplication().getController('Producto').getPedidoList();
         var clienteId = 0;
         if(Ext.getStore('Pedido').getCount()>0) {
             clienteId = Ext.getStore('Pedido').getAt(0).get('cliente_id');

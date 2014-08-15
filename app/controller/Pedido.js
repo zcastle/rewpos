@@ -118,7 +118,7 @@ Ext.define('rewpos.controller.Pedido', {
                 },
                 callback: function(){
                     rewpos.Util.unmask();
-                    rewpos.app.getController('Pedido').pagarOk(nroatencion);
+                    this.getApplication().getController('Pedido').pagarOk(nroatencion);
                 }
             });
         } else {
@@ -170,11 +170,11 @@ Ext.define('rewpos.controller.Pedido', {
                             rewpos.Util.unmask();
                             var text = Ext.JSON.decode(response.responseText);
                             if(text.success){
-                                rewpos.app.getController('Pedido').imprimirTiket(text.data.id);
+                                this.getApplication().getController('Pedido').imprimirTiket(text.data.id);
                                 Ext.getStore('Pago').removeAll();
                                 Ext.getStore('Pedido').removeAll();
-                                rewpos.app.getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
-                                rewpos.app.getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
+                                this.getApplication().getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
+                                this.getApplication().getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
                                 if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
                                     rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
                                 } else {
@@ -201,10 +201,10 @@ Ext.define('rewpos.controller.Pedido', {
                     var text = Ext.JSON.decode(response.responseText);
                     console.log(text);
                     if(!text.success) {
-                        rewpos.app.getController('Pedido').imprimirTiketQ(id);
+                        this.getApplication().getController('Pedido').imprimirTiketQ(id);
                     }
                 } else {
-                    rewpos.app.getController('Pedido').imprimirTiketQ(id);
+                    this.getApplication().getController('Pedido').imprimirTiketQ(id);
                 }
             }
         });
@@ -269,8 +269,8 @@ Ext.define('rewpos.controller.Pedido', {
                                             if(res.success){
                                                 Ext.getStore('Pago').removeAll();
                                                 Ext.getStore('Pedido').removeAll();
-                                                rewpos.app.getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
-                                                rewpos.app.getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
+                                                this.getApplication().getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
+                                                this.getApplication().getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
                                                 if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
                                                     rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
                                                     rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
@@ -349,7 +349,7 @@ Ext.define('rewpos.controller.Pedido', {
                             var res = Ext.JSON.decode(response.responseText);
                             if(res.success){
                                 Ext.Viewport.remove(btnOk.up('panel'));
-                                rewpos.app.getController('Pedido').getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+nrodestino);
+                                this.getApplication().getController('Pedido').getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+nrodestino);
                             } else {
                                 mesaDestino.setValue('');
                                 if(res.error=='destinoexiste') {
@@ -404,7 +404,7 @@ Ext.define('rewpos.controller.Pedido', {
                             var res = Ext.JSON.decode(response.responseText);
                             if(res.success){
                                 Ext.Viewport.remove(btnOk.up('panel'));
-                                rewpos.app.getController('Mesas').loadPedido(nrodestino);
+                                this.getApplication().getController('Mesas').loadPedido(nrodestino);
                             } else {
                                 mesaDestino.setValue('');
                                 if(res.error=='destinovacio') {
@@ -438,15 +438,18 @@ Ext.define('rewpos.controller.Pedido', {
             callback: function(request, success, response){
                 rewpos.Util.unmask();
                 var text = Ext.JSON.decode(response.responseText);
-                var atenciones = Ext.data.Types.NUMBER.convert(text.data[0].Atenciones);
-                var ventas = Ext.data.Types.NUMBER.convert(text.data[0].Ventas);
+                var atenciones = text.data[0].Atenciones || 0;
+                var atenciones = Ext.data.Types.NUMBER.convert(atenciones);
+                var ventas = text.data[0].Ventas || 0;
+                var ventas = Ext.data.Types.NUMBER.convert(ventas);
                 var total = atenciones+ventas;
 
                 var atenciones = rewpos.Util.formatValue(atenciones);
                 var ventas = rewpos.Util.formatValue(ventas);
                 var total = rewpos.Util.formatValue(total);
+                var cajero = rewpos.AppGlobals.USUARIO.get('nombre')+' '+rewpos.AppGlobals.USUARIO.get('apellido');
                 Ext.Msg.show({
-                    title: 'Resumen Diario', 
+                    title: 'Resumen Diario - '+cajero, 
                     message: '<div id="resumenMessage">'+
                     '<div class="titulo">Atenciones:</div><div class="valor">'+atenciones+'</div><br/>'+
                     '<div class="titulo">Ventas:</div><div class="valor">'+ventas+'</div><br/>'+

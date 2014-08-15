@@ -85,9 +85,14 @@ Ext.define('rewpos.controller.Editar', {
                         success: function() {
                             rewpos.Util.unmask();
                             //
-                            var list = rewpos.app.getController('Editar').getPedidoList();
-                            list.select(0);
+                            //var list = this.getApplication().getController('Editar').getPedidoList;
+                            //list.select(0);
                             //
+                            if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
+                                rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
+                            } else {
+                                rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
+                            }
                             Ext.getStore('Pedido').remove(record);
                             if(record.get('enviado')=='S') {
                                 console.log('Enviando anulacion');

@@ -1,0 +1,92 @@
+.x-button {
+  display: flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #eee;
+  /*border: 1px solid #cccccc;*/
+  border: 1px solid #fff;
+  /*REW*/
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.x-list .x-list-item {
+  position: absolute !important;
+  left: 0;
+  top: 0;
+  width: 100%;
+  /*ADD*/
+  display: -webkit-box;
+  display: box;
+  /*REW*/
+}
+
+.x-list .x-list-item.x-list-item-tpl .x-innerhtml {
+  padding: 10px 10px 10px 5px;
+}
+
+.x-button {
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  /*-webkit-border-radius: 0.4em;
+  -moz-border-radius: 0.4em;
+  -ms-border-radius: 0.4em;
+  -o-border-radius: 0.4em;
+  border-radius: 0.4em;*/
+  -webkit-border-radius: 0em;
+  -moz-border-radius: 0em;
+  -ms-border-radius: 0em;
+  -o-border-radius: 0em;
+  border-radius: 0em;
+  /*REW*/
+  min-height: 1.8em;
+  padding: 0.3em 0.6em;
+}
+
+.x-button, .x-toolbar .x-button {
+  /*border: 1px solid #999999;*/
+  border: 1px solid #fff;
+  /*REW*/
+  border-top-color: #a6a6a6;
+  background-color: #cccccc;
+  color: white;
+}
+
+.background_comando .x-button .x-button-icon,
+.btn_editar .x-button-icon,
+.btn_eliminar .x-button-icon {
+  /*width: 1.5em;
+  height: 1.5em;*/
+  width: 3em;
+  height: 3em;
+  /*REW*/
+}
+
+.x-form-fieldset {
+  margin: 0.3em;
+}
+
+.x-form-fieldset .x-form-fieldset-inner {
+  -moz-border-radius: 0em;
+  -ms-border-radius: 0em;
+  -o-border-radius: 0em;
+  border-radius: 0em; *
+}
+
+.x-field-search .x-field-input .x-form-field {
+  margin-left: 0em;
+  padding-left: 1.5em;
+}
+
+.x-toolbar {
+  min-height: 2em;
+}
+
+.x-toolbar .x-button {
+  margin: 3px 0.2em;
+}
