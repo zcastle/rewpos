@@ -2,7 +2,7 @@ Ext.define('rewpos.controller.Main', {
     extend: 'Ext.app.Controller',
     config: {
         stores: ['Usuario', 'Pago', 'Pedido'],
-        models: ['Usuario', 'Corporacion', 'Caja'],
+        models: ['Usuario', 'Corporacion', 'Caja', 'Config'],
         refs: {
             seleccionView: 'seleccionView',
             pedidoList: 'pedidoList',
@@ -18,11 +18,36 @@ Ext.define('rewpos.controller.Main', {
     activate: function() {
         console.log('POS Listo');
         console.log('Debug is '+rewpos.AppGlobals.DEBUG);
+        //this.db();
+        Ext.ModelManager.getModel('rewpos.model.Config').load(1,{
+            callback: function(record, operation) {
+                if(record) {
+                    rewpos.AppGlobals.CAJA_ID = record.get('caja_id');
+                    this.activateOk();
+                } else {
+                    this.getApplication().getController('Acceso').configuracion();
+                }
+            },
+            scope: this
+        });
+        //console.log('Load DB OK');
+    },
+    activateOk: function() {
+        console.log('activateOk');
+        Ext.getStore('Mesa').load();
+        /*Ext.getStore('Pedido').addListener('load', function(store){
+            this.setHeader(store);
+        }, this);*/
+
+        Ext.getStore('Pedido').addListener({
+            load: this.setHeader,
+            addrecords: this.setHeader,
+            updaterecord: this.setHeader,
+            removerecords: this.setHeader,
+            scope: this
+        });
         //console.log(Ext.os.deviceType);
         //console.log('Ext.os.deviceType');
-        //
-        //this.db();
-        //
         $('.x-scroll-view').mousewheel(function(event) {
             event.preventDefault();
             //console.log(event.deltaX, event.deltaY, event.deltaFactor);
@@ -41,11 +66,13 @@ Ext.define('rewpos.controller.Main', {
         }
 
         $(document.body).keydown(function(event) {
-            console.log(event.which);
+            //console.log(event.which);
             if(event.which==119) { //F8 PRECUENTA ESPECIAL
 
             } else if(event.which==120) { //F9 PAGAR
                 //pagar();
+                //console.log(rewpos.app.getController('Pedido').pagar);
+                //rewpos.app.getController('Pedido').pagar();
             }
         });
 
@@ -76,7 +103,7 @@ Ext.define('rewpos.controller.Main', {
                                 break;
                             case 'productoList':
                                 var record = list.getSelection()[0];
-                                this.getApplication().getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
+                                rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
                                 break;
                         }
                     } else if(event.which==37) { //KEY LEFT
@@ -91,7 +118,7 @@ Ext.define('rewpos.controller.Main', {
         //Ext.getStore('Producto').load();
         Ext.Msg.defaultAllowedConfig.showAnimation = rewpos.AppGlobals.ANIMACION;
         Ext.Msg.defaultAllowedConfig.hideAnimation = rewpos.AppGlobals.ANIMACION;
-        Ext.ModelManager.getModel('rewpos.model.Corporacion').load(rewpos.AppGlobals.DEFAULT_CORPORACION,{
+        Ext.ModelManager.getModel('rewpos.model.Corporacion').load(rewpos.AppGlobals.CAJA_ID,{
             success: function(corporacion) {
                 rewpos.AppGlobals.CORPORACION = corporacion.get('nombre');
                 this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CORPORACION);
@@ -157,6 +184,7 @@ Ext.define('rewpos.controller.Main', {
                 text: '' //Configuracion
             },{
                 text: 'Cerrar Sesion',
+                scope: this,
                 handler: this.getApplication().getController('Main').cerraSesion
             }]
         });
@@ -182,7 +210,7 @@ Ext.define('rewpos.controller.Main', {
                     rewpos.Util.showPanel('mainCard', 'accesoView', 'right');
                 }
             },
-            scope: this.getApplication().getController('Main')
+            scope: this
         });
     },
     loadDefault: function() {
@@ -209,21 +237,20 @@ Ext.define('rewpos.controller.Main', {
             this.getToolbarView().down('button[name=usuarioLogin]').setText(rewpos.AppGlobals.USUARIO.get('nombre'));
             this.getToolbarView().down('button[name=showmenu]').setHidden(true);
             rewpos.Util.showPanel('mainCard', 'pedidoView', 'left');
-
-            Ext.getStore('Pedido').load({
-                params: {
-                    mesa: 0
-                },
-                callback: function(records) {
-                    if(records.length>0){
-                        this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
-                        this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
-                    }
-                },
-                scope: this
-            });
-            this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: 0');
         }
+        Ext.getStore('Pedido').load({
+            params: {
+                mesa: 1
+            },
+            callback: function(records) {
+                if(records.length>0){
+                    this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
+                    this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
+                }
+            },
+            scope: this
+        });
+        this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: 1');
     },
     db: function() {
         var html5rocks = {};
@@ -232,26 +259,24 @@ Ext.define('rewpos.controller.Main', {
         html5rocks.webdb.db = null;
         html5rocks.webdb.open = function() {
             var dbSize = 1 * 1024 * 1024; // 1MB
-            html5rocks.webdb.db = openDatabase("Todo", "1", "Todo manager", dbSize);
+            html5rocks.webdb.db = openDatabase("dbrewsoftlite", "1", "config", dbSize);
         }
 
         html5rocks.webdb.onError = function(tx, e) {
-            console.log("There has been an error: " + e.message);
+            console.log("Algun error: " + e.message);
         }
 
         html5rocks.webdb.onSuccess = function(tx, r) {
-            console.log("SUCCESS");
+            console.log("success");
         }
 
         html5rocks.webdb.createTable = function() {
             var db = html5rocks.webdb.db;
             db.transaction(function(tx) {
-                tx.executeSql("CREATE TABLE IF NOT EXISTS producto(" +
+                tx.executeSql("CREATE TABLE IF NOT EXISTS config(" +
                     "id INTEGER PRIMARY KEY ASC, "+
-                    "nombre TEXT, "+
-                    "precio FLOAT, "+
-                    "orden INTEGER, "+
-                    "categoria_id INTEGER"+
+                    "caja_id INTEGER, "+
+                    "host_service TEXT "+
                     ")", []);
             });
         }
@@ -270,17 +295,25 @@ Ext.define('rewpos.controller.Main', {
             });
         }
 
-        html5rocks.webdb.getAllProductos = function(renderFunc) {
+        /*html5rocks.webdb.getAllProductos = function(renderFunc) {
             var db = html5rocks.webdb.db;
             db.transaction(function(tx) {
                 tx.executeSql("SELECT * FROM producto", [], renderFunc, html5rocks.webdb.onError);
+            });
+        }*/
+
+        html5rocks.webdb.getConfig = function(renderFunc) {
+            var db = html5rocks.webdb.db;
+            db.transaction(function(tx) {
+                tx.executeSql("SELECT * FROM config", [], renderFunc, html5rocks.webdb.onError);
             });
         }
 
         html5rocks.webdb.open();
         html5rocks.webdb.createTable();
         //html5rocks.webdb.addProducto('PRODUCTO 1', 10.0, 1, 1);
-        html5rocks.webdb.getAllProductos(this.loadProductosItems);
+        //html5rocks.webdb.getAllProductos(this.loadProductosItems);
+        html5rocks.webdb.getConfig(this.loadConfig);
 
         console.log(html5rocks);
     },
@@ -290,5 +323,26 @@ Ext.define('rewpos.controller.Main', {
             var row = rs.rows.item(i);
             console.log(row);
         }
+    },
+    loadConfig: function(tx, rs) {
+        console.log('loadConfig');
+        for (var i=0; i < rs.rows.length; i++) {
+            var row = rs.rows.item(i);
+            console.log(row);
+        }
+        this.activateOk();
+    },
+    setHeader: function(store) {
+        //rewpos.app.getController('Pedido')
+        this.getApplication().getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: '+store.getCount());
+        this.getApplication().getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+rewpos.Util.toFixed(this.getTotales(store), 2));
+        this.getApplication().getController('Pedido').getPagosView().down('label[name=lblTotalMontoPagar]').setHtml(rewpos.Util.toFixed(this.getTotales(store), 2));
+    },
+    getTotales: function(store) {
+        var total = 0.0;
+        store.each(function(item, index, length){
+            total += item.get('cantidad') * item.get('precio');
+        });
+        return total;
     }
 });

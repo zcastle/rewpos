@@ -3,7 +3,7 @@ Ext.define('rewpos.view.AccesoView', {
     xtype: 'accesoView',
     config: {
         layout: 'hbox',
-        //cls: 'fondo-cia',
+        cls: 'fondo-cia',
         items: [/*{
             width: 500
         },*/{

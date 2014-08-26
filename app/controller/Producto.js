@@ -43,11 +43,13 @@ Ext.define('rewpos.controller.Producto', {
                 Ext.getStore('Producto').load({
                     url: rewpos.AppGlobals.HOST+'producto/pos/buscar/'+value,
                     callback: function(records) {
-                        rewpos.Util.showPanel('productosCard', 'productoDataView', 'right');
+                        //rewpos.Util.showPanel('productosCard', 'productoDataView', 'right');
+                        rewpos.Util.showPanel('productosCard', 'productoList', 'right');
                         if(records.length>0){
                             if(this.getProductoList()==undefined || this.getProductoList()==null) return;
                             if(this.getProductoList().getSelection().length==0){
                                 this.getProductoList().select(0);
+                                rewpos.AppGlobals.LIST_SELECTED = this.getProductoList();
                             }
                         }
                     },
@@ -70,7 +72,15 @@ Ext.define('rewpos.controller.Producto', {
     },
     onSelectCategoriaList: function(list, record){
         rewpos.AppGlobals.LIST_SELECTED = list;
-        Ext.getStore('Producto').load({url: rewpos.AppGlobals.HOST+'producto/pos/categoria/'+record.get('id')});
+        rewpos.Util.mask('Cargando...', true);
+        Ext.getStore('Producto').load({
+            url: rewpos.AppGlobals.HOST+'producto/pos/categoria/'+record.get('id'),
+            callback: function(){
+                rewpos.Util.unmask(true);
+                rewpos.Util.showPanel('productosCard', 'productoDataView', 'right');
+            },
+            scope: this
+        });
     },
     onSelectProductoList: function(list, records) {
         rewpos.AppGlobals.LIST_SELECTED = list;
@@ -152,8 +162,8 @@ Ext.define('rewpos.controller.Producto', {
         }).save({
             success: function(pedido) {
                 Ext.getStore('Pedido').add(pedido);
-                list.select(pedido);
-                list.scrollToRecord(pedido);
+                //list.select(pedido);
+                //list.scrollToRecord(pedido);
             },
             scope: this
         });
@@ -163,7 +173,7 @@ Ext.define('rewpos.controller.Producto', {
     },
     onItemTapCategoria: function(view, index, target, record) {
         this.onSelectCategoriaList(null, record);
-        rewpos.Util.showPanel('productosCard', 'productoDataView', 'right');
+        //rewpos.Util.showPanel('productosCard', 'productoDataView', 'right');
     },
     onItemTapProducto: function(view, index, target, record) {
         this.onItemDoubleTapProductoList(null, null, null, record)

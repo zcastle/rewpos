@@ -26,6 +26,9 @@ Ext.define('rewpos.controller.Acceso', {
                 },{
                     text: 'Cierre Total',
                     handler: this.getApplication().getController('Pedido').cierreParcial
+                },{
+                    text: 'Configuracion',
+                    handler: this.configuracion
                 }]
             });
         }
@@ -43,28 +46,41 @@ Ext.define('rewpos.controller.Acceso', {
         });
     },
     onItemTapUsuariosList: function(item, index, target, record) {
-        var centrocostoId = record.get('centrocosto_id');
         rewpos.AppGlobals.USUARIO = record;
-        var url = Ext.getStore('Caja').getProxy().getUrl()+'/'+centrocostoId;
-        Ext.getStore('Caja').load({
-            url: url,
-            callback: function(records, operation, success) {
-                if(records.length==1){
-                    rewpos.AppGlobals.CAJA = records[0];
-                    this.getToolbarView().down('button[name=empresaLogin]').setText(records[0].get('empresa_name')+' - '+records[0].get('centrocosto_name'));
+        Ext.ModelManager.getModel('rewpos.model.Caja').load(rewpos.AppGlobals.CAJA_ID,{
+            callback: function(caja, operation) {
+                //console.log(caja);
+                if(caja) {
+                    rewpos.AppGlobals.CAJA = caja;
+                    this.getToolbarView().down('button[name=empresaLogin]').setText(caja.get('empresa_name')+' - '+caja.get('centrocosto_name'));
                     this.getToolbarView().down('button[name=usuarioLogin]').setText(record.get('nombre')+' '+record.get('apellido'));
                     this.getToolbarView().down('button[name=showmenu]').setHidden(true);
                     this.chageViewToPedido();
                 } else {
-                    Ext.Array.forEach(records, function(item) {
-                        
-                    }, this);
+                    Ext.Msg.alert('Advertencia', 'No se puede hallar la caja con el id: '+rewpos.AppGlobals.CAJA_ID, Ext.emptyFn);
                 }
             },
             scope: this
-        })
+        });
     },
     chageViewToPedido: function() {
         rewpos.Util.showPanel('mainCard', 'authView', 'left');
+    },
+    configuracion: function() {
+        Ext.Viewport.toggleMenu('right');
+        var modal = Ext.Viewport.add({xtype: 'autorizacionModal'});
+        var cbo = modal.down('selectfield');
+        cbo.setHidden(true);
+        var btnOk = modal.down('button[action=ok]');
+        var pass = modal.down('passwordfield[name=passwordLoginAdmin]');
+        btnOk.addListener('tap', function(btn){
+            if(pass.getValue()=='2385'){
+                Ext.Viewport.remove(btnOk.up('panel'));
+                Ext.Viewport.add({xtype: 'configModal'});
+            } else {
+                pass.setValue('');
+                Ext.Msg.alert('Advertencia', 'Clave incorrecta', Ext.emptyFn);
+            }
+        });
     }
 });

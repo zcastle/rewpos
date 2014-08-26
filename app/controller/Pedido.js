@@ -269,8 +269,6 @@ Ext.define('rewpos.controller.Pedido', {
                                             if(res.success){
                                                 Ext.getStore('Pago').removeAll();
                                                 Ext.getStore('Pedido').removeAll();
-                                                this.getApplication().getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
-                                                this.getApplication().getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
                                                 if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
                                                     rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
                                                     rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
@@ -295,6 +293,9 @@ Ext.define('rewpos.controller.Pedido', {
                                             }
                                         }
                                     });
+                                    console.log(rewpos.app);
+                                    rewpos.app.getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
+                                    this.getApplication().getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
                                 } else {
                                     pass.setValue('');
                                     Ext.Msg.alert('Advertencia', 'Clave incorrecta', Ext.emptyFn);

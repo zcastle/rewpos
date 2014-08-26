@@ -26,6 +26,8 @@ Ext.define('rewpos.view.ProductoTouchView', {
                 xtype: 'categoriaDataView'
             },{
                 xtype: 'productoDataView'
+            },{
+                xtype: 'productoList'
             }]
         }]
     }

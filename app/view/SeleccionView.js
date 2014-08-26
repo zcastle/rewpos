@@ -10,7 +10,7 @@ Ext.define('rewpos.view.SeleccionView', {
         items: [{
             name: 'btnSeleccionMesa',
             itemId: 'btnSeleccionMesa',
-            text: 'M: 0',
+            text: 'M: 1',
             cls: 'btn_seleccion'
         },{
             xtype: 'selectfield',

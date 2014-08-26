@@ -40,6 +40,11 @@ Ext.define('rewpos.controller.Comando', {
         if(Ext.getStore('Pedido').getCount()>0){
             var cajaId = Ext.getStore('Pedido').getAt(0).get('caja_id');
             var nroAtencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
+            Ext.Ajax.request({
+                url: rewpos.AppGlobals.HOST+'pedido/precuenta/'+cajaId+'/'+nroAtencion,
+                callback: function(){
+                }
+            });
             rewpos.Util.mask();
             Ext.Ajax.request({
                 url: rewpos.AppGlobals.HOST_PRINT+'print/precuenta/'+cajaId+'/'+nroAtencion,
@@ -50,6 +55,14 @@ Ext.define('rewpos.controller.Comando', {
                         var text = Ext.JSON.decode(response.responseText);
                         if(!text.success) {
                             Ext.Msg.alert('Advertencia', rewpos.AppGlobals.MSG_PRINTER_ERROR, Ext.emptyFn);
+                        } else {
+                            //cajaId
+                            //nroAtencion
+                            /*Ext.Ajax.request({
+                                url: rewpos.AppGlobals.HOST+'pedido/precuenta/'+cajaId+'/'+nroAtencion,
+                                callback: function(){
+                                }
+                            });*/
                         }
                     } else {
                         Ext.Msg.alert('Advertencia', rewpos.AppGlobals.MSG_PRINTER_ERROR, Ext.emptyFn);

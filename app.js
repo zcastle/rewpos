@@ -38,7 +38,8 @@ Ext.application({
     controllers: [
         'Main','Toolbar','Comando','Pedido','Mesas','Editar','Pagos',
         'Acceso','Auth','AutorizacionModal','Producto','ClienteModal',
-        'CambiarMesaModal','TecladoPrecioModal','AnularDocumentoModal'
+        'CambiarMesaModal','TecladoPrecioModal','AnularDocumentoModal',
+        'ConfigModal'
     ],
     //'Acciones',
     views: [
@@ -46,7 +47,8 @@ Ext.application({
         'Totales','PedidoList','ComandosView','CategoriaList','ProductoList','ProductoView',
         'EditarForm','TecladoMoneda','PagosView','AccesoView','AuthView','TecladoNumerico',
         'ChatView','AutorizacionModal','ClienteModal','CambiarMesaModal','TecladoPrecioModal',
-        'AnularDocumentoModal','ProductoTouchView','CategoriaDataView','ProductoDataView'
+        'AnularDocumentoModal','ProductoTouchView','CategoriaDataView','ProductoDataView',
+        'ConfigModal'
     ],
 
     icon: {
