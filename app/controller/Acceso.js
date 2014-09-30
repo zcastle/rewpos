@@ -47,21 +47,9 @@ Ext.define('rewpos.controller.Acceso', {
     },
     onItemTapUsuariosList: function(item, index, target, record) {
         rewpos.AppGlobals.USUARIO = record;
-        Ext.ModelManager.getModel('rewpos.model.Caja').load(rewpos.AppGlobals.CAJA_ID,{
-            callback: function(caja, operation) {
-                //console.log(caja);
-                if(caja) {
-                    rewpos.AppGlobals.CAJA = caja;
-                    this.getToolbarView().down('button[name=empresaLogin]').setText(caja.get('empresa_name')+' - '+caja.get('centrocosto_name'));
-                    this.getToolbarView().down('button[name=usuarioLogin]').setText(record.get('nombre')+' '+record.get('apellido'));
-                    this.getToolbarView().down('button[name=showmenu]').setHidden(true);
-                    this.chageViewToPedido();
-                } else {
-                    Ext.Msg.alert('Advertencia', 'No se puede hallar la caja con el id: '+rewpos.AppGlobals.CAJA_ID, Ext.emptyFn);
-                }
-            },
-            scope: this
-        });
+        this.getToolbarView().down('button[name=usuarioLogin]').setText(record.get('nombre')+' '+record.get('apellido'));
+        this.getToolbarView().down('button[name=showmenu]').setHidden(true);
+        this.chageViewToPedido();
     },
     chageViewToPedido: function() {
         rewpos.Util.showPanel('mainCard', 'authView', 'left');

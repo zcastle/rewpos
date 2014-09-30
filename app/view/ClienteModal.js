@@ -41,10 +41,10 @@ Ext.define('rewpos.view.ClienteModal', {
                 xtype: 'spacer'
             },{
                 text: 'Cancelar',
-                action: 'cancelar'
+                itemId: 'cancelar'
             },{
                 text: 'Aceptar',
-                action: 'aceptar'
+                itemId: 'aceptar'
             }]
         }]
         

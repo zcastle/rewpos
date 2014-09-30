@@ -33,9 +33,7 @@ Ext.define('rewpos.controller.Comando', {
             Ext.Msg.alert('Advertencia', 'No se puede enviar PRECUENTA en modo DEBUG', Ext.emptyFn);
             return;
         }
-        console.log('Enviando Precuenta');
         //rewpos.Print.precuenta('');
-        //console.log('Fin');
         //return;
         if(Ext.getStore('Pedido').getCount()>0){
             var cajaId = Ext.getStore('Pedido').getAt(0).get('caja_id');
@@ -74,7 +72,6 @@ Ext.define('rewpos.controller.Comando', {
         }
     },
     enviarPedido: function() {
-        console.log('Enviando Pedido');
         if(Ext.getStore('Pedido').getCount()>0){
             var noEnviados = Ext.getStore('Pedido').findExact('enviado', 'N');
             if(noEnviados < 0) {

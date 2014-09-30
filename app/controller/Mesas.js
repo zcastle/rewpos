@@ -17,11 +17,12 @@ Ext.define('rewpos.controller.Mesas', {
         this.loadPedido(record.get('id'));
     },
     loadPedido: function(mesa) {
+        rewpos.Util.mask('Cargando...', true);
+        //console.log(rewpos.AppGlobals.HOST+'pedido/'+mesa+'/'+rewpos.AppGlobals.CAJA_ID);
         Ext.getStore('Pedido').load({
-            params: {
-                mesa: mesa
-            },
+            url: rewpos.AppGlobals.HOST+'pedido/'+mesa+'/'+rewpos.AppGlobals.CAJA_ID,
             callback: function(records) {
+                rewpos.Util.unmask(true);
                 if(records.length>0){
                     this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
                     this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));

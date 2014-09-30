@@ -20,28 +20,32 @@ Ext.define('rewpos.controller.ClienteModal', {
         } 
     },
     onInitialize: function(view) {
-        var ubigeo = new Array();
-        Ext.getStore('Ubigeo').each(function(item){
-            ubigeo.push({
-                text: item.get('nombre'),
-                value: item.get('id')
-            })
-        });
-        view.down('selectfield').setOptions(ubigeo);
-        
-        var clienteId = Ext.getStore('Pedido').getAt(0).get('cliente_id');
-        Ext.ModelManager.getModel('rewpos.model.Cliente').load(clienteId,{
-                callback: function(record, operation) {
-                    var form = this.getClienteModal();
-                    if(record) {
-                        form.setRecord(record);
-                    } else {
-                        form.setRecord(Ext.create('rewpos.model.Cliente',{id: null, ubigeo_id: "1393"}));
-                        form.down('textfield[name=ruc]').focus();
-                    }
-                },
-                scope: this
+        if(Ext.getStore('Pedido').getCount()>0) {
+            var ubigeo = new Array();
+            Ext.getStore('Ubigeo').each(function(item){
+                ubigeo.push({
+                    text: item.get('nombre'),
+                    value: item.get('id')
+                })
             });
+            view.down('selectfield').setOptions(ubigeo);
+            
+            var clienteId = Ext.getStore('Pedido').getAt(0).get('cliente_id');
+            if(clienteId>0){
+                Ext.ModelManager.getModel('rewpos.model.Cliente').load(clienteId,{
+                    callback: function(record, operation) {
+                        var form = this.getClienteModal();
+                        if(record) {
+                            form.setRecord(record);
+                        } else {
+                            form.setRecord(Ext.create('rewpos.model.Cliente',{id: null, ubigeo_id: "1393"}));
+                            form.down('textfield[name=ruc]').focus();
+                        }
+                    },
+                    scope: this
+                });
+            }
+        }
     },
     onSearchAction: function(field, e) {
         var form = this.getClienteModal();
@@ -65,7 +69,7 @@ Ext.define('rewpos.controller.ClienteModal', {
         form.setRecord(Ext.create('rewpos.model.Cliente',{id: null, ubigeo_id: "1393"}));
     },
     onTapButton: function(btn) {
-        switch(btn.action){
+        switch(btn.getItemId()){
             case 'cancelar':
                 Ext.Viewport.remove(btn.up('panel'));
                 break;
@@ -86,7 +90,6 @@ Ext.define('rewpos.controller.ClienteModal', {
 
                 var record = form.getRecord();
                 record.set(values);
-                //console.log(record);
                 var errors = record.validate();
                 var errorString = '';
                 function getLabel(campo) {
@@ -136,31 +139,5 @@ Ext.define('rewpos.controller.ClienteModal', {
                 }
                 break;
         }
-    }/*,
-    actualizarCliente: function(){
-        var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
-        rewpos.Util.doAjaxCall(
-            rewpos.AppGlobals.HOST+'pedido/actualizar/cliente',
-            'POST',
-            {
-                nroatencion: nroatencion,
-                clienteId: cliente.get('id')
-            },
-            function(request, success, response){
-                rewpos.Util.unmask();
-                console.log(this);
-                this.getPagosView().down('button[name=btnCliente]').setText(cliente.get('nombre'));
-                Ext.getStore('Pedido').each(function(pedido){
-                    pedido.set('cliente_id', cliente.get('id'));
-                    pedido.set('cliente_name', cliente.get('nombre'));
-                });
-                Ext.Viewport.remove(btn.up('panel'));
-                console.log(this);
-                console.log(request);
-                console.log(success);
-                console.log(response);
-            },
-            this
-        )
-    }*/
+    }
 });

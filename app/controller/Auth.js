@@ -52,7 +52,8 @@ Ext.define('rewpos.controller.Auth', {
     onTapActionCancelar: function(btn) {
         var txtPassword = this.getAuthView().down('passwordfield[name=passwordLogin]');
         txtPassword.setValue('');
-        this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CORPORACION);
+        //this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CORPORACION);
+        this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CAJA.get('empresa_name')+' - '+rewpos.AppGlobals.CAJA.get('centrocosto_name'));
         this.getToolbarView().down('button[name=usuarioLogin]').setText('');
         rewpos.Util.showPanel('mainCard', 'accesoView', 'right');
     }

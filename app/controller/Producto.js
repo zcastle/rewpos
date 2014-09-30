@@ -40,17 +40,21 @@ Ext.define('rewpos.controller.Producto', {
         if(keyCode == 13) {
             var value = field.getValue();
             if(value.length>=3) {
+                rewpos.Util.mask('Buscando...', true);
                 Ext.getStore('Producto').load({
                     url: rewpos.AppGlobals.HOST+'producto/pos/buscar/'+value,
                     callback: function(records) {
+                        rewpos.Util.unmask(true);
                         //rewpos.Util.showPanel('productosCard', 'productoDataView', 'right');
-                        rewpos.Util.showPanel('productosCard', 'productoList', 'right');
                         if(records.length>0){
-                            if(this.getProductoList()==undefined || this.getProductoList()==null) return;
+                            rewpos.Util.showPanel('productosCard', 'productoList', 'right');
+                            /*if(this.getProductoList()==undefined || this.getProductoList()==null) return;
                             if(this.getProductoList().getSelection().length==0){
                                 this.getProductoList().select(0);
                                 rewpos.AppGlobals.LIST_SELECTED = this.getProductoList();
-                            }
+                            }*/
+                        } else {
+                            rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
                         }
                     },
                     scope: this
@@ -146,6 +150,7 @@ Ext.define('rewpos.controller.Producto', {
         var mozo_id = this.getSeleccionView().down('selectfield[name=cboMozos]').getValue();
         var pax = this.getSeleccionView().down('selectfield[name=cboPax]').getValue();
         var tipoDocumentoId = clienteId > 0 ? 2 : 4;
+        rewpos.Util.mask('Insertando...', true);
         Ext.create('rewpos.model.Pedido', {
             nroatencion: mesa,
             cajero_id: rewpos.AppGlobals.USUARIO.get('id'),
@@ -155,13 +160,14 @@ Ext.define('rewpos.controller.Producto', {
             cantidad: 1,
             precio: record.get('precio'),
             cliente_id: clienteId,
-            caja_id: rewpos.AppGlobals.CAJA.get('id'),
+            caja_id: rewpos.AppGlobals.CAJA_ID,
             pax: pax,
             mensaje: '',
             tipo_documento_id: tipoDocumentoId
         }).save({
             success: function(pedido) {
                 Ext.getStore('Pedido').add(pedido);
+                rewpos.Util.unmask(true);
                 //list.select(pedido);
                 //list.scrollToRecord(pedido);
             },

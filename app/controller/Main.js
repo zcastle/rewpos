@@ -18,27 +18,58 @@ Ext.define('rewpos.controller.Main', {
     activate: function() {
         console.log('POS Listo');
         console.log('Debug is '+rewpos.AppGlobals.DEBUG);
-        //this.db();
+
+        /*Ext.Ajax.request({
+            url: 'http://localhost:3000/api/tvshows',
+            method: 'GET',
+            callback: function(res, success, req){
+                console.log('OK');
+                console.log(res);
+                console.log(success);
+                console.log(req);
+                console.log(req.responseText);
+            }
+        });*/
+
         Ext.ModelManager.getModel('rewpos.model.Config').load(1,{
             callback: function(record, operation) {
                 if(record) {
                     rewpos.AppGlobals.CAJA_ID = record.get('caja_id');
                     this.activateOk();
                 } else {
-                    this.getApplication().getController('Acceso').configuracion();
+                    var idDefault = 2;
+                    Ext.create('rewpos.model.Config', {
+                        id: 1,
+                        caja_id: idDefault
+                    }).save({
+                        callback: function(){
+                            rewpos.AppGlobals.CAJA_ID = idDefault;
+                            this.activateOk();
+                        }
+                    });
+                    //this.getApplication().getController('Acceso').configuracion();
                 }
             },
             scope: this
         });
-        //console.log('Load DB OK');
     },
     activateOk: function() {
         console.log('activateOk');
-        Ext.getStore('Mesa').load();
+        Ext.ModelManager.getModel('rewpos.model.Caja').load(rewpos.AppGlobals.CAJA_ID,{
+            callback: function(caja) {
+                if(caja) {
+                    rewpos.AppGlobals.CAJA = caja;
+                    this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CAJA.get('empresa_name')+' - '+rewpos.AppGlobals.CAJA.get('centrocosto_name'));
+                } else {
+                    Ext.Msg.alert('Advertencia', 'No se puede hallar la caja con el id: '+rewpos.AppGlobals.CAJA_ID, Ext.emptyFn);
+                }
+            },
+            scope: this
+        });
+        Ext.getStore('Mesa').load({url: rewpos.AppGlobals.HOST+'mesa/'+rewpos.AppGlobals.CAJA_ID});
         /*Ext.getStore('Pedido').addListener('load', function(store){
             this.setHeader(store);
         }, this);*/
-
         Ext.getStore('Pedido').addListener({
             load: this.setHeader,
             addrecords: this.setHeader,
@@ -46,11 +77,8 @@ Ext.define('rewpos.controller.Main', {
             removerecords: this.setHeader,
             scope: this
         });
-        //console.log(Ext.os.deviceType);
-        //console.log('Ext.os.deviceType');
         $('.x-scroll-view').mousewheel(function(event) {
             event.preventDefault();
-            //console.log(event.deltaX, event.deltaY, event.deltaFactor);
             var scrollTop = this.scrollTop;
             this.scrollTop = (scrollTop + ((event.deltaY * event.deltaFactor) * -1));
         });
@@ -66,22 +94,18 @@ Ext.define('rewpos.controller.Main', {
         }
 
         $(document.body).keydown(function(event) {
-            //console.log(event.which);
             if(event.which==119) { //F8 PRECUENTA ESPECIAL
 
             } else if(event.which==120) { //F9 PAGAR
                 //pagar();
-                //console.log(rewpos.app.getController('Pedido').pagar);
                 //rewpos.app.getController('Pedido').pagar();
             }
         });
 
         if(Ext.os.deviceType=='Desktop') {
             $(document.body).keydown(function(event) {
-                //console.log(event);
                 var list = rewpos.AppGlobals.LIST_SELECTED;
                 if(list==null) return;
-                //console.log(event.which);
                 var store = rewpos.AppGlobals.LIST_SELECTED.getStore();
                 var record = list.getSelection()[0];
                 var totalIndex = store.getCount()-1;
@@ -102,8 +126,13 @@ Ext.define('rewpos.controller.Main', {
                             case 'categoriaList':
                                 break;
                             case 'productoList':
-                                var record = list.getSelection()[0];
-                                rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
+                                /*console.log(list);
+                                console.log(Ext.getCmp('productosCard').getActiveItem());
+                                if(Ext.getCmp('productosCard').getActiveItem()==list){
+                                    console.log('productoListACtive');
+                                }*/
+                                //var record = list.getSelection()[0];
+                                //rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
                                 break;
                         }
                     } else if(event.which==37) { //KEY LEFT
@@ -118,14 +147,14 @@ Ext.define('rewpos.controller.Main', {
         //Ext.getStore('Producto').load();
         Ext.Msg.defaultAllowedConfig.showAnimation = rewpos.AppGlobals.ANIMACION;
         Ext.Msg.defaultAllowedConfig.hideAnimation = rewpos.AppGlobals.ANIMACION;
-        Ext.ModelManager.getModel('rewpos.model.Corporacion').load(rewpos.AppGlobals.CAJA_ID,{
+        /*Ext.ModelManager.getModel('rewpos.model.Corporacion').load(rewpos.AppGlobals.CAJA_ID,{
             success: function(corporacion) {
                 rewpos.AppGlobals.CORPORACION = corporacion.get('nombre');
                 this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CORPORACION);
                 this.loadDefault();
             },
             scope: this
-        });
+        });*/
         Ext.getStore('Usuario').load({
             callback: function(records, operation, success) {
                 var mozos = new Array();
@@ -159,12 +188,15 @@ Ext.define('rewpos.controller.Main', {
             cls: 'menupos',
             items: [{
                 text: 'Cambiar Mesa',
+                scope: this.getApplication().getController('Pedido'),
                 handler: this.getApplication().getController('Pedido').cambiar
             },{
                 text: 'Unir Mesas',
+                scope: this,
                 handler: this.getApplication().getController('Pedido').unir
             },{
                 text: 'Liberar Mesa',
+                scope: this,
                 handler: this.getApplication().getController('Pedido').liberar
             },/*{
                 text: 'Descuento'
@@ -173,6 +205,7 @@ Ext.define('rewpos.controller.Main', {
                 handler: this.getApplication().getController('Pedido').resumen
             },{
                 text: 'Pagar',
+                scope: this.getApplication().getController('Pedido'),
                 handler: this.getApplication().getController('Pedido').pagar
             },{
                 text: 'Anular Documento',
@@ -188,6 +221,24 @@ Ext.define('rewpos.controller.Main', {
                 handler: this.getApplication().getController('Main').cerraSesion
             }]
         });
+        Ext.getStore('Pedido').load({
+            url: rewpos.AppGlobals.HOST+'pedido/1/'+rewpos.AppGlobals.CAJA_ID,
+            callback: function(records) {
+                if(records.length>0){
+                    this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
+                    this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
+                }
+            },
+            scope: this
+        });
+        /*Ext.getStore('Pedido').load(function(records) {
+            if(records.length>0){
+                console.log(records);
+                this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
+                this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
+            }
+        }, this);*/
+        this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: 1');
     },
     cerraSesion: function(){
         Ext.Viewport.toggleMenu('right');
@@ -205,7 +256,8 @@ Ext.define('rewpos.controller.Main', {
                 if(btn=='yes'){
                     Ext.getStore('Pago').removeAll();
                     Ext.getStore('Pedido').removeAll();
-                    this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CORPORACION);
+                    //this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CORPORACION);
+                    this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CAJA.get('empresa_name')+' - '+rewpos.AppGlobals.CAJA.get('centrocosto_name'));
                     this.getToolbarView().down('button[name=usuarioLogin]').setText('');
                     rewpos.Util.showPanel('mainCard', 'accesoView', 'right');
                 }
@@ -238,99 +290,6 @@ Ext.define('rewpos.controller.Main', {
             this.getToolbarView().down('button[name=showmenu]').setHidden(true);
             rewpos.Util.showPanel('mainCard', 'pedidoView', 'left');
         }
-        Ext.getStore('Pedido').load({
-            params: {
-                mesa: 1
-            },
-            callback: function(records) {
-                if(records.length>0){
-                    this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
-                    this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
-                }
-            },
-            scope: this
-        });
-        this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: 1');
-    },
-    db: function() {
-        var html5rocks = {};
-        html5rocks.webdb = {};
-
-        html5rocks.webdb.db = null;
-        html5rocks.webdb.open = function() {
-            var dbSize = 1 * 1024 * 1024; // 1MB
-            html5rocks.webdb.db = openDatabase("dbrewsoftlite", "1", "config", dbSize);
-        }
-
-        html5rocks.webdb.onError = function(tx, e) {
-            console.log("Algun error: " + e.message);
-        }
-
-        html5rocks.webdb.onSuccess = function(tx, r) {
-            console.log("success");
-        }
-
-        html5rocks.webdb.createTable = function() {
-            var db = html5rocks.webdb.db;
-            db.transaction(function(tx) {
-                tx.executeSql("CREATE TABLE IF NOT EXISTS config(" +
-                    "id INTEGER PRIMARY KEY ASC, "+
-                    "caja_id INTEGER, "+
-                    "host_service TEXT "+
-                    ")", []);
-            });
-        }
-
-        html5rocks.webdb.addProducto = function(nombre, precio, orden, categoria_id) {
-            var db = html5rocks.webdb.db;
-            db.transaction(function(tx){
-                //var addedOn = new Date();
-                tx.executeSql(
-                    "INSERT INTO producto(nombre, precio, orden, categoria_id) "+
-                    "VALUES (?,?,?,?)",
-                    [nombre, precio, orden, categoria_id],
-                    html5rocks.webdb.onSuccess,
-                    html5rocks.webdb.onError
-                );
-            });
-        }
-
-        /*html5rocks.webdb.getAllProductos = function(renderFunc) {
-            var db = html5rocks.webdb.db;
-            db.transaction(function(tx) {
-                tx.executeSql("SELECT * FROM producto", [], renderFunc, html5rocks.webdb.onError);
-            });
-        }*/
-
-        html5rocks.webdb.getConfig = function(renderFunc) {
-            var db = html5rocks.webdb.db;
-            db.transaction(function(tx) {
-                tx.executeSql("SELECT * FROM config", [], renderFunc, html5rocks.webdb.onError);
-            });
-        }
-
-        html5rocks.webdb.open();
-        html5rocks.webdb.createTable();
-        //html5rocks.webdb.addProducto('PRODUCTO 1', 10.0, 1, 1);
-        //html5rocks.webdb.getAllProductos(this.loadProductosItems);
-        html5rocks.webdb.getConfig(this.loadConfig);
-
-        console.log(html5rocks);
-    },
-    loadProductosItems: function(tx, rs) {
-        console.log('loadProductosItems');
-        for (var i=0; i < rs.rows.length; i++) {
-            var row = rs.rows.item(i);
-            console.log(row);
-        }
-    },
-    loadConfig: function(tx, rs) {
-        console.log('loadConfig');
-        for (var i=0; i < rs.rows.length; i++) {
-            var row = rs.rows.item(i);
-            console.log(row);
-        }
-        this.activateOk();
     },
     setHeader: function(store) {
         //rewpos.app.getController('Pedido')

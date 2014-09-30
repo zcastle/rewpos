@@ -36,6 +36,10 @@ Ext.define('rewpos.controller.Pedido', {
     ontapSeleccion: function(btn) {
         switch(btn.getItemId()) {
             case 'btnSeleccionMesa':
+                //Ext.getStore('Mesa').load();
+                //Ext.getStore('Mesa').proxy.url = rewpos.AppGlobals.HOST+'mesa/'+rewpos.AppGlobals.CAJA_ID;
+                Ext.getStore('Mesa').getProxy().setUrl(rewpos.AppGlobals.HOST+'mesa/'+rewpos.AppGlobals.CAJA_ID);
+                //console.log(Ext.getStore('Mesa').getProxy());
                 Ext.getStore('Mesa').load();
                 this.getToolbarView().down('button[name=backToPedido]').setHidden(false);
                 this.getToolbarView().down('button[name=backToPedido]').setText('MESA: '+btn.getText().substr(3));
@@ -62,7 +66,6 @@ Ext.define('rewpos.controller.Pedido', {
         }
     },
     onChangeCbo: function(cbo, newValue, oldValue) {
-        //console.log(newValue);
         if(newValue>0 && Ext.getStore('Pedido').getCount()>0){
             var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
             var mozo_id = this.getSeleccionView().down('selectfield[name=cboMozos]').getValue();
@@ -118,8 +121,9 @@ Ext.define('rewpos.controller.Pedido', {
                 },
                 callback: function(){
                     rewpos.Util.unmask();
-                    this.getApplication().getController('Pedido').pagarOk(nroatencion);
-                }
+                    this.pagarOk(nroatencion);
+                },
+                scope: this
             });
         } else {
             Ext.Msg.alert('', 'No hay un pedido para procesar', Ext.emptyFn);
@@ -170,11 +174,11 @@ Ext.define('rewpos.controller.Pedido', {
                             rewpos.Util.unmask();
                             var text = Ext.JSON.decode(response.responseText);
                             if(text.success){
-                                this.getApplication().getController('Pedido').imprimirTiket(text.data.id);
+                                this.imprimirTiket(text.data.id);
                                 Ext.getStore('Pago').removeAll();
                                 Ext.getStore('Pedido').removeAll();
-                                this.getApplication().getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
-                                this.getApplication().getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
+                                this.getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
+                                this.getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
                                 if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
                                     rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
                                 } else {
@@ -184,7 +188,8 @@ Ext.define('rewpos.controller.Pedido', {
                             } else {
                                 Ext.Msg.alert('Advertencia', 'Error al pagar la cuenta', Ext.emptyFn);
                             }
-                        }
+                        },
+                        scope: this
                     });
                 }
             },
@@ -199,14 +204,14 @@ Ext.define('rewpos.controller.Pedido', {
                 rewpos.Util.unmask(true);
                 if(success){
                     var text = Ext.JSON.decode(response.responseText);
-                    console.log(text);
                     if(!text.success) {
-                        this.getApplication().getController('Pedido').imprimirTiketQ(id);
+                        this.imprimirTiketQ(id);
                     }
                 } else {
-                    this.getApplication().getController('Pedido').imprimirTiketQ(id);
+                    this.imprimirTiketQ(id);
                 }
-            }
+            },
+            scope: this
         });
     },
     imprimirTiketQ: function(id) {
@@ -233,82 +238,64 @@ Ext.define('rewpos.controller.Pedido', {
         if(Ext.getStore('Pedido').getCount()>0){
             var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
             var mensaje = 'Desea liberar la mesa: '+nroatencion;
-            Ext.Msg.show({
-                title: "Confirmacion",
-                message: mensaje,
-                buttons:  [{
-                    itemId: 'no',
-                    text: 'No'
-                },{
-                    itemId: 'yes',
-                    text: 'Si'
-                }],
-                fn: function(btn) {
-                    if(btn=='yes'){
-                        var modal = Ext.Viewport.add({xtype: 'autorizacionModal'});
-                        var btnOk = modal.down('button[action=ok]');
-                        var cbo = modal.down('selectfield[name=cboAdministradores]');
-                        var pass = modal.down('passwordfield[name=passwordLoginAdmin]');
-                        btnOk.addListener('tap', function(btn){
-                            var adminId = cbo.getValue();
-                            if(adminId>0) {
-                                var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
-                                var pass2 = Ext.getStore('Usuario').findRecord('id', adminId).get('clave').toUpperCase();
-                                if(pass1==pass2){
-                                    Ext.Viewport.remove(btnOk.up('panel'));
-                                    rewpos.Util.mask();
+            var modal = Ext.Viewport.add({xtype: 'autorizacionModal'});
+            var btnOk = modal.down('button[action=ok]');
+            var cbo = modal.down('selectfield[name=cboAdministradores]');
+            var pass = modal.down('passwordfield[name=passwordLoginAdmin]');
+            btnOk.addListener('tap', function(btn){
+                var adminId = cbo.getValue();
+                if(adminId>0) {
+                    var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
+                    var pass2 = Ext.getStore('Usuario').findRecord('id', adminId).get('clave').toUpperCase();
+                    if(pass1==pass2){
+                        Ext.Viewport.remove(btnOk.up('panel'));
+                        rewpos.Util.mask();
+                        Ext.Ajax.request({
+                            url: rewpos.AppGlobals.HOST+'pedido/liberar/'+adminId,
+                            method: 'POST',
+                            params: {
+                                nroatencion: nroatencion
+                            },
+                            callback: function(request, success, response){
+                                rewpos.Util.unmask();
+                                var res = Ext.JSON.decode(response.responseText);
+                                if(res.success){
+                                    Ext.getStore('Pago').removeAll();
+                                    Ext.getStore('Pedido').removeAll();
+                                    if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
+                                        rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
+                                        rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
+                                    } else {
+                                        rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
+                                    }
                                     Ext.Ajax.request({
-                                        url: rewpos.AppGlobals.HOST+'pedido/liberar/'+adminId,
-                                        method: 'POST',
-                                        params: {
-                                            nroatencion: nroatencion
-                                        },
+                                        url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/liberar/'+res.data.id,
                                         callback: function(request, success, response){
-                                            rewpos.Util.unmask();
-                                            var res = Ext.JSON.decode(response.responseText);
-                                            if(res.success){
-                                                Ext.getStore('Pago').removeAll();
-                                                Ext.getStore('Pedido').removeAll();
-                                                if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
-                                                    rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
-                                                    rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
-                                                } else {
-                                                    rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
+                                            if(success){
+                                                var text = Ext.JSON.decode(response.responseText);
+                                                if(!text.success) {
+                                                    Ext.Msg.alert('Advertencia', 'Error al imprimir LIBERADO', Ext.emptyFn);
                                                 }
-                                                Ext.Ajax.request({
-                                                    url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/liberar/'+res.data.id,
-                                                    callback: function(request, success, response){
-                                                        if(success){
-                                                            var text = Ext.JSON.decode(response.responseText);
-                                                            if(!text.success) {
-                                                                Ext.Msg.alert('Advertencia', 'Error al imprimir LIBERADO', Ext.emptyFn);
-                                                            }
-                                                        }else{
-                                                            Ext.Msg.alert('Advertencia', 'Error al imprimir LIBERADO', Ext.emptyFn);
-                                                        }
-                                                    }
-                                                });
-                                            } else {
-                                                Ext.Msg.alert('Advertencia', 'Error al liberar la mesa', Ext.emptyFn);
+                                            }else{
+                                                Ext.Msg.alert('Advertencia', 'Error al imprimir LIBERADO', Ext.emptyFn);
                                             }
                                         }
                                     });
-                                    console.log(rewpos.app);
-                                    rewpos.app.getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
-                                    this.getApplication().getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
                                 } else {
-                                    pass.setValue('');
-                                    Ext.Msg.alert('Advertencia', 'Clave incorrecta', Ext.emptyFn);
+                                    Ext.Msg.alert('Advertencia', 'Error al liberar la mesa', Ext.emptyFn);
                                 }
-                            } else {
-                                Ext.Msg.alert('Advertencia', 'Elija un administrador', Ext.emptyFn);
                             }
                         });
-
+                        this.getApplication().getController('Pedido').getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
+                        this.getApplication().getController('Pedido').getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
+                    } else {
+                        pass.setValue('');
+                        Ext.Msg.alert('Advertencia', 'Clave incorrecta', Ext.emptyFn);
                     }
-                },
-                scope: this
-            });
+                } else {
+                    Ext.Msg.alert('Advertencia', 'Elija un administrador', Ext.emptyFn);
+                }
+            }, this);
         } else {
             Ext.Msg.alert('', 'No hay un mesa para liberar', Ext.emptyFn);
         }
@@ -333,7 +320,6 @@ Ext.define('rewpos.controller.Pedido', {
                 //nrodestino = text; //Ext.data.Types.NUMBER.convert(text)
                 //Ext.isNumber(nrodestino)
                 if(nrodestino>=1 && nrodestino<=rewpos.AppGlobals.MAX_MESAS) {
-                    
                     rewpos.Util.mask();
                     Ext.Ajax.request({
                         url: rewpos.AppGlobals.HOST+'pedido/cambiar',
@@ -350,7 +336,7 @@ Ext.define('rewpos.controller.Pedido', {
                             var res = Ext.JSON.decode(response.responseText);
                             if(res.success){
                                 Ext.Viewport.remove(btnOk.up('panel'));
-                                this.getApplication().getController('Pedido').getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+nrodestino);
+                                this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: '+nrodestino);
                             } else {
                                 mesaDestino.setValue('');
                                 if(res.error=='destinoexiste') {
@@ -359,13 +345,14 @@ Ext.define('rewpos.controller.Pedido', {
                                     Ext.Msg.alert('Advertencia', 'Error al cambiar mesa', Ext.emptyFn);
                                 }
                             }
-                        }
+                        },
+                        scope: this
                     });
                 } else {
                     Ext.Msg.alert('Advertencia', 'Debe ingresar un numero de mesa valido entre 1 y 100', Ext.emptyFn);
                     mesaDestino.setValue('');
                 }
-            });
+            }, this);
         } else {
             Ext.Msg.alert('', 'No hay un mesa para cambiar', Ext.emptyFn);
         }
@@ -388,7 +375,6 @@ Ext.define('rewpos.controller.Pedido', {
                     return;
                 }
                 if(nrodestino>=1 && nrodestino<=rewpos.AppGlobals.MAX_MESAS) {
-                    
                     rewpos.Util.mask();
                     Ext.Ajax.request({
                         url: rewpos.AppGlobals.HOST+'pedido/unir',
@@ -414,13 +400,14 @@ Ext.define('rewpos.controller.Pedido', {
                                     Ext.Msg.alert('Advertencia', 'Error al unir mesa', Ext.emptyFn);
                                 }
                             }
-                        }
+                        },
+                        scope: this
                     });
                 } else {
                     Ext.Msg.alert('Advertencia', 'Debe ingresar un numero de mesa valido entre 1 y 100', Ext.emptyFn);
                     mesaDestino.setValue('');
                 }
-            });
+            }, this);
         } else {
             Ext.Msg.alert('', 'No hay un mesa para unir', Ext.emptyFn);
         }
@@ -435,7 +422,7 @@ Ext.define('rewpos.controller.Pedido', {
         var cajaId = rewpos.AppGlobals.CAJA.get('id');
         var cajeroId = rewpos.AppGlobals.USUARIO.get('id');
         Ext.Ajax.request({
-            url: rewpos.AppGlobals.HOST+'pedido/resumen/'+cajaId+'/'+cajeroId,
+            url: rewpos.AppGlobals.HOST+'pedido/resumen/cc/'+cajaId+'/'+cajeroId,
             callback: function(request, success, response){
                 rewpos.Util.unmask();
                 var text = Ext.JSON.decode(response.responseText);

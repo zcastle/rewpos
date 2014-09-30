@@ -5,19 +5,6 @@ Ext.define('rewpos.Util', {
     currencyAtEnd: false,
     decimalSeparator: '.',
     thousandSeparator: ',',
-
-    doAjaxCall: function(pUrl, pMethod, pParams, pCallback, pScope) {
-        Ext.Ajax.request({
-            url: pUrl,
-            method: pMethod,
-            params: pParams,
-            callback: function(request, success, response) {
-                if (Ext.isFunction(pCallback)){
-                    pCallback.call(pScope, request, success, response);
-                }
-            }
-        });
-    },
     formatCurrency: function (v, currencySign, decimals, end) {
         var negativeSign = '',
             format = ",0",

@@ -1,2 +1,2 @@
 // @tag full-page
-// @require /opt/lampp/htdocs/rewpos/app.js
+// @require /var/www/html/rewpos/app.js

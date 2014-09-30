@@ -78,34 +78,30 @@ Ext.define('rewpos.controller.Editar', {
             }],
             fn: function(btn) {
                 if(btn=='yes'){
-                    rewpos.Util.mask();
                     var form = this.getEditarForm();
                     var record = form.getRecord();
+                    Ext.getStore('Pedido').remove(record);
+                    if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
+                        rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
+                    } else {
+                        rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
+                    }
+                    if(record.get('enviado')=='S') {
+                        Ext.Ajax.request({
+                            url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/remove/'+record.get('id')+'/'+record.get('cantidad'),
+                            callback: function(request, success, response){
+                                var text = Ext.JSON.decode(response.responseText);
+                                if(!text.success) {
+                                    Ext.Msg.alert('Advertencia', 'Error al ELIMINAR PRODUCTO', Ext.emptyFn);
+                                }
+                            }
+                        });
+                    }
+                    //
+                    rewpos.Util.mask();
                     record.erase({
                         success: function() {
                             rewpos.Util.unmask();
-                            //
-                            //var list = this.getApplication().getController('Editar').getPedidoList;
-                            //list.select(0);
-                            //
-                            if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
-                                rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
-                            } else {
-                                rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
-                            }
-                            Ext.getStore('Pedido').remove(record);
-                            if(record.get('enviado')=='S') {
-                                console.log('Enviando anulacion');
-                                Ext.Ajax.request({
-                                    url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/remove/'+record.get('id')+'/'+record.get('cantidad'),
-                                    callback: function(request, success, response){
-                                        var text = Ext.JSON.decode(response.responseText);
-                                        if(!text.success) {
-                                            Ext.Msg.alert('Advertencia', 'Error al ELIMINAR PRODUCTO', Ext.emptyFn);
-                                        }
-                                    }
-                                });
-                            }
                         }
                     });
                 }

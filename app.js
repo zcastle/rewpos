@@ -16,8 +16,9 @@
 
 Ext.application({
     name: 'rewpos',
+    //,'rewpos.Print',
     requires: [
-        'rewpos.AppGlobals','rewpos.Util','rewpos.Print','rewpos.Menu',
+        'rewpos.AppGlobals','rewpos.Util', 'rewpos.Menu',
         'Ext.form.Panel',
         'Ext.form.FieldSet',
         'Ext.Label',
@@ -28,6 +29,7 @@ Ext.application({
         'Ext.field.Hidden',
         'Ext.field.Password',
         'Ext.field.Search',
+        'Ext.field.TextArea',
         'Ext.Button',
         'Ext.Menu',
         'Ext.plugin.PullRefresh',
