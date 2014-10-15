@@ -1,7 +1,7 @@
 Ext.define('rewpos.controller.Pedido', {
     extend: 'Ext.app.Controller',
     config: {
-        stores: ['Mesa','Pedido','Categoria','Producto', 'Usuario'],
+        stores: ['Mesa','Pedido','Categoria','Producto', 'Cajero'],
         models: ['Mesa','Pedido','Categoria','Producto'],
         refs: {
             editarForm: 'editarForm',
@@ -26,20 +26,25 @@ Ext.define('rewpos.controller.Pedido', {
             }
         } 
     },
-    onActivate: function(){
-        Ext.Viewport.setMenu(rewpos.Menu.USUARIO, {
-            side: 'right',
-            reveal: false,
-            cover: false
-        });
+    onActivate: function(view){
+        if(rewpos.AppGlobals.CAJA.get('tipo')=='C') {
+            Ext.Viewport.setMenu(rewpos.Menu.CAJA, {
+                side: 'right',
+                reveal: false,
+                cover: false
+            });
+        } else {
+            Ext.Viewport.setMenu(rewpos.Menu.PEDIDO, {
+                side: 'right',
+                reveal: false,
+                cover: false
+            });
+        }
     },
     ontapSeleccion: function(btn) {
         switch(btn.getItemId()) {
             case 'btnSeleccionMesa':
-                //Ext.getStore('Mesa').load();
-                //Ext.getStore('Mesa').proxy.url = rewpos.AppGlobals.HOST+'mesa/'+rewpos.AppGlobals.CAJA_ID;
                 Ext.getStore('Mesa').getProxy().setUrl(rewpos.AppGlobals.HOST+'mesa/'+rewpos.AppGlobals.CAJA_ID);
-                //console.log(Ext.getStore('Mesa').getProxy());
                 Ext.getStore('Mesa').load();
                 this.getToolbarView().down('button[name=backToPedido]').setHidden(false);
                 this.getToolbarView().down('button[name=backToPedido]').setText('MESA: '+btn.getText().substr(3));
@@ -47,7 +52,7 @@ Ext.define('rewpos.controller.Pedido', {
                 break;
             case 'lblTotalMonto':
                 //Ext.data.Types.NUMBER.convert(btn.getText().substr(4))<=0
-                if(Ext.getStore('Pedido').getCount()>0) {
+                if(Ext.getStore('Pedido').getCount()>0 && rewpos.AppGlobals.CAJA.get('tipo')=='C') {
                     var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
                     var cliente = Ext.getStore('Pedido').getAt(0).get('cliente_name');
                     if(cliente=='' || cliente==null) {
@@ -56,7 +61,7 @@ Ext.define('rewpos.controller.Pedido', {
                         this.getPagosView().down('button[name=btnCliente]').setText(cliente);
                     }
                     Ext.getStore('Pago').load({
-                        url: rewpos.AppGlobals.HOST+'pedido/pago/'+nroatencion,
+                        url: rewpos.AppGlobals.HOST+'pedido/pago/'+nroatencion+'/'+rewpos.AppGlobals.CAJA_ID,
                         callback: function() {
                             rewpos.Util.showPanel('comandoCard', 'pagosView', 'right');
                         }
@@ -76,6 +81,7 @@ Ext.define('rewpos.controller.Pedido', {
                 method: 'POST',
                 params: {
                     nroatencion: nroatencion,
+                    caja_id: rewpos.AppGlobals.CAJA_ID,
                     mozo_id: mozo_id,
                     pax: pax
                 },
@@ -110,21 +116,28 @@ Ext.define('rewpos.controller.Pedido', {
         }
         if(Ext.getStore('Pedido').getCount()>0){
             var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
-            rewpos.Util.mask();
+            Ext.getStore('Pago').load({
+                url: rewpos.AppGlobals.HOST+'pedido/pago/'+nroatencion+'/'+rewpos.AppGlobals.CAJA_ID,
+                callback: function() {
+                    this.pagarOk(nroatencion);
+                },
+                scope: this
+            });
+            /*rewpos.Util.mask();
             Ext.Ajax.request({
                 url: rewpos.AppGlobals.HOST+'pedido/actualizar/debug',
                 method: 'POST',
                 params: {
                     nroatencion: nroatencion,
-                    caja_id: rewpos.AppGlobals.CAJA.get('id'),
-                    cajero_id: rewpos.AppGlobals.USUARIO.get('id')
+                    caja_id: rewpos.AppGlobals.CAJA_ID,
+                    cajero_id: rewpos.AppGlobals.CAJERO.get('id')
                 },
                 callback: function(){
                     rewpos.Util.unmask();
                     this.pagarOk(nroatencion);
                 },
                 scope: this
-            });
+            });*/
         } else {
             Ext.Msg.alert('', 'No hay un pedido para procesar', Ext.emptyFn);
         }
@@ -163,15 +176,17 @@ Ext.define('rewpos.controller.Pedido', {
             }],
             fn: function(btn) {
                 if(btn=='yes'){
-                    rewpos.Util.mask();
+                    rewpos.Util.mask('Procesando...', true);
                     Ext.Ajax.request({
                         url: rewpos.AppGlobals.HOST+'pedido/pagar',
                         method: 'POST',
                         params: {
-                            nroatencion: nroatencion
+                            nroatencion: nroatencion,
+                            caja_id: rewpos.AppGlobals.CAJA_ID,
+                            cajero_id: rewpos.AppGlobals.CAJERO.get('id')
                         },
                         callback: function(request, success, response){
-                            rewpos.Util.unmask();
+                            rewpos.Util.unmask(true);
                             var text = Ext.JSON.decode(response.responseText);
                             if(text.success){
                                 this.imprimirTiket(text.data.id);
@@ -184,7 +199,6 @@ Ext.define('rewpos.controller.Pedido', {
                                 } else {
                                     rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                                 }
-                                
                             } else {
                                 Ext.Msg.alert('Advertencia', 'Error al pagar la cuenta', Ext.emptyFn);
                             }
@@ -246,7 +260,7 @@ Ext.define('rewpos.controller.Pedido', {
                 var adminId = cbo.getValue();
                 if(adminId>0) {
                     var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
-                    var pass2 = Ext.getStore('Usuario').findRecord('id', adminId).get('clave').toUpperCase();
+                    var pass2 = Ext.getStore('Cajero').findRecord('id', adminId).get('clave').toUpperCase();
                     if(pass1==pass2){
                         Ext.Viewport.remove(btnOk.up('panel'));
                         rewpos.Util.mask();
@@ -419,8 +433,8 @@ Ext.define('rewpos.controller.Pedido', {
             return;
         }
         rewpos.Util.mask();
-        var cajaId = rewpos.AppGlobals.CAJA.get('id');
-        var cajeroId = rewpos.AppGlobals.USUARIO.get('id');
+        var cajaId = rewpos.AppGlobals.CAJA_ID;
+        var cajeroId = rewpos.AppGlobals.CAJERO.get('id');
         Ext.Ajax.request({
             url: rewpos.AppGlobals.HOST+'pedido/resumen/cc/'+cajaId+'/'+cajeroId,
             callback: function(request, success, response){
@@ -435,7 +449,7 @@ Ext.define('rewpos.controller.Pedido', {
                 var atenciones = rewpos.Util.formatValue(atenciones);
                 var ventas = rewpos.Util.formatValue(ventas);
                 var total = rewpos.Util.formatValue(total);
-                var cajero = rewpos.AppGlobals.USUARIO.get('nombre')+' '+rewpos.AppGlobals.USUARIO.get('apellido');
+                var cajero = rewpos.AppGlobals.CAJERO.get('nombre')+' '+rewpos.AppGlobals.CAJERO.get('apellido');
                 Ext.Msg.show({
                     title: 'Resumen Diario - '+cajero, 
                     message: '<div id="resumenMessage">'+
@@ -463,14 +477,14 @@ Ext.define('rewpos.controller.Pedido', {
             var adminId = cbo.getValue();
             if(adminId>0) {
                 var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
-                var pass2 = Ext.getStore('Usuario').findRecord('id', adminId).get('clave').toUpperCase();
+                var pass2 = Ext.getStore('Cajero').findRecord('id', adminId).get('clave').toUpperCase();
                 if(pass1==pass2){
                     Ext.Viewport.remove(btnOk.up('panel'));
                     rewpos.Util.mask();
                     var cajaId;
                     var urlCierre;
-                    if(rewpos.AppGlobals.USUARIO==null){
-                        var centrocostoId = Ext.getStore('Usuario').findRecord('id', adminId).get('centrocosto_id')
+                    if(rewpos.AppGlobals.CAJERO==null){
+                        var centrocostoId = Ext.getStore('Cajero').findRecord('id', adminId).get('centrocosto_id')
                         var urlCaja = Ext.getStore('Caja').getProxy().getUrl()+'/'+centrocostoId;
                         Ext.getStore('Caja').load({
                             url: urlCaja,
@@ -508,8 +522,8 @@ Ext.define('rewpos.controller.Pedido', {
                         })
                         urlCierre = rewpos.AppGlobals.HOST_PRINT+'print/cierre/'+cajaId;
                     } else {
-                        cajaId = rewpos.AppGlobals.CAJA.get('id');
-                        var cajeroId = rewpos.AppGlobals.USUARIO.get('id');
+                        cajaId = rewpos.AppGlobals.CAJA_ID;
+                        var cajeroId = rewpos.AppGlobals.CAJERO.get('id');
                         urlCierre = rewpos.AppGlobals.HOST_PRINT+'print/cierre/'+cajaId+'/'+cajeroId
                         Ext.Ajax.request({
                             url: urlCierre,

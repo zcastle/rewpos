@@ -2,7 +2,7 @@ Ext.define('rewpos.view.PedidoView', {
 	extend: 'Ext.Container',
     xtype: 'pedidoView',
     config: {
-        id: 'cambio',
+        //id: 'cambio',
         layout: 'hbox',
         items: [{
             flex: 1,
@@ -31,7 +31,7 @@ Ext.define('rewpos.view.PedidoView', {
                     xtype: 'productoTouchView'
                 },{
                     xtype: 'editarForm',
-                    scrollable: false,
+                    //scrollable: false,
                     height: '100%'
                 },{
                     xtype: 'pagosView'

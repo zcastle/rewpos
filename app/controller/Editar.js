@@ -16,6 +16,9 @@ Ext.define('rewpos.controller.Editar', {
             },
             'editarForm button[name=btnTecladoCantidad]': {
                 tap: 'onTapClickTecladoCantidad'
+            },
+            'editarForm textareafield': {
+                focus: 'onFocusTxtMensaje'
             }
         } 
     },
@@ -130,5 +133,22 @@ Ext.define('rewpos.controller.Editar', {
             Ext.Viewport.remove(btnOk.up('panel'));
             form.query("field[name=precio]")[0].setValue(txtPrecioNew.getValue());
         });
+    },
+    onFocusTxtMensaje: function(txt, e) {
+        if(Ext.os.deviceType=='Tablet') {
+            rewpos.Util.showPanel('mainCard', 'tecladoFull', 'left');
+            var tecladoFull = Ext.getCmp('tecladoFull');
+            var productoName = tecladoFull.down('textfield[name=producto_name]');
+            var text = tecladoFull.down('textfield[name=texto]');
+            var btnEnter = tecladoFull.down('button');
+            var form = this.getEditarForm();
+            var values = form.getValues();
+            productoName.setValue(values.producto_name);
+            text.setValue(txt.getValue());
+            btnEnter.addListener('tap', function(btn){
+                txt.setValue(text.getValue());
+                rewpos.Util.showPanel('mainCard', 'pedidoView', 'right');
+            });
+        }
     }
 });

@@ -20,12 +20,8 @@ Ext.define('rewpos.controller.AnularDocumentoModal', {
         } 
     },
     onInitialize: function(view){
-        /*if(rewpos.AppGlobals.DEBUG) {
-            Ext.Msg.alert('Advertencia', 'No se puede realizar anulaciones en modo DEBUG', Ext.emptyFn);
-            return;
-        }*/
         var caja_id, cajero_id, url;
-        if(rewpos.AppGlobals.CAJA==null){
+        if(rewpos.AppGlobals.CAJERO==null){
             view.setHidden(true);
             var modal = Ext.Viewport.add({xtype: 'autorizacionModal'});
             var cbo = modal.down('selectfield[name=cboAdministradores]');
@@ -35,13 +31,13 @@ Ext.define('rewpos.controller.AnularDocumentoModal', {
                 var adminId = cbo.getValue();
                 if(adminId>0) {
                     var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
-                    var pass2 = Ext.getStore('Usuario').findRecord('id', adminId).get('clave').toUpperCase();
+                    var pass2 = Ext.getStore('Admin').findRecord('id', adminId).get('clave').toUpperCase();
                     if(pass1==pass2){
                         rewpos.Util.mask();
                         pass.setValue('');
                         Ext.Viewport.remove(btnOk.up('panel'));
                         view.setHidden(false);
-                        var centrocostoId = Ext.getStore('Usuario').findRecord('id', adminId).get('centrocosto_id')
+                        var centrocostoId = Ext.getStore('Admin').findRecord('id', adminId).get('centrocosto_id')
                         var urlCaja = Ext.getStore('Caja').getProxy().getUrl()+'/'+centrocostoId;
                         Ext.getStore('Caja').load({
                             url: urlCaja,
@@ -69,8 +65,8 @@ Ext.define('rewpos.controller.AnularDocumentoModal', {
                 }
             });
         } else {
-            caja_id = rewpos.AppGlobals.CAJA.get('id');
-            cajero_id = rewpos.AppGlobals.USUARIO.get('id');
+            caja_id = rewpos.AppGlobals.CAJA_ID;
+            cajero_id = rewpos.AppGlobals.CAJERO.get('id');
             url = rewpos.AppGlobals.HOST+'venta/anular/'+caja_id+"/"+cajero_id;
             Ext.getStore('Venta').load({
                 url: url
@@ -100,7 +96,7 @@ Ext.define('rewpos.controller.AnularDocumentoModal', {
                 var adminId = cbo.getValue();
                 if(adminId>0) {
                     var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
-                    var pass2 = Ext.getStore('Usuario').findRecord('id', adminId).get('clave').toUpperCase();
+                    var pass2 = Ext.getStore('Admin').findRecord('id', adminId).get('clave').toUpperCase();
                     if(pass1==pass2){
                         Ext.Viewport.remove(btnOk.up('panel'));
                         rewpos.Util.mask();

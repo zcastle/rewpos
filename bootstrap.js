@@ -763,6 +763,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "rewpos.controller.Pagos": [],
   "rewpos.controller.Pedido": [],
   "rewpos.controller.Producto": [],
+  "rewpos.controller.TecladoFull": [],
   "rewpos.controller.TecladoPrecioModal": [],
   "rewpos.controller.Toolbar": [],
   "rewpos.model.Caja": [],
@@ -777,14 +778,16 @@ Ext.ClassManager.addNameAlternateMappings({
   "rewpos.model.Ubigeo": [],
   "rewpos.model.Usuario": [],
   "rewpos.model.Venta": [],
+  "rewpos.store.Admin": [],
   "rewpos.store.Caja": [],
+  "rewpos.store.Cajero": [],
   "rewpos.store.Categoria": [],
   "rewpos.store.Mesa": [],
+  "rewpos.store.Mozo": [],
   "rewpos.store.Pago": [],
   "rewpos.store.Pedido": [],
   "rewpos.store.Producto": [],
   "rewpos.store.Ubigeo": [],
-  "rewpos.store.Usuario": [],
   "rewpos.store.Venta": [],
   "rewpos.view.AccesoView": [],
   "rewpos.view.AnularDocumentoModal": [],
@@ -809,6 +812,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "rewpos.view.ProductoTouchView": [],
   "rewpos.view.ProductoView": [],
   "rewpos.view.SeleccionView": [],
+  "rewpos.view.TecladoFull": [],
   "rewpos.view.TecladoMoneda": [],
   "rewpos.view.TecladoNumerico": [],
   "rewpos.view.TecladoPrecioModal": [],
@@ -1775,6 +1779,7 @@ Ext.ClassManager.addNameAliasMappings({
   "rewpos.controller.Pagos": [],
   "rewpos.controller.Pedido": [],
   "rewpos.controller.Producto": [],
+  "rewpos.controller.TecladoFull": [],
   "rewpos.controller.TecladoPrecioModal": [],
   "rewpos.controller.Toolbar": [],
   "rewpos.model.Caja": [],
@@ -1789,14 +1794,16 @@ Ext.ClassManager.addNameAliasMappings({
   "rewpos.model.Ubigeo": [],
   "rewpos.model.Usuario": [],
   "rewpos.model.Venta": [],
+  "rewpos.store.Admin": [],
   "rewpos.store.Caja": [],
+  "rewpos.store.Cajero": [],
   "rewpos.store.Categoria": [],
   "rewpos.store.Mesa": [],
+  "rewpos.store.Mozo": [],
   "rewpos.store.Pago": [],
   "rewpos.store.Pedido": [],
   "rewpos.store.Producto": [],
   "rewpos.store.Ubigeo": [],
-  "rewpos.store.Usuario": [],
   "rewpos.store.Venta": [],
   "rewpos.view.AccesoView": [
     "widget.accesoView"
@@ -1866,6 +1873,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "rewpos.view.SeleccionView": [
     "widget.seleccionView"
+  ],
+  "rewpos.view.TecladoFull": [
+    "widget.tecladoFull"
   ],
   "rewpos.view.TecladoMoneda": [
     "widget.tecladoMoneda"

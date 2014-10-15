@@ -1,7 +1,7 @@
 Ext.define('rewpos.controller.AutorizacionModal', {
     extend: 'Ext.app.Controller',
     config: {
-        stores: ['Usuario'],
+        stores: ['Admin'],
         refs: {
             autorizacionModal: 'autorizacionModal'
         },
@@ -24,19 +24,12 @@ Ext.define('rewpos.controller.AutorizacionModal', {
             text: 'Seleccionar',
             value: 0
         });
-        Ext.getStore('Usuario').clearFilter();
-        Ext.getStore('Usuario').each(function(item){
-            if(item.get('rol_id')==rewpos.AppGlobals.ROL_ID_ADMINISTRADOR) {
+        Ext.getStore('Admin').each(function(item){
+            if(item.get('rol_id')==rewpos.AppGlobals.ROL_ID_ADMIN) {
                 administradores.push({
-                    text: item.get('nombre')+' '+item.get('apellido'),
-                    value: item.get('id')
+                    value: item.get('id'),
+                    text: item.get('nombre')+' '+item.get('apellido')
                 })
-            }
-        });
-        Ext.getStore('Usuario').clearFilter();
-        Ext.getStore('Usuario').filter(function(record) {
-            if (record.get('rol_id')==rewpos.AppGlobals.ROL_ID_VENTA || record.get('rol_id')==rewpos.AppGlobals.ROL_ID_VENTA_JEFE) {
-                return true;
             }
         });
         view.down('selectfield[name=cboAdministradores]').setOptions(administradores);

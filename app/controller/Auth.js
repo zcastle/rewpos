@@ -21,13 +21,13 @@ Ext.define('rewpos.controller.Auth', {
         } 
     },
     onActivate: function(view) {
-        var sx = rewpos.AppGlobals.USUARIO.get('sexo');
+        var sx = rewpos.AppGlobals.CAJERO.get('sexo');
         if(sx=='M') {
             view.down('image').setSrc('resources/images/usuario_m.png');
         } else {
             view.down('image').setSrc('resources/images/usuario_f.png');
         }
-        view.down('label').setHtml(rewpos.AppGlobals.USUARIO.get('nombre')+' '+rewpos.AppGlobals.USUARIO.get('apellido'));
+        view.down('label').setHtml(rewpos.AppGlobals.CAJERO.get('nombre')+' '+rewpos.AppGlobals.CAJERO.get('apellido'));
         view.down('passwordfield').setValue('');
     },
     onTapNum: function(btn) {
@@ -42,7 +42,7 @@ Ext.define('rewpos.controller.Auth', {
         var txtPassword = this.getAuthView().down('passwordfield[name=passwordLogin]');
         var pass1 = rewpos.Util.MD5(txtPassword.getValue()).toUpperCase();
         txtPassword.setValue('');
-        var pass2 = rewpos.AppGlobals.USUARIO.get('clave').toUpperCase();
+        var pass2 = rewpos.AppGlobals.CAJERO.get('clave').toUpperCase();
         if(pass1==pass2){
             rewpos.Util.showPanel('mainCard', 'pedidoView', 'left');
         } else {

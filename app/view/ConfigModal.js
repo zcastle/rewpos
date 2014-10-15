@@ -3,9 +3,9 @@ Ext.define('rewpos.view.ConfigModal', {
     xtype: 'configModal',
     config: {
         centered: true,
-        width: 450,
-        height: 110,
-        hideOnMaskTap: true,
+        width: 400,
+        height: 210,
+        hideOnMaskTap: false,
         modal: true,
         items: [{
             xtype: 'fieldset',
@@ -18,11 +18,17 @@ Ext.define('rewpos.view.ConfigModal', {
                 name: 'caja_id',
                 minValue: 1,
                 stepValue: 1
-            }/*,{
+            },{
                 xtype: 'textfield',
-                label: 'HOST SERVICE',
-                name: 'host_service'
-            }*/]
+                label: 'PRINT SERVER',
+                name: 'print_server'
+            },{
+                xtype: 'spinnerfield',
+                label: 'PUERTO',
+                name: 'print_port',
+                minValue: 1,
+                stepValue: 1
+            }]
         },{
             xtype: 'toolbar',
             docked: 'bottom',

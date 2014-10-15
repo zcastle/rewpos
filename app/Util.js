@@ -5,6 +5,11 @@ Ext.define('rewpos.Util', {
     currencyAtEnd: false,
     decimalSeparator: '.',
     thousandSeparator: ',',
+    log: function(msg) {
+        if(rewpos.AppGlobals.DEV) {
+            console.log(msg);
+        }
+    },
     formatCurrency: function (v, currencySign, decimals, end) {
         var negativeSign = '',
             format = ",0",

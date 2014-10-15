@@ -15,11 +15,13 @@ Ext.define('rewpos.view.SeleccionView', {
         },{
             xtype: 'selectfield',
             name: 'cboPax',
+            usePicker: true,
             width: 120,
             baseCls: 'btn_seleccion'
         },{
             xtype: 'selectfield',
             name: 'cboMozos',
+            usePicker: true,
             flex: 1,
             baseCls: 'btn_seleccion'
         },{

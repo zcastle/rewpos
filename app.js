@@ -13,7 +13,6 @@
     enabled: true,
     disableCaching: false
 });*/
-
 Ext.application({
     name: 'rewpos',
     //,'rewpos.Print',
@@ -41,7 +40,7 @@ Ext.application({
         'Main','Toolbar','Comando','Pedido','Mesas','Editar','Pagos',
         'Acceso','Auth','AutorizacionModal','Producto','ClienteModal',
         'CambiarMesaModal','TecladoPrecioModal','AnularDocumentoModal',
-        'ConfigModal'
+        'ConfigModal','TecladoFull'
     ],
     //'Acciones',
     views: [
@@ -50,7 +49,7 @@ Ext.application({
         'EditarForm','TecladoMoneda','PagosView','AccesoView','AuthView','TecladoNumerico',
         'ChatView','AutorizacionModal','ClienteModal','CambiarMesaModal','TecladoPrecioModal',
         'AnularDocumentoModal','ProductoTouchView','CategoriaDataView','ProductoDataView',
-        'ConfigModal'
+        'ConfigModal','TecladoFull'
     ],
 
     icon: {
@@ -72,15 +71,14 @@ Ext.application({
     },
 
     launch: function() {
-        // Destroy the #appLoadingIndicator element
-        Ext.Ajax.setDisableCaching(false);
-        Ext.Ajax.setUseDefaultXhrHeader(false);
+        //Ext.Ajax.setDisableCaching(false);
+        //Ext.Ajax.setUseDefaultXhrHeader(false);
+        //Destroy the #appLoadingIndicator element
         //Ext.fly('appLoadingIndicator').destroy();
         Ext.fly('canvasloader-container').destroy();
         // Initialize the main view
         Ext.Viewport.add(Ext.create('rewpos.view.Main'));
     },
-
     onUpdated: function() {
         Ext.Msg.confirm(
             "Actualización de la aplicación", //Application Update

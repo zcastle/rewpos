@@ -10,7 +10,7 @@ Ext.define('rewpos.view.AccesoView', {
             xtype: 'dataview',
             flex: 1,
             cls: 'dvUsuarios',
-            store: 'Usuario',
+            //store: 'Cajero',
             inline: true,
             itemTpl: new Ext.XTemplate(
                 '<div class="usuario">',

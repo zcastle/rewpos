@@ -4,6 +4,7 @@ Ext.define('rewpos.model.Pago', {
         fields: [
         'id',
         'nroatencion',
+        {name: 'caja_id', type: 'int'},
         'tipopago',
         {name: 'valorpago', type: 'float'},
         {name: 'tipocambio', type: 'float'},

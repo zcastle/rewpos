@@ -27,7 +27,9 @@ Ext.define('rewpos.controller.ConfigModal', {
                 } else {
                     form.setRecord(Ext.create('rewpos.model.Config', {
                         id: 1,
-                        caja_id: 1
+                        caja_id: 2,
+                        print_server: 'localhost',
+                        print_port: '8523'
                     }));
                 }
             },
@@ -55,12 +57,16 @@ Ext.define('rewpos.controller.ConfigModal', {
                 case 'caja_id':
                     return 'CAJA ID';
                     break;
-                case 'host_service':
-                    return 'HOST SERVICE';
+                case 'print_server':
+                    return 'PRINT SERVER';
+                    break;
+                case 'print_port':
+                    return 'PUERTO';
                     break;
             }
         }
         if(!errors.isValid()) {
+            var errorString = '';
             errors.each(function (errorObj){
                 errorString += getLabel(errorObj.getField())+"<br>";
                 var s = Ext.String.format('field[name={0}]',errorObj.getField());
@@ -70,7 +76,9 @@ Ext.define('rewpos.controller.ConfigModal', {
         } else {
             Ext.create('rewpos.model.Config', {
                 id: 1,
-                caja_id: record.get('caja_id')
+                caja_id: record.get('caja_id'),
+                print_server: record.get('print_server'),
+                print_port: record.get('print_port')
             }).save({
                 callback: function(){
                     window.location.reload();

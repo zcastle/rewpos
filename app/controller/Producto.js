@@ -153,7 +153,7 @@ Ext.define('rewpos.controller.Producto', {
         rewpos.Util.mask('Insertando...', true);
         Ext.create('rewpos.model.Pedido', {
             nroatencion: mesa,
-            cajero_id: rewpos.AppGlobals.USUARIO.get('id'),
+            cajero_id: rewpos.AppGlobals.CAJERO.get('id'),
             mozo_id: mozo_id,
             producto_id: record.get('id'),
             producto_name: record.get('nombre'),

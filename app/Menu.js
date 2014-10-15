@@ -1,5 +1,6 @@
 Ext.define('rewpos.Menu', {
     singleton: true,
-    USUARIO: null,
+    CAJA: null,
+    PEDIDO: null,
     ADMIN: null
 });

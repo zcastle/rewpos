@@ -1,9 +1,10 @@
 Ext.define('rewpos.controller.Acceso', {
     extend: 'Ext.app.Controller',
     config: {
-        stores: ['Usuario','Caja'],
+        stores: ['Pedido', 'Cajero','Mozo','Caja'],
         refs: {
-            toolbarView: 'toolbarView'
+            toolbarView: 'toolbarView',
+            seleccionView: 'seleccionView',
         },
         control: {
             'accesoView': {
@@ -14,9 +15,7 @@ Ext.define('rewpos.controller.Acceso', {
             }
         } 
     },
-    onActivate: function() {
-        rewpos.AppGlobals.CAJA=null;
-        rewpos.AppGlobals.USUARIO=null;
+    onActivate: function(view) {
         if(rewpos.Menu.ADMIN==null) {
             rewpos.Menu.ADMIN = Ext.create('Ext.Menu', {
                 cls: 'menupos',
@@ -38,31 +37,45 @@ Ext.define('rewpos.controller.Acceso', {
             cover: false
         });
         this.getToolbarView().down('button[name=showmenu]').setHidden(false);
-        Ext.getStore('Usuario').clearFilter();
-        Ext.getStore('Usuario').filter(function(record) {
-            if (record.get('rol_id')==rewpos.AppGlobals.ROL_ID_VENTA || record.get('rol_id')==rewpos.AppGlobals.ROL_ID_VENTA_JEFE) {
-                return true;
-            }
-        });
     },
     onItemTapUsuariosList: function(item, index, target, record) {
-        rewpos.AppGlobals.USUARIO = record;
+        this.getSeleccionView().down('button[name=btnSeleccionMesa]').setText('M: 1');
+        Ext.getStore('Pedido').load({
+            url: rewpos.AppGlobals.HOST+'pedido/1/'+rewpos.AppGlobals.CAJA_ID,
+            callback: function(records) {
+                if(records.length>0){
+                    this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
+                    this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
+                }
+            },
+            scope: this
+        });
+        rewpos.AppGlobals.CAJERO = record;
         this.getToolbarView().down('button[name=usuarioLogin]').setText(record.get('nombre')+' '+record.get('apellido'));
         this.getToolbarView().down('button[name=showmenu]').setHidden(true);
+        if(rewpos.AppGlobals.CAJA.get('tipo')=='P') {
+            //this.getSeleccionView().down('selectfield[name=cboMozos]').setValueField(record.get('id'));
+            this.getSeleccionView().down('selectfield[name=cboMozos]').setOptions({
+                value: record.get('id'),
+                text: record.get('nombre')+' '+record.get('apellido')
+            });
+            this.getSeleccionView().down('selectfield[name=cboMozos]').disable();
+        }
         this.chageViewToPedido();
     },
     chageViewToPedido: function() {
         rewpos.Util.showPanel('mainCard', 'authView', 'left');
     },
     configuracion: function() {
-        Ext.Viewport.toggleMenu('right');
+        Ext.Viewport.hideAllMenus(true); //toggleMenu('right');
         var modal = Ext.Viewport.add({xtype: 'autorizacionModal'});
         var cbo = modal.down('selectfield');
         cbo.setHidden(true);
         var btnOk = modal.down('button[action=ok]');
         var pass = modal.down('passwordfield[name=passwordLoginAdmin]');
         btnOk.addListener('tap', function(btn){
-            if(pass.getValue()=='2385'){
+            var p = rewpos.Util.MD5(pass.getValue()).toLowerCase();
+            if(p=='1a68e5f4ade56ed1d4bf273e55510750'){
                 Ext.Viewport.remove(btnOk.up('panel'));
                 Ext.Viewport.add({xtype: 'configModal'});
             } else {

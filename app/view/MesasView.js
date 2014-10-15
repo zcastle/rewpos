@@ -9,26 +9,7 @@ Ext.define('rewpos.view.MesasView', {
             plugins: [{
                 xclass: 'Ext.plugin.PullRefresh',
                 pullText: 'Recargar Mesas',
-                releaseText: 'Suelta para Recargar',
-                autoSnapBack: false,
-                fetchLatest: function() {
-                    var store = this.getList().getStore(),
-                        proxy = store.getProxy(),
-                        operation;
-
-                    operation = Ext.create('Ext.data.Operation', {
-                        page: 1,
-                        start: 0,
-                        model: store.getModel(),
-                        limit: store.getPageSize(),
-                        action: 'read',
-                        sorters: store.getSorters(),
-                        filters: store.getRemoteFilter() ? store.getFilters() : []
-                    });
-                    store.removeAll();
-                    //console.log(this.getList());
-                    proxy.read(operation, this.onLatestFetched, this);
-                }
+                releaseText: 'Suelta para Recargar'
             }],
             store: 'Mesa',
             inline: true,
@@ -40,9 +21,7 @@ Ext.define('rewpos.view.MesasView', {
                 '</tpl>',
                 '{id}</div>',
                 {
-                    // XTemplate configuration:
                     disableFormats: true,
-                    // member functions:
                     isOcupada: function(estado){
                        return estado == 'O';
                     }

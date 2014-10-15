@@ -40,23 +40,10 @@ Ext.define('rewpos.controller.Pagos', {
                 }, this)
                 var saldo = cuenta - pagado;
                 if(saldo>0) {
-                    var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
                     var tipoPago = btn.getText();
                     var orden = btn.orden;
                     var valorPago = saldo;
-                    var tipoCambio = tipoPago=='DOLARES' ? rewpos.AppGlobals.TIPO_CAMBIO : '';
-                    Ext.create('rewpos.model.Pago', {
-                        nroatencion: nroatencion,
-                        tipopago: tipoPago,
-                        valorpago: valorPago,
-                        tipocambio: tipoCambio,
-                        orden: orden
-                    }).save({
-                        success: function(record) {
-                            Ext.getStore('Pago').add(record);
-                        },
-                        scope: this
-                    });
+                    this.addPago(tipoPago, valorPago, orden);
                 }
             }
         }
@@ -73,21 +60,24 @@ Ext.define('rewpos.controller.Pagos', {
             existRecord.set('valorpago', existRecord.get('valorpago')+valorPago);
             existRecord.save();
         } else {
-            var tipoCambio = tipoPago=='DOLARES' ? rewpos.AppGlobals.TIPO_CAMBIO : '';
-            var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
-            Ext.create('rewpos.model.Pago', {
-                nroatencion: nroatencion,
-                tipopago: tipoPago,
-                valorpago: valorPago,
-                tipocambio: tipoCambio,
-                orden: orden
-            }).save({
-                success: function(record) {
-                    Ext.getStore('Pago').add(record);
-                },
-                scope: this
-            });
+            this.addPago(tipoPago, valorPago, orden);
         }
+    },
+    addPago: function( tipoPago, valorPago, orden) {
+        var tipoCambio = tipoPago=='DOLARES' ? rewpos.AppGlobals.TIPO_CAMBIO : '';
+        Ext.create('rewpos.model.Pago', {
+            nroatencion: Ext.getStore('Pedido').getAt(0).get('nroatencion'),
+            tipopago: tipoPago,
+            caja_id: rewpos.AppGlobals.CAJA_ID,
+            valorpago: valorPago,
+            tipocambio: tipoCambio,
+            orden: orden
+        }).save({
+            success: function(record) {
+                Ext.getStore('Pago').add(record);
+            },
+            scope: this
+        });
     },
     ontapBtnCliente: function() {
         Ext.Viewport.add({xtype: 'clienteModal', scrollable: false});

@@ -23,19 +23,6 @@ Ext.define('rewpos.view.Main', {
             },{
                 xtype: 'chatView'
             }]
-        }/*,{
-            xtype: 'panel',
-            id: 'chatContainer',
-            floating: true,
-            width: 280,
-            height: 300,
-            bottom: 0,
-            right: 0,
-            items: [{
-                xtype  : 'toolbar',
-                docked : 'bottom',
-                title  : 'Mensajes'
-            }]
-        }*/]
+        }]
     }
 });
