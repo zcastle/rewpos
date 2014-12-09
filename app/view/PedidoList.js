@@ -5,13 +5,13 @@ Ext.define('rewpos.view.PedidoList', {
     config: {
     	store: 'Pedido',
     	itemTpl: new Ext.XTemplate(
-	    	'<div class="pedido-row-list">',
+	    	'<div class="-row-list">',
                 '<tpl if="this.isEnviado(enviado)">',
-                    '<span class="enviado"></span>',
+                    '<span class="field estado enviado"></span>',
                 '<tpl else>',
-                    '<span class="noenviado"></span>',
+                    '<span class="field estado noenviado"></span>',
                 '</tpl>',
-		    	'<div class="field nombre">{producto_name:this.toUpper}</div>',
+		    	'<div class="field flex">{producto_name:this.toUpper}</div>',
 		    	'<div class="field cantidad">{cantidad}</div>',
 		    	'<div class="field unitario">{precio:this.formatNumer}</div>',
 		    	'<div class="field total">{[this.getTotal(values.cantidad, values.precio)]}</div>',

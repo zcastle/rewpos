@@ -47,9 +47,9 @@ Ext.define('rewpos.controller.Editar', {
                         var diferencia = Math.abs(newValue - oldValue);
                         var url;
                         if(newValue>oldValue) {
-                            url = rewpos.AppGlobals.HOST_PRINT+'print/pedido/add/'+record.get('id')+'/'+diferencia
+                            url = rewpos.AppGlobals.HOST_PRINT+'pedido/add/'+record.get('id')+'/'+diferencia
                         } else {
-                            url = rewpos.AppGlobals.HOST_PRINT+'print/pedido/remove/'+record.get('id')+'/'+diferencia
+                            url = rewpos.AppGlobals.HOST_PRINT+'pedido/remove/'+record.get('id')+'/'+diferencia
                         }
                         rewpos.Util.mask();
                         Ext.Ajax.request({
@@ -91,7 +91,7 @@ Ext.define('rewpos.controller.Editar', {
                     }
                     if(record.get('enviado')=='S') {
                         Ext.Ajax.request({
-                            url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/remove/'+record.get('id')+'/'+record.get('cantidad'),
+                            url: rewpos.AppGlobals.HOST_PRINT+'pedido/remove/'+record.get('id')+'/'+record.get('cantidad'),
                             callback: function(request, success, response){
                                 var text = Ext.JSON.decode(response.responseText);
                                 if(!text.success) {

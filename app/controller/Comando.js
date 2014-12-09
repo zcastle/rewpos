@@ -2,6 +2,9 @@ Ext.define('rewpos.controller.Comando', {
     extend: 'Ext.app.Controller',
     config: {
         stores: ['Pedido'],
+        refs: {
+            productoList: 'productoList'
+        },
         control: {
             'comandosView button': {
                 tap: 'ontap'
@@ -15,6 +18,10 @@ Ext.define('rewpos.controller.Comando', {
                     rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
                 } else {
                     rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
+                }
+                //console.log(Ext.getCmp('productosCard').getActiveItem().getId());
+                if(Ext.getCmp('productosCard').getActiveItem().getId()=='productoList') {
+                    rewpos.AppGlobals.LIST_SELECTED = this.getProductoList();
                 }
                 break;
             case 'btnComandoPrecuenta':
@@ -44,8 +51,9 @@ Ext.define('rewpos.controller.Comando', {
                 }
             });
             rewpos.Util.mask();
+            console.log(rewpos.AppGlobals.HOST_PRINT+'precuenta/'+cajaId+'/'+nroAtencion);
             Ext.Ajax.request({
-                url: rewpos.AppGlobals.HOST_PRINT+'print/precuenta/'+cajaId+'/'+nroAtencion,
+                url: rewpos.AppGlobals.HOST_PRINT+'precuenta/'+cajaId+'/'+nroAtencion,
                 //method: 'GET',
                 callback: function(request, success, response){
                     rewpos.Util.unmask();
@@ -104,7 +112,7 @@ Ext.define('rewpos.controller.Comando', {
         var nroAtencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
         rewpos.Util.mask();
         Ext.Ajax.request({
-            url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/'+cajaId+'/'+nroAtencion,
+            url: rewpos.AppGlobals.HOST_PRINT+'pedido/'+cajaId+'/'+nroAtencion,
             callback: function(request, success, response){
                 rewpos.Util.unmask();
                 if(success){

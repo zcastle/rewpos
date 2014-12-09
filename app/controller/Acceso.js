@@ -4,7 +4,7 @@ Ext.define('rewpos.controller.Acceso', {
         stores: ['Pedido', 'Cajero','Mozo','Caja'],
         refs: {
             toolbarView: 'toolbarView',
-            seleccionView: 'seleccionView',
+            seleccionView: 'seleccionView'
         },
         control: {
             'accesoView': {

@@ -110,12 +110,18 @@ Ext.define('rewpos.controller.Pedido', {
     },
     pagar: function(){
         Ext.Viewport.toggleMenu('right');
-        if(rewpos.AppGlobals.DEBUG) {
+       /* if(rewpos.AppGlobals.DEBUG) {
             Ext.Msg.alert('Advertencia', 'No se puede realizar pagos en modo DEBUG', Ext.emptyFn);
             return;
-        }
+        }*/
         if(Ext.getStore('Pedido').getCount()>0){
             var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
+            if(this.getPagosView().down('segmentedbutton').getPressedButtons()[0].getText()=='OTROS'){
+                if(Ext.getStore('Pedido').getAt(0).get('cliente_id')>0) {
+                    //
+                }
+            }
+            //return;
             Ext.getStore('Pago').load({
                 url: rewpos.AppGlobals.HOST+'pedido/pago/'+nroatencion+'/'+rewpos.AppGlobals.CAJA_ID,
                 callback: function() {
@@ -213,7 +219,7 @@ Ext.define('rewpos.controller.Pedido', {
     imprimirTiket: function(id){
         rewpos.Util.mask('imprimiendo comprobante, porfavor espere.', true);
         Ext.Ajax.request({
-            url: rewpos.AppGlobals.HOST_PRINT+'print/factura/'+id,
+            url: rewpos.AppGlobals.HOST_PRINT+'factura/'+id,
             callback: function(request, success, response){
                 rewpos.Util.unmask(true);
                 if(success){
@@ -283,7 +289,7 @@ Ext.define('rewpos.controller.Pedido', {
                                         rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                                     }
                                     Ext.Ajax.request({
-                                        url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/liberar/'+res.data.id,
+                                        url: rewpos.AppGlobals.HOST_PRINT+'pedido/liberar/'+res.data.id,
                                         callback: function(request, success, response){
                                             if(success){
                                                 var text = Ext.JSON.decode(response.responseText);
@@ -491,7 +497,7 @@ Ext.define('rewpos.controller.Pedido', {
                             callback: function(records, operation, success) {
                                 if(records.length==1){
                                     cajaId = records[0].get('id');
-                                    urlCierre = rewpos.AppGlobals.HOST_PRINT+'print/cierre/'+cajaId;
+                                    urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId;
                                     Ext.Ajax.request({
                                         url: urlCierre,
                                         callback: function(request, success, response){
@@ -520,11 +526,11 @@ Ext.define('rewpos.controller.Pedido', {
                             },
                             scope: this
                         })
-                        urlCierre = rewpos.AppGlobals.HOST_PRINT+'print/cierre/'+cajaId;
+                        urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId;
                     } else {
                         cajaId = rewpos.AppGlobals.CAJA_ID;
                         var cajeroId = rewpos.AppGlobals.CAJERO.get('id');
-                        urlCierre = rewpos.AppGlobals.HOST_PRINT+'print/cierre/'+cajaId+'/'+cajeroId
+                        urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId+'/'+cajeroId
                         Ext.Ajax.request({
                             url: urlCierre,
                             callback: function(request, success, response){

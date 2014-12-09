@@ -48,6 +48,8 @@ Ext.define('rewpos.controller.Producto', {
                         //rewpos.Util.showPanel('productosCard', 'productoDataView', 'right');
                         if(records.length>0){
                             rewpos.Util.showPanel('productosCard', 'productoList', 'right');
+                            this.getProductoList().select(0);
+                            rewpos.AppGlobals.LIST_SELECTED = this.getProductoList();
                             /*if(this.getProductoList()==undefined || this.getProductoList()==null) return;
                             if(this.getProductoList().getSelection().length==0){
                                 this.getProductoList().select(0);
@@ -113,7 +115,7 @@ Ext.define('rewpos.controller.Producto', {
                             this.existProducto(existRecord, list, clienteId)
                             rewpos.Util.mask();
                             Ext.Ajax.request({
-                                url: rewpos.AppGlobals.HOST_PRINT+'print/pedido/add/'+existRecord.get('id')+'/1',
+                                url: rewpos.AppGlobals.HOST_PRINT+'pedido/add/'+existRecord.get('id')+'/1',
                                 callback: function(request, success, response){
                                     rewpos.Util.unmask();
                                     var text = Ext.JSON.decode(response.responseText);

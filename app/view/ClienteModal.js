@@ -3,7 +3,7 @@ Ext.define('rewpos.view.ClienteModal', {
     xtype: 'clienteModal',
     config: {
         centered: true,
-        width: 500,
+        width: 700,
         height: 340,
         //hideOnMaskTap: true,
         modal: true,
@@ -17,7 +17,8 @@ Ext.define('rewpos.view.ClienteModal', {
             items: [{
                 xtype: 'searchfield',
                 label: 'RUC',
-                name: 'ruc'
+                name: 'ruc',
+                placeHolder: 'RUC/DNI'
             },{
                 label: 'Razon Social',
                 name: 'nombre'
@@ -32,19 +33,30 @@ Ext.define('rewpos.view.ClienteModal', {
                 name: 'ubigeo_id'
             }]
         },{
-            xtype: 'toolbar',
-            docked: 'bottom',
-            items: [{
+            /*xtype: 'toolbar',
+            docked: 'bottom',*/
+            layout: 'hbox',
+            defaults: {
+                xtype: 'button',
+                flex: 1
+            },
+            height: 55,
+            items: [/*{
                 xtype: 'label',
                 html: 'Informacion de Cliente'
             },{
                 xtype: 'spacer'
             },{
+                text: 'Borrar',
+                itemId: 'borrar'
+            },*/{
                 text: 'Cancelar',
-                itemId: 'cancelar'
+                itemId: 'cancelar',
+                cls: 'btn_eliminar'
             },{
                 text: 'Aceptar',
-                itemId: 'aceptar'
+                itemId: 'aceptar',
+                cls: 'btn_editar'
             }]
         }]
         

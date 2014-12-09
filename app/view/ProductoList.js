@@ -15,9 +15,10 @@ Ext.define('rewpos.view.ProductoList', {
         }],*/
         store: 'Producto',
     	itemTpl: new Ext.XTemplate(
-            '<div class="producto-row-list">',
-            '<div class="nombre field">{nombre:this.toUpper}</div>'+
-            '<div class="precio field">{precio:this.formatNumer}</div>'+
+            '<div class="-row-list">',
+            '<div class="field codigo">{codigo}</div>'+
+            '<div class="field flex">{nombre:this.toUpper}</div>'+
+            '<div class="field precio">{precio:this.formatNumer}</div>'+
             '</div>',
             {
                 toUpper: function(item) {

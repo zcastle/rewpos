@@ -9,15 +9,25 @@ Ext.define('rewpos.view.PagosView', {
         items: [{
             flex: 1,
             layout: 'vbox',
-            defaults: {
+            /*defaults: {
                 xtype: 'button'
-            },
+            },*/
             items: [{
-                name: 'btnCliente',
-                text: 'Cliente',
-                cls: 'button-label-align-left'
+                layout: 'hbox',
+                items: [{
+                    xtype: 'button',
+                    name: 'btnCliente',
+                    text: 'Cliente',
+                    cls: 'button-label-align-left',
+                    flex: 1
+                },{
+                    xtype: 'button',
+                    name: 'btnLimpiar',
+                    text: 'X',
+                    cls: 'button-label-limpiar'
+                }]
             },{
-                xtype: 'container',
+                //xtype: 'container',
                 layout: 'hbox',
                 cls: 'label',
                 items: [{
@@ -39,13 +49,13 @@ Ext.define('rewpos.view.PagosView', {
                 flex: 1,
                 itemTpl: new Ext.XTemplate(
                     '<tpl if="this.isPropina(tipopago)">',
-                        '<div class="pagos-row-list propina">',
+                        '<div class="-row-list propina">',
                     '<tpl else>',
-                        '<div class="pagos-row-list">',
+                        '<div class="-row-list">',
                     '</tpl>',
                         '{tipopago}&nbsp;',
-                        '<div class="estilo-dolar">{tipocambio:this.complete}</div>',
-                        '<div class="flex-1">{[this.getDolar(values.valorpago, values.tipopago)]}</div>',
+                        '<div class="field estilo-dolar">{tipocambio:this.complete}</div>',
+                        '<div class="field flex">{[this.getDolar(values.valorpago, values.tipopago)]}</div>',
                         '{valorpago:this.formatNumer}',
                     '</div>',
                     {
@@ -64,7 +74,7 @@ Ext.define('rewpos.view.PagosView', {
                     }
                 )
             },{
-                xtype: 'container',
+                //xtype: 'container',
                 layout: 'hbox',
                 cls: 'label label-fin',
                 items: [{
@@ -80,7 +90,7 @@ Ext.define('rewpos.view.PagosView', {
                     html: '0.00'
                 }]
             },{
-                xtype: 'container',
+                //xtype: 'container',
                 layout: 'hbox',
                 cls: 'label label-fin',
                 items: [{
@@ -96,7 +106,7 @@ Ext.define('rewpos.view.PagosView', {
                     html: '0.00'
                 }]
             },{
-                xtype: 'container',
+                //xtype: 'container',
                 id: 'containerTotalMontoVuelto',
                 layout: 'hbox',
                 cls: 'label label-fin',

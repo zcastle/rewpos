@@ -23,6 +23,7 @@ Ext.define('rewpos.view.ToolbarView', {
             style: 'background: transparent; border: 0px;'
         },{
             name: 'usuarioLogin',
+            itemId: 'usuarioLogin',
             text: '',
             style: 'background: transparent; border: 0px;'
         },{

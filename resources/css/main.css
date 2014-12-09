@@ -189,59 +189,73 @@
 	color: #09c;
 }
 */
-.pedido-row-list {
+.-row-list {
 	display: -webkit-flex;
 	display: flex;
 }
 
-.pedido-row-list .field {
+.-row-list .field {
 	float: left;
 	font-size: 0.8em;
 }
 
-.pedido-row-list .estado {
-	/*width: 10px;*/
-}
-
-.pedido-row-list .enviado {
-	margin-top: 8px;
+.-row-list .estado {
+	margin-right: 3px;
+	margin-top: 6px;
 	width: 0.5em;
 	height: 0.5em;
+	border-radius: 0.5em;
+	-moz-border-radius: 0.5em;
+	-webkit-border-radius: 0.5em;
+}
+
+.-row-list .enviado {
 	background: #690;
-	border-radius: 0.5em;
-	-moz-border-radius: 0.5em;
-	-webkit-border-radius: 0.5em;
 }
 
-.pedido-row-list .noenviado {
-	margin-top: 8px;
-	width: 0.5em;
-	height: 0.5em;
+.-row-list .noenviado {
 	background: #f44;
-	border-radius: 0.5em;
-	-moz-border-radius: 0.5em;
-	-webkit-border-radius: 0.5em;
 }
 
-.pedido-row-list .nombre {
+.-row-list .flex {
 	-webkit-flex: 1;
     flex: 1;
-	padding-left: 3px;
 }
 
-.pedido-row-list .cantidad {
+.-row-list .cantidad {
 	width: 50px;
 	text-align: right;
 }
 
-.pedido-row-list .unitario {
+.-row-list .unitario {
 	width: 70px;
 	text-align: right;
 }
 
-.pedido-row-list .total {
+.-row-list .total {
 	width: 90px;
 	text-align: right;
+}
+
+.-row-list .codigo {
+	width: 90px;
+}
+
+.-row-list .precio {
+	width: 90px;
+	text-align: right;
+}
+
+.-row-list .ruc {
+	width: 100px;
+}
+
+.propina {
+	color: #09c;
+}
+
+.estilo-dolar {
+	font-size: 0.5em;
 }
 
 .background_comando {
@@ -281,19 +295,6 @@
 
 .center {
 	text-align: center;
-}
-
-.producto-row-list .field {
-	float: left;
-}
-
-.producto-row-list .nombre {
-	width: 80%;
-}
-
-.producto-row-list .precio {
-	width: 20%;
-	text-align: right;
 }
 
 .modal.x-panel.x-floating {
@@ -398,7 +399,13 @@
 }
 
 .button-label-align-left .x-button-label {
+	font-size: 0.8em;
 	text-align: left;
+}
+
+.button-label-limpiar {
+	border: 1px solid #fff;
+	background: #0099cc;
 }
 
 .label {
@@ -411,20 +418,6 @@
 
 .label-fin {
 	border-bottom: 0px;
-}
-
-.pagos-row-list {
-	display: -webkit-flex;
-	display: flex;
-}
-
-.flex-1 {
-	-webkit-flex: 1;
-    flex: 1;
-}
-
-.propina {
-	color: #09c;
 }
 
 .tipoPago.x-stretched.x-container > .x-inner,
@@ -480,10 +473,6 @@
 
 .valoresPago .x-button:active {
 	opacity: 1;
-}
-
-.estilo-dolar {
-	font-size: 0.5em;
 }
 
 #chatContainer {
@@ -629,7 +618,10 @@
 
 @media screen and (max-width: 1024px) {
 	.dvProductos .x-dataview-item .boton {
-		font-size: 1em;
+		font-size: 0.7em;
+	}
+	.dvCategorias .x-dataview-item .boton {
+		font-size: 0.8em;
 	}
 	.x-list .x-list-item.x-list-item-tpl .x-innerhtml {
 		padding: 15px 10px 15px 5px;

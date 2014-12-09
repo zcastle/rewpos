@@ -115,6 +115,46 @@ Ext.define('rewpos.controller.Main', {
             var record = list.getSelection()[0];
             list.scrollToRecord(record);
         }
+        if(Ext.os.deviceType=='Desktop') {
+            $(document.body).keydown(function(event) {
+                var list = rewpos.AppGlobals.LIST_SELECTED; //rewpos.app.getController('Main').getPedidoList();
+                if(list==null) return;
+                var store = rewpos.AppGlobals.LIST_SELECTED.getStore();
+                if(store==null) return;
+                var record = list.getSelection()[0];
+                var totalIndex = store.getCount()-1;
+                if(record) {
+                    var index = store.findExact('id', record.get('id'));
+                    if(event.which==38) { //KEY UP
+                        if(index>0) {
+                            selectList(list, index-1);
+                        }
+                    } else if(event.which==40) { //KEY DOWN
+                        if(index<totalIndex) {
+                            selectList(list, index+1);
+                        }
+                    } else if(event.which==13) { //KEY ENTER
+                        var record = list.getSelection()[0];
+                        switch(list.getId()) {
+                            case 'pedidoList':
+                                break;
+                            case 'categoriaList':
+                                break;
+                            case 'productoList':
+                                rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
+                                break;
+                            case 'clientesList':
+                                rewpos.app.getController('ClienteModal').onItemDoubleTapClienteList(list, null, null, record);
+                                break;
+                        }
+                    } else if(event.which==37) { //KEY LEFT
+                        //if(list.getId()=='categoriaList') {
+                        //    rewpos.app.getController('Main').getProductoList().select(0);
+                        //}
+                    }
+                }
+            });
+        }
 
         /*$(document.body).keydown(function(event) {
             if(event.which==119) { //F8 PRECUENTA ESPECIAL
@@ -230,6 +270,7 @@ Ext.define('rewpos.controller.Main', {
                 handler: this.getApplication().getController('Main').cerraSesion
             }]
         });
+        this.loadDefault();
     },
     cerraSesion: function(){
         Ext.Viewport.toggleMenu('right');
@@ -276,6 +317,16 @@ Ext.define('rewpos.controller.Main', {
             this.getToolbarView().down('button[name=empresaLogin]').setText(rewpos.AppGlobals.CAJA.get('empresa_name')+' - '+rewpos.AppGlobals.CAJA.get('centrocosto_name'));
             this.getToolbarView().down('button[name=usuarioLogin]').setText(rewpos.AppGlobals.CAJERO.get('nombre'));
             this.getToolbarView().down('button[name=showmenu]').setHidden(true);
+            Ext.getStore('Pedido').load({
+                url: rewpos.AppGlobals.HOST+'pedido/1/'+rewpos.AppGlobals.CAJA_ID,
+                callback: function(records) {
+                    if(records.length>0){
+                        this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
+                        this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
+                    }
+                },
+                scope: this
+            });
             rewpos.Util.showPanel('mainCard', 'pedidoView', 'left');
         }
     },
