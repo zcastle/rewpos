@@ -71,8 +71,6 @@ Ext.application({
     },
 
     launch: function() {
-        //Ext.Ajax.setDisableCaching(false);
-        //Ext.Ajax.setUseDefaultXhrHeader(false);
         //Destroy the #appLoadingIndicator element
         //Ext.fly('appLoadingIndicator').destroy();
         Ext.fly('canvasloader-container').destroy();

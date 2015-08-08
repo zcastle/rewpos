@@ -54,6 +54,8 @@ Ext.define('rewpos.controller.Editar', {
                         rewpos.Util.mask();
                         Ext.Ajax.request({
                             url: url,
+                            disableCaching: false,
+                            useDefaultXhrHeader: false,
                             callback: function(request, success, response){
                                 rewpos.Util.unmask();
                                 var text = Ext.JSON.decode(response.responseText);
@@ -92,6 +94,8 @@ Ext.define('rewpos.controller.Editar', {
                     if(record.get('enviado')=='S') {
                         Ext.Ajax.request({
                             url: rewpos.AppGlobals.HOST_PRINT+'pedido/remove/'+record.get('id')+'/'+record.get('cantidad'),
+                            disableCaching: false,
+                            useDefaultXhrHeader: false,
                             callback: function(request, success, response){
                                 var text = Ext.JSON.decode(response.responseText);
                                 if(!text.success) {

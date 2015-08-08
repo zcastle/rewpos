@@ -52,8 +52,12 @@ Ext.define('rewpos.controller.Comando', {
             });
             rewpos.Util.mask();
             console.log(rewpos.AppGlobals.HOST_PRINT+'precuenta/'+cajaId+'/'+nroAtencion);
+            //Ext.Ajax.setDisableCaching(false);
+            //Ext.Ajax.setUseDefaultXhrHeader(false);
             Ext.Ajax.request({
                 url: rewpos.AppGlobals.HOST_PRINT+'precuenta/'+cajaId+'/'+nroAtencion,
+                disableCaching: false,
+                useDefaultXhrHeader: false,
                 //method: 'GET',
                 callback: function(request, success, response){
                     rewpos.Util.unmask();
@@ -113,6 +117,8 @@ Ext.define('rewpos.controller.Comando', {
         rewpos.Util.mask();
         Ext.Ajax.request({
             url: rewpos.AppGlobals.HOST_PRINT+'pedido/'+cajaId+'/'+nroAtencion,
+            disableCaching: false,
+            useDefaultXhrHeader: false,
             callback: function(request, success, response){
                 rewpos.Util.unmask();
                 if(success){

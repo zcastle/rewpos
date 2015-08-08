@@ -141,10 +141,10 @@ Ext.define('rewpos.controller.Main', {
                             case 'categoriaList':
                                 break;
                             case 'productoList':
-                                rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
+                                //rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
                                 break;
                             case 'clientesList':
-                                rewpos.app.getController('ClienteModal').onItemDoubleTapClienteList(list, null, null, record);
+                                //rewpos.app.getController('ClienteModal').onItemDoubleTapClienteList(list, null, null, record);
                                 break;
                         }
                     } else if(event.which==37) { //KEY LEFT

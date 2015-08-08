@@ -782,6 +782,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "rewpos.store.Caja": [],
   "rewpos.store.Cajero": [],
   "rewpos.store.Categoria": [],
+  "rewpos.store.Cliente": [],
   "rewpos.store.Mesa": [],
   "rewpos.store.Mozo": [],
   "rewpos.store.Pago": [],
@@ -797,6 +798,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "rewpos.view.CategoriaDataView": [],
   "rewpos.view.CategoriaList": [],
   "rewpos.view.ChatView": [],
+  "rewpos.view.ClienteBuscarModal": [],
   "rewpos.view.ClienteModal": [],
   "rewpos.view.ComandosView": [],
   "rewpos.view.ConfigModal": [],
@@ -1798,6 +1800,7 @@ Ext.ClassManager.addNameAliasMappings({
   "rewpos.store.Caja": [],
   "rewpos.store.Cajero": [],
   "rewpos.store.Categoria": [],
+  "rewpos.store.Cliente": [],
   "rewpos.store.Mesa": [],
   "rewpos.store.Mozo": [],
   "rewpos.store.Pago": [],
@@ -1828,6 +1831,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "rewpos.view.ChatView": [
     "widget.chatView"
+  ],
+  "rewpos.view.ClienteBuscarModal": [
+    "widget.clienteBuscarModal"
   ],
   "rewpos.view.ClienteModal": [
     "widget.clienteModal"

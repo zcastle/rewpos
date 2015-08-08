@@ -220,6 +220,8 @@ Ext.define('rewpos.controller.Pedido', {
         rewpos.Util.mask('imprimiendo comprobante, porfavor espere.', true);
         Ext.Ajax.request({
             url: rewpos.AppGlobals.HOST_PRINT+'factura/'+id,
+            disableCaching: false,
+            useDefaultXhrHeader: false,
             callback: function(request, success, response){
                 rewpos.Util.unmask(true);
                 if(success){
@@ -290,6 +292,8 @@ Ext.define('rewpos.controller.Pedido', {
                                     }
                                     Ext.Ajax.request({
                                         url: rewpos.AppGlobals.HOST_PRINT+'pedido/liberar/'+res.data.id,
+                                        disableCaching: false,
+                                        useDefaultXhrHeader: false,
                                         callback: function(request, success, response){
                                             if(success){
                                                 var text = Ext.JSON.decode(response.responseText);
@@ -500,6 +504,8 @@ Ext.define('rewpos.controller.Pedido', {
                                     urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId;
                                     Ext.Ajax.request({
                                         url: urlCierre,
+                                        disableCaching: false,
+                                        useDefaultXhrHeader: false,
                                         callback: function(request, success, response){
                                             if(success){
                                                 var text = Ext.JSON.decode(response.responseText);
@@ -533,6 +539,8 @@ Ext.define('rewpos.controller.Pedido', {
                         urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId+'/'+cajeroId
                         Ext.Ajax.request({
                             url: urlCierre,
+                            disableCaching: false,
+                            useDefaultXhrHeader: false,
                             callback: function(request, success, response){
                                 var text = Ext.JSON.decode(response.responseText);
                                 if(!text.success) {

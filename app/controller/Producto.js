@@ -116,6 +116,8 @@ Ext.define('rewpos.controller.Producto', {
                             rewpos.Util.mask();
                             Ext.Ajax.request({
                                 url: rewpos.AppGlobals.HOST_PRINT+'pedido/add/'+existRecord.get('id')+'/1',
+                                disableCaching: false,
+                                useDefaultXhrHeader: false,
                                 callback: function(request, success, response){
                                     rewpos.Util.unmask();
                                     var text = Ext.JSON.decode(response.responseText);
