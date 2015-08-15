@@ -2,6 +2,7 @@ Ext.define('rewpos.controller.Comando', {
     extend: 'Ext.app.Controller',
     config: {
         stores: ['Pedido'],
+        models: ['Imprimir'],
         refs: {
             productoList: 'productoList'
         },
@@ -15,7 +16,8 @@ Ext.define('rewpos.controller.Comando', {
         switch(btn.getItemId()) {
             case 'btnComandoBuscar':
                 if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
-                    rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
+                    //rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
+                    rewpos.Util.showPanel('comandoCard', 'categoriaDataView', 'left');
                 } else {
                     rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                 }
@@ -51,34 +53,31 @@ Ext.define('rewpos.controller.Comando', {
                 }
             });
             rewpos.Util.mask();
-            console.log(rewpos.AppGlobals.HOST_PRINT+'precuenta/'+cajaId+'/'+nroAtencion);
+            //console.log(rewpos.AppGlobals.HOST_PRINT+'precuenta/'+cajaId+'/'+nroAtencion);
             //Ext.Ajax.setDisableCaching(false);
             //Ext.Ajax.setUseDefaultXhrHeader(false);
-            Ext.Ajax.request({
+            Ext.ModelManager.getModel('rewpos.model.Imprimir').load("precuenta/"+cajaId+"/"+nroAtencion,{
+                callback: function(record, operation) {
+                    console.log(record.get('success'));
+                },
+                scope: this
+            });
+            /*Ext.Ajax.request({
                 url: rewpos.AppGlobals.HOST_PRINT+'precuenta/'+cajaId+'/'+nroAtencion,
                 disableCaching: false,
                 useDefaultXhrHeader: false,
-                //method: 'GET',
                 callback: function(request, success, response){
                     rewpos.Util.unmask();
                     if(success){
                         var text = Ext.JSON.decode(response.responseText);
                         if(!text.success) {
                             Ext.Msg.alert('Advertencia', rewpos.AppGlobals.MSG_PRINTER_ERROR, Ext.emptyFn);
-                        } else {
-                            //cajaId
-                            //nroAtencion
-                            /*Ext.Ajax.request({
-                                url: rewpos.AppGlobals.HOST+'pedido/precuenta/'+cajaId+'/'+nroAtencion,
-                                callback: function(){
-                                }
-                            });*/
                         }
                     } else {
                         Ext.Msg.alert('Advertencia', rewpos.AppGlobals.MSG_PRINTER_ERROR, Ext.emptyFn);
                     }
                 }
-            });
+            });*/
         } else {
             Ext.Msg.alert('', 'No hay un pedido', Ext.emptyFn);
         }

@@ -200,8 +200,11 @@ Ext.define('rewpos.controller.Pedido', {
                                 Ext.getStore('Pedido').removeAll();
                                 this.getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
                                 this.getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
+                                console.log(rewpos.AppGlobals.PRODUCTO_TOUCH);
                                 if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
-                                    rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
+                                    //rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
+                                    //rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
+                                    rewpos.Util.showPanel('comandoCard', 'categoriaDataView', 'left');
                                 } else {
                                     rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                                 }
@@ -218,7 +221,14 @@ Ext.define('rewpos.controller.Pedido', {
     },
     imprimirTiket: function(id){
         rewpos.Util.mask('imprimiendo comprobante, porfavor espere.', true);
-        Ext.Ajax.request({
+        Ext.ModelManager.getModel('rewpos.model.Imprimir').load("comprobante/"+id,{
+            callback: function(record, operation) {
+                rewpos.Util.unmask(true);
+                console.log(record.get('success'));
+            },
+            scope: this
+        });
+        /*Ext.Ajax.request({
             url: rewpos.AppGlobals.HOST_PRINT+'factura/'+id,
             disableCaching: false,
             useDefaultXhrHeader: false,
@@ -234,7 +244,7 @@ Ext.define('rewpos.controller.Pedido', {
                 }
             },
             scope: this
-        });
+        });*/
     },
     imprimirTiketQ: function(id) {
         Ext.Msg.show({

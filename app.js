@@ -49,7 +49,7 @@ Ext.application({
         'EditarForm','TecladoMoneda','PagosView','AccesoView','AuthView','TecladoNumerico',
         'ChatView','AutorizacionModal','ClienteModal','CambiarMesaModal','TecladoPrecioModal',
         'AnularDocumentoModal','ProductoTouchView','CategoriaDataView','ProductoDataView',
-        'ConfigModal','TecladoFull'
+        'ConfigModal','TecladoFull','ClienteBuscarModal'
     ],
 
     icon: {
