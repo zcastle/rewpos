@@ -1,7 +1,7 @@
 Ext.define('rewpos.controller.Pedido', {
     extend: 'Ext.app.Controller',
     config: {
-        stores: ['Mesa','Pedido','Categoria','Producto', 'Cajero'],
+        stores: ['Mesa','Pedido','Categoria','Producto', 'Cajero', 'Admin'],
         models: ['Mesa','Pedido','Categoria','Producto'],
         refs: {
             editarForm: 'editarForm',
@@ -278,7 +278,8 @@ Ext.define('rewpos.controller.Pedido', {
                 var adminId = cbo.getValue();
                 if(adminId>0) {
                     var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
-                    var pass2 = Ext.getStore('Cajero').findRecord('id', adminId).get('clave').toUpperCase();
+                    //console.log(Ext.getStore('Admin').findRecord('id', adminId));
+                    var pass2 = Ext.getStore('Admin').findRecord('id', adminId).get('clave').toUpperCase();
                     if(pass1==pass2){
                         Ext.Viewport.remove(btnOk.up('panel'));
                         rewpos.Util.mask();
@@ -300,7 +301,13 @@ Ext.define('rewpos.controller.Pedido', {
                                     } else {
                                         rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                                     }
-                                    Ext.Ajax.request({
+                                    Ext.ModelManager.getModel('rewpos.model.Imprimir').load('pedido/liberar/'+res.data.id,{
+                                        callback: function(record, operation) {
+                                        },
+                                        scope: this
+                                    });
+                                    
+                                    /*Ext.Ajax.request({
                                         url: rewpos.AppGlobals.HOST_PRINT+'pedido/liberar/'+res.data.id,
                                         disableCaching: false,
                                         useDefaultXhrHeader: false,
@@ -314,7 +321,7 @@ Ext.define('rewpos.controller.Pedido', {
                                                 Ext.Msg.alert('Advertencia', 'Error al imprimir LIBERADO', Ext.emptyFn);
                                             }
                                         }
-                                    });
+                                    });*/
                                 } else {
                                     Ext.Msg.alert('Advertencia', 'Error al liberar la mesa', Ext.emptyFn);
                                 }
@@ -497,7 +504,7 @@ Ext.define('rewpos.controller.Pedido', {
             var adminId = cbo.getValue();
             if(adminId>0) {
                 var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
-                var pass2 = Ext.getStore('Cajero').findRecord('id', adminId).get('clave').toUpperCase();
+                var pass2 = Ext.getStore('Admin').findRecord('id', adminId).get('clave').toUpperCase();
                 if(pass1==pass2){
                     Ext.Viewport.remove(btnOk.up('panel'));
                     rewpos.Util.mask();
@@ -511,8 +518,19 @@ Ext.define('rewpos.controller.Pedido', {
                             callback: function(records, operation, success) {
                                 if(records.length==1){
                                     cajaId = records[0].get('id');
-                                    urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId;
-                                    Ext.Ajax.request({
+                                    //urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId;
+                                    Ext.ModelManager.getModel('rewpos.model.Imprimir').load('cierre/'+cajaId,{
+                                        callback: function(record, operation) {
+                                            Ext.Ajax.request({
+                                                url: rewpos.AppGlobals.HOST+'caja/cierre/'+cajaId,
+                                                callback: function(request, success, response) {
+                                                    rewpos.Util.unmask();
+                                                }
+                                            });
+                                        },
+                                        scope: this
+                                    });
+                                    /*Ext.Ajax.request({
                                         url: urlCierre,
                                         disableCaching: false,
                                         useDefaultXhrHeader: false,
@@ -533,7 +551,7 @@ Ext.define('rewpos.controller.Pedido', {
                                                 Ext.Msg.alert('Advertencia', rewpos.AppGlobals.MSG_PRINTER_ERROR, Ext.emptyFn);
                                             }
                                         }
-                                    });
+                                    });*/
                                 } else {
                                     Ext.Array.forEach(records, function(item) {
                                         
@@ -546,8 +564,14 @@ Ext.define('rewpos.controller.Pedido', {
                     } else {
                         cajaId = rewpos.AppGlobals.CAJA_ID;
                         var cajeroId = rewpos.AppGlobals.CAJERO.get('id');
-                        urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId+'/'+cajeroId
-                        Ext.Ajax.request({
+                        //urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId+'/'+cajeroId
+                        Ext.ModelManager.getModel('rewpos.model.Imprimir').load('cierre/'+cajaId+'/'+cajeroId,{
+                            callback: function(record, operation) {
+                                rewpos.Util.unmask();
+                            },
+                            scope: this
+                        });
+                        /*Ext.Ajax.request({
                             url: urlCierre,
                             disableCaching: false,
                             useDefaultXhrHeader: false,
@@ -557,7 +581,7 @@ Ext.define('rewpos.controller.Pedido', {
                                     Ext.Msg.alert('Advertencia', 'Error en cierre PARCIAL', Ext.emptyFn);
                                 }
                             }
-                        });
+                        });*/
                     }
                 } else {
                     pass.setValue('');

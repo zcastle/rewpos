@@ -15,6 +15,8 @@ Ext.define('rewpos.view.Main', {
             items: [{
                 xtype: 'accesoView'
             },{
+                xtype: 'configuracionView'
+            },{
                 xtype: 'authView'
             },{
                 xtype: 'pedidoView'

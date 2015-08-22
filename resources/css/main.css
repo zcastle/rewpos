@@ -230,11 +230,13 @@
 .-row-list .unitario {
 	width: 70px;
 	text-align: right;
+	margin-right: 10px;
 }
 
 .-row-list .total {
 	width: 90px;
 	text-align: right;
+	margin-right: 10px;
 }
 
 .-row-list .codigo {
@@ -244,10 +246,15 @@
 .-row-list .precio {
 	width: 90px;
 	text-align: right;
+	margin-right: 10px;
 }
 
 .-row-list .ruc {
 	width: 100px;
+}
+
+.-row-list .categoria {
+	width: 150px;
 }
 
 .propina {

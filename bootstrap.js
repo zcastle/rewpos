@@ -757,6 +757,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "rewpos.controller.ClienteModal": [],
   "rewpos.controller.Comando": [],
   "rewpos.controller.ConfigModal": [],
+  "rewpos.controller.Configuracion": [],
   "rewpos.controller.Editar": [],
   "rewpos.controller.Main": [],
   "rewpos.controller.Mesas": [],
@@ -771,6 +772,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "rewpos.model.Cliente": [],
   "rewpos.model.Config": [],
   "rewpos.model.Corporacion": [],
+  "rewpos.model.Imprimir": [],
   "rewpos.model.Mesa": [],
   "rewpos.model.Pago": [],
   "rewpos.model.Pedido": [],
@@ -819,7 +821,10 @@ Ext.ClassManager.addNameAlternateMappings({
   "rewpos.view.TecladoNumerico": [],
   "rewpos.view.TecladoPrecioModal": [],
   "rewpos.view.ToolbarView": [],
-  "rewpos.view.Totales": []
+  "rewpos.view.Totales": [],
+  "rewpos.view.configuracion.ConfiguracionList": [],
+  "rewpos.view.configuracion.ConfiguracionView": [],
+  "rewpos.view.configuracion.MantenimientoProductoList": []
 });
 Ext.ClassManager.addNameAliasMappings({
   "Ext.AbstractComponent": [],
@@ -1775,6 +1780,7 @@ Ext.ClassManager.addNameAliasMappings({
   "rewpos.controller.ClienteModal": [],
   "rewpos.controller.Comando": [],
   "rewpos.controller.ConfigModal": [],
+  "rewpos.controller.Configuracion": [],
   "rewpos.controller.Editar": [],
   "rewpos.controller.Main": [],
   "rewpos.controller.Mesas": [],
@@ -1789,6 +1795,7 @@ Ext.ClassManager.addNameAliasMappings({
   "rewpos.model.Cliente": [],
   "rewpos.model.Config": [],
   "rewpos.model.Corporacion": [],
+  "rewpos.model.Imprimir": [],
   "rewpos.model.Mesa": [],
   "rewpos.model.Pago": [],
   "rewpos.model.Pedido": [],
@@ -1897,5 +1904,14 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "rewpos.view.Totales": [
     "widget.totales"
+  ],
+  "rewpos.view.configuracion.ConfiguracionList": [
+    "widget.configuracionList"
+  ],
+  "rewpos.view.configuracion.ConfiguracionView": [
+    "widget.configuracionView"
+  ],
+  "rewpos.view.configuracion.MantenimientoProductoList": [
+    "widget.mantenimientoProductoList"
   ]
 });

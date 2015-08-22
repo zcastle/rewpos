@@ -114,7 +114,13 @@ Ext.define('rewpos.controller.Producto', {
                         if(btn=='yes'){
                             this.existProducto(existRecord, list, clienteId)
                             rewpos.Util.mask();
-                            Ext.Ajax.request({
+                            Ext.ModelManager.getModel('rewpos.model.Imprimir').load('pedido/add/'+existRecord.get('id')+'/1', {
+                                callback: function(record, operation) {
+                                    rewpos.Util.unmask();
+                                },
+                                scope: this
+                            });
+                            /*Ext.Ajax.request({
                                 url: rewpos.AppGlobals.HOST_PRINT+'pedido/add/'+existRecord.get('id')+'/1',
                                 disableCaching: false,
                                 useDefaultXhrHeader: false,
@@ -125,7 +131,7 @@ Ext.define('rewpos.controller.Producto', {
                                         Ext.Msg.alert('Advertencia', 'Error al ENVIAR PRODUCTO', Ext.emptyFn);
                                     }
                                 }
-                            });
+                            });*/
                         } else if(btn=='no') {
                             this.addProducto(record, list, clienteId);
                         }

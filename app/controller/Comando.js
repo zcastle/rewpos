@@ -58,7 +58,7 @@ Ext.define('rewpos.controller.Comando', {
             //Ext.Ajax.setUseDefaultXhrHeader(false);
             Ext.ModelManager.getModel('rewpos.model.Imprimir').load("precuenta/"+cajaId+"/"+nroAtencion,{
                 callback: function(record, operation) {
-                    console.log(record.get('success'));
+                    rewpos.Util.unmask();
                 },
                 scope: this
             });
@@ -114,7 +114,16 @@ Ext.define('rewpos.controller.Comando', {
         var cajaId = Ext.getStore('Pedido').getAt(0).get('caja_id');
         var nroAtencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
         rewpos.Util.mask();
-        Ext.Ajax.request({
+        Ext.ModelManager.getModel('rewpos.model.Imprimir').load("pedido/"+cajaId+"/"+nroAtencion,{
+            callback: function(record, operation) {
+                rewpos.Util.unmask();
+                Ext.getStore('Pedido').each(function(item){
+                    item.set('enviado', "S");
+                });
+            },
+            scope: this
+        });
+        /*Ext.Ajax.request({
             url: rewpos.AppGlobals.HOST_PRINT+'pedido/'+cajaId+'/'+nroAtencion,
             disableCaching: false,
             useDefaultXhrHeader: false,
@@ -133,6 +142,6 @@ Ext.define('rewpos.controller.Comando', {
                     Ext.Msg.alert('Advertencia', 'Error al ENVIAR PEDIDO', Ext.emptyFn);
                 }
             }
-        });
+        });*/
     }
 });

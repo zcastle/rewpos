@@ -47,12 +47,20 @@ Ext.define('rewpos.controller.Editar', {
                         var diferencia = Math.abs(newValue - oldValue);
                         var url;
                         if(newValue>oldValue) {
-                            url = rewpos.AppGlobals.HOST_PRINT+'pedido/add/'+record.get('id')+'/'+diferencia
+                            //url = rewpos.AppGlobals.HOST_PRINT+'pedido/add/'+record.get('id')+'/'+diferencia
+                            url = 'pedido/add/'+record.get('id')+'/'+diferencia
                         } else {
-                            url = rewpos.AppGlobals.HOST_PRINT+'pedido/remove/'+record.get('id')+'/'+diferencia
+                            //url = rewpos.AppGlobals.HOST_PRINT+'pedido/remove/'+record.get('id')+'/'+diferencia
+                            url = 'pedido/remove/'+record.get('id')+'/'+diferencia
                         }
                         rewpos.Util.mask();
-                        Ext.Ajax.request({
+                        Ext.ModelManager.getModel('rewpos.model.Imprimir').load(url,{
+                            callback: function(record, operation) {
+                                rewpos.Util.unmask();
+                            },
+                            scope: this
+                        });
+                        /*Ext.Ajax.request({
                             url: url,
                             disableCaching: false,
                             useDefaultXhrHeader: false,
@@ -63,7 +71,7 @@ Ext.define('rewpos.controller.Editar', {
                                     Ext.Msg.alert('Advertencia', 'Error al ENVIAR/REMOVER PRODUCTO', Ext.emptyFn);
                                 }
                             }
-                        });
+                        });*/
                     }
                 }
             },
@@ -92,7 +100,12 @@ Ext.define('rewpos.controller.Editar', {
                         rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                     }
                     if(record.get('enviado')=='S') {
-                        Ext.Ajax.request({
+                        Ext.ModelManager.getModel('rewpos.model.Imprimir').load('pedido/remove/'+record.get('id')+'/'+record.get('cantidad'),{
+                            callback: function(record, operation) {
+                            },
+                            scope: this
+                        });
+                        /*Ext.Ajax.request({
                             url: rewpos.AppGlobals.HOST_PRINT+'pedido/remove/'+record.get('id')+'/'+record.get('cantidad'),
                             disableCaching: false,
                             useDefaultXhrHeader: false,
@@ -102,7 +115,7 @@ Ext.define('rewpos.controller.Editar', {
                                     Ext.Msg.alert('Advertencia', 'Error al ELIMINAR PRODUCTO', Ext.emptyFn);
                                 }
                             }
-                        });
+                        });*/
                     }
                     //
                     rewpos.Util.mask();
