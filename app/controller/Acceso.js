@@ -16,6 +16,7 @@ Ext.define('rewpos.controller.Acceso', {
         } 
     },
     onActivate: function(view) {
+        rewpos.AppGlobals.CAJERO = null;
         if(rewpos.Menu.ADMIN==null) {
             rewpos.Menu.ADMIN = Ext.create('Ext.Menu', {
                 cls: 'menupos',
@@ -68,8 +69,8 @@ Ext.define('rewpos.controller.Acceso', {
     },
     configuracion: function() {
         Ext.Viewport.hideAllMenus(true); //toggleMenu('right');
-        rewpos.Util.showPanel('mainCard', 'configuracionView', 'left');
-        /*var modal = Ext.Viewport.add({xtype: 'autorizacionModal'});
+        //rewpos.Util.showPanel('mainCard', 'configuracionView', 'left');
+        var modal = Ext.Viewport.add({xtype: 'autorizacionModal'});
         var cbo = modal.down('selectfield');
         cbo.setHidden(true);
         var btnOk = modal.down('button[action=ok]');
@@ -83,6 +84,6 @@ Ext.define('rewpos.controller.Acceso', {
                 pass.setValue('');
                 Ext.Msg.alert('Advertencia', 'Clave incorrecta', Ext.emptyFn);
             }
-        });*/
+        });
     }
 });

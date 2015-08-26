@@ -39,7 +39,7 @@ Ext.define('rewpos.controller.Main', {
             callback: function(record, operation) {
                 if(record) {
                     rewpos.AppGlobals.CAJA_ID = record.get('caja_id');
-                    rewpos.AppGlobals.HOST_PRINT = 'http://'+record.get('print_server')+':'+record.get('print_port')+'/';
+                    //rewpos.AppGlobals.HOST_PRINT = 'http://'+record.get('print_server')+':'+record.get('print_port')+'/';
                     //this.loadCaja();
                 } else {
                     if(rewpos.AppGlobals.DEV){
@@ -117,6 +117,13 @@ Ext.define('rewpos.controller.Main', {
         }
         if(Ext.os.deviceType=='Desktop') {
             $(document.body).keydown(function(event) {
+                if(event.ctrlKey && event.shiftKey && event.which==13){
+                    var oculto = rewpos.app.getController('Main').getPedidoView().isHidden();
+                    if(!oculto){
+                        rewpos.app.getController('Pedido').pagar(true);
+                    }
+                    return;
+                }
                 var list = rewpos.AppGlobals.LIST_SELECTED; //rewpos.app.getController('Main').getPedidoList();
                 if(list==null) return;
                 var store = rewpos.AppGlobals.LIST_SELECTED.getStore();

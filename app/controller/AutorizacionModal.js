@@ -25,7 +25,7 @@ Ext.define('rewpos.controller.AutorizacionModal', {
             value: 0
         });
         Ext.getStore('Admin').each(function(item){
-            if(item.get('rol_id')==rewpos.AppGlobals.ROL_ID_ADMIN) {
+            if(item.get('rol_id')==rewpos.AppGlobals.ROL_ID_ADMIN || item.get('rol_id')==4) {
                 administradores.push({
                     value: item.get('id'),
                     text: item.get('nombre')+' '+item.get('apellido')

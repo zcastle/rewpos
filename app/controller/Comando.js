@@ -113,13 +113,17 @@ Ext.define('rewpos.controller.Comando', {
     enviarPedidoOk: function() {
         var cajaId = Ext.getStore('Pedido').getAt(0).get('caja_id');
         var nroAtencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
-        rewpos.Util.mask();
+        rewpos.Util.mask("Enviando...", true);
         Ext.ModelManager.getModel('rewpos.model.Imprimir').load("pedido/"+cajaId+"/"+nroAtencion,{
             callback: function(record, operation) {
-                rewpos.Util.unmask();
-                Ext.getStore('Pedido').each(function(item){
-                    item.set('enviado', "S");
-                });
+                rewpos.Util.unmask(true);
+                if(record.get('error')){
+                    Ext.Msg.alert('Advertencia', record.get('message'), Ext.emptyFn);
+                }else{
+                    Ext.getStore('Pedido').each(function(item){
+                        item.set('enviado', "S");
+                    });
+                }
             },
             scope: this
         });

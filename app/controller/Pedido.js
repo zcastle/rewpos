@@ -108,24 +108,29 @@ Ext.define('rewpos.controller.Pedido', {
         this.getEditarForm().setRecord(record);
         rewpos.Util.showPanel('comandoCard', 'editarForm', 'right');
     },
-    pagar: function(){
-        Ext.Viewport.toggleMenu('right');
+    pagar: function(ticket){
+        if(Ext.typeOf(ticket)=="object"){
+            ticket = false;
+        }
+        if(!ticket){
+            Ext.Viewport.toggleMenu('right');
+        }
        /* if(rewpos.AppGlobals.DEBUG) {
             Ext.Msg.alert('Advertencia', 'No se puede realizar pagos en modo DEBUG', Ext.emptyFn);
             return;
         }*/
         if(Ext.getStore('Pedido').getCount()>0){
             var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
-            if(this.getPagosView().down('segmentedbutton').getPressedButtons()[0].getText()=='OTROS'){
+            /*if(this.getPagosView().down('segmentedbutton').getPressedButtons()[0].getText()=='OTROS'){
                 if(Ext.getStore('Pedido').getAt(0).get('cliente_id')>0) {
-                    //
+                    
                 }
-            }
+            }*/
             //return;
             Ext.getStore('Pago').load({
                 url: rewpos.AppGlobals.HOST+'pedido/pago/'+nroatencion+'/'+rewpos.AppGlobals.CAJA_ID,
                 callback: function() {
-                    this.pagarOk(nroatencion);
+                    this.pagarOk(nroatencion, ticket);
                 },
                 scope: this
             });
@@ -148,7 +153,7 @@ Ext.define('rewpos.controller.Pedido', {
             Ext.Msg.alert('', 'No hay un pedido para procesar', Ext.emptyFn);
         }
     },
-    pagarOk: function(nroatencion) {
+    pagarOk: function(nroatencion, ticket) {
         var mozo_id = Ext.getStore('Pedido').getAt(0).get('mozo_id');
         if(mozo_id==0){
             Ext.Msg.alert('Advertencia', 'Debe seleccionar un mozo', Ext.emptyFn);
@@ -189,22 +194,34 @@ Ext.define('rewpos.controller.Pedido', {
                         params: {
                             nroatencion: nroatencion,
                             caja_id: rewpos.AppGlobals.CAJA_ID,
-                            cajero_id: rewpos.AppGlobals.CAJERO.get('id')
+                            cajero_id: rewpos.AppGlobals.CAJERO.get('id'),
+                            ticket: ticket
                         },
                         callback: function(request, success, response){
                             rewpos.Util.unmask(true);
                             var text = Ext.JSON.decode(response.responseText);
                             if(text.success){
-                                this.imprimirTiket(text.data.id);
+                                this.imprimirTiket(text.data.id, ticket);
                                 Ext.getStore('Pago').removeAll();
                                 Ext.getStore('Pedido').removeAll();
+                                this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(0);
+                                this.getSeleccionView().down('selectfield[name=cboPax]').setValue(1);
+                                /*Ext.getStore('Pedido').load({
+                                    url: rewpos.AppGlobals.HOST+'pedido/'+nroatencion+'/'+rewpos.AppGlobals.CAJA_ID,
+                                    callback: function(records) {
+                                        if(records.length>0){
+                                            this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
+                                            this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
+                                        }
+                                    },
+                                    scope: this
+                                });*/
                                 this.getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
                                 this.getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
-                                console.log(rewpos.AppGlobals.PRODUCTO_TOUCH);
                                 if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
-                                    //rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
+                                    rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
                                     //rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
-                                    rewpos.Util.showPanel('comandoCard', 'categoriaDataView', 'left');
+                                    //rewpos.Util.showPanel('comandoCard', 'categoriaDataView', 'left');
                                 } else {
                                     rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                                 }
@@ -219,12 +236,14 @@ Ext.define('rewpos.controller.Pedido', {
             scope: this
         });
     },
-    imprimirTiket: function(id){
+    imprimirTiket: function(id, ticket){
         rewpos.Util.mask('imprimiendo comprobante, porfavor espere.', true);
-        Ext.ModelManager.getModel('rewpos.model.Imprimir').load("comprobante/"+id,{
+        Ext.ModelManager.getModel('rewpos.model.Imprimir').load("comprobante/"+id+"/"+ticket,{
             callback: function(record, operation) {
                 rewpos.Util.unmask(true);
-                console.log(record.get('success'));
+                if(!record.get('success')){
+                    this.imprimirTiketQ(id, ticket);
+                }
             },
             scope: this
         });
@@ -246,7 +265,7 @@ Ext.define('rewpos.controller.Pedido', {
             scope: this
         });*/
     },
-    imprimirTiketQ: function(id) {
+    imprimirTiketQ: function(id, ticket) {
         Ext.Msg.show({
             title: "Confirmacion",
             message: rewpos.AppGlobals.MSG_PRINTER_ERROR+"\nReintentar Impresion?",
@@ -259,7 +278,7 @@ Ext.define('rewpos.controller.Pedido', {
             }],
             fn: function(btn) {
                 if(btn=='yes'){
-                    this.imprimirTiket(id);
+                    this.imprimirTiket(id, ticket);
                 }
             },
             scope: this
@@ -278,7 +297,6 @@ Ext.define('rewpos.controller.Pedido', {
                 var adminId = cbo.getValue();
                 if(adminId>0) {
                     var pass1 = rewpos.Util.MD5(pass.getValue()).toUpperCase();
-                    //console.log(Ext.getStore('Admin').findRecord('id', adminId));
                     var pass2 = Ext.getStore('Admin').findRecord('id', adminId).get('clave').toUpperCase();
                     if(pass1==pass2){
                         Ext.Viewport.remove(btnOk.up('panel'));
@@ -508,25 +526,29 @@ Ext.define('rewpos.controller.Pedido', {
                 if(pass1==pass2){
                     Ext.Viewport.remove(btnOk.up('panel'));
                     rewpos.Util.mask();
-                    var cajaId;
+                    var cajaId = rewpos.AppGlobals.CAJA_ID;
                     var urlCierre;
                     if(rewpos.AppGlobals.CAJERO==null){
-                        var centrocostoId = Ext.getStore('Cajero').findRecord('id', adminId).get('centrocosto_id')
-                        var urlCaja = Ext.getStore('Caja').getProxy().getUrl()+'/'+centrocostoId;
-                        Ext.getStore('Caja').load({
-                            url: urlCaja,
-                            callback: function(records, operation, success) {
-                                if(records.length==1){
-                                    cajaId = records[0].get('id');
+                        //var centrocostoId = Ext.getStore('Admin').findRecord('id', adminId).get('centrocosto_id')
+                        //var urlCaja = Ext.getStore('Caja').getProxy().getUrl()+'/'+centrocostoId;
+                        //Ext.getStore('Caja').load({
+                        //    url: urlCaja,
+                        //    callback: function(records, operation, success) {
+                        //        if(records.length==1){
+                                    //cajaId = records[0].get('id')
                                     //urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId;
-                                    Ext.ModelManager.getModel('rewpos.model.Imprimir').load('cierre/'+cajaId,{
+                                    Ext.ModelManager.getModel('rewpos.model.Imprimir').load('cierre/'+cajaId, {
                                         callback: function(record, operation) {
-                                            Ext.Ajax.request({
-                                                url: rewpos.AppGlobals.HOST+'caja/cierre/'+cajaId,
-                                                callback: function(request, success, response) {
-                                                    rewpos.Util.unmask();
-                                                }
-                                            });
+                                            if(record.get("error")){
+                                                Ext.Msg.alert('Advertencia', record.get("message"), Ext.emptyFn);
+                                            }else{
+                                                Ext.Ajax.request({
+                                                    url: rewpos.AppGlobals.HOST+'caja/cierre/'+cajaId,
+                                                    callback: function(request, success, response) {
+                                                        rewpos.Util.unmask();
+                                                    }
+                                                });
+                                            }
                                         },
                                         scope: this
                                     });
@@ -552,17 +574,16 @@ Ext.define('rewpos.controller.Pedido', {
                                             }
                                         }
                                     });*/
-                                } else {
-                                    Ext.Array.forEach(records, function(item) {
+                        //        } else {
+                        //            Ext.Array.forEach(records, function(item) {
                                         
-                                    }, this);
-                                }
-                            },
-                            scope: this
-                        })
+                        //            }, this);
+                        //        }
+                        //    },
+                        //    scope: this
+                        //})
                         urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId;
                     } else {
-                        cajaId = rewpos.AppGlobals.CAJA_ID;
                         var cajeroId = rewpos.AppGlobals.CAJERO.get('id');
                         //urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId+'/'+cajeroId
                         Ext.ModelManager.getModel('rewpos.model.Imprimir').load('cierre/'+cajaId+'/'+cajeroId,{
