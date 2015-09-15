@@ -16,8 +16,9 @@ Ext.define('rewpos.controller.Comando', {
         switch(btn.getItemId()) {
             case 'btnComandoBuscar':
                 if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
-                    //rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
-                    rewpos.Util.showPanel('comandoCard', 'categoriaDataView', 'left');
+                    rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
+                    rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
+                    //rewpos.Util.showPanel('comandoCard', 'categoriaDataView', 'left');
                 } else {
                     rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                 }
