@@ -18,7 +18,7 @@ Ext.define('rewpos.controller.Pedido', {
                 tap: 'ontapSeleccion'
             },
             'seleccionView selectfield': {
-                change: 'onChangeCbo'
+                change: 'onChangeCbo' 
             },
             'pedidoList': {
                 select: 'onSelectPedidoList',
@@ -496,7 +496,8 @@ Ext.define('rewpos.controller.Pedido', {
                 var total = rewpos.Util.formatValue(total);
                 var cajero = rewpos.AppGlobals.CAJERO.get('nombre')+' '+rewpos.AppGlobals.CAJERO.get('apellido');
                 Ext.Msg.show({
-                    title: 'Resumen Diario - '+cajero, 
+                    //title: 'Resumen Diario - '+cajero, 
+                    title: 'Resumen Diario', 
                     message: '<div id="resumenMessage">'+
                     '<div class="titulo">Atenciones:</div><div class="valor">'+atenciones+'</div><br/>'+
                     '<div class="titulo">Ventas:</div><div class="valor">'+ventas+'</div><br/>'+

@@ -11,7 +11,8 @@ Ext.define('rewpos.view.TecladoNumerico', {
                 layout: 'hbox',
                 defaults: {
                     xtype: 'button',
-                    flex: 1
+                    flex: 1,
+                    height: 100
                 }
             },
             items: [{

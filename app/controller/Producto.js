@@ -5,18 +5,21 @@ Ext.define('rewpos.controller.Producto', {
         refs: {
             seleccionView: 'seleccionView',
             pedidoList: 'pedidoList',
-            productoList: 'productoList'
+            productoList: 'productoList',
+            searchfield: 'productoTouchView searchfield'
         },
         control: {
             'productoView searchfield': {
                 keyup: 'onSearchKeyUp',
-                clearicontap: 'onSearchClearIconTap'
+                clearicontap: 'onSearchClearIconTap',
+                focus: 'onFocusSearch'
             },
             'categoriaList': {
                 select: 'onSelectCategoriaList'
             },
             'productoList': {
-                itemdoubletap: 'onItemDoubleTapProductoList',
+                //itemdoubletap: 'onItemDoubleTapProductoList',
+                itemtap: 'onItemDoubleTapProductoList',
                 select: 'onSelectProductoList'
             },
             'productoTouchView button': {
@@ -24,7 +27,8 @@ Ext.define('rewpos.controller.Producto', {
             },
             'productoTouchView searchfield': {
                 keyup: 'onSearchKeyUp',
-                clearicontap: 'onSearchClearIconTap'
+                clearicontap: 'onSearchClearIconTap',
+                focus: 'onFocusSearch'
             },
             'categoriaDataView': {
                 itemtap: 'onItemTapCategoria'
@@ -39,6 +43,7 @@ Ext.define('rewpos.controller.Producto', {
         var keyCode = e.event.keyCode;
         if(keyCode == 13) {
             var value = field.getValue();
+            field.reset();
             if(value.length>=3) {
                 rewpos.Util.mask('Buscando...', true);
                 Ext.getStore('Producto').load({
@@ -75,6 +80,9 @@ Ext.define('rewpos.controller.Producto', {
     onSearchClearIconTap: function() {
         rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
         Ext.getStore('Producto').setData([]);
+    },
+    onFocusSearch: function(){
+        rewpos.AppGlobals.LIST_SELECTED = null;
     },
     onSelectCategoriaList: function(list, record){
         rewpos.AppGlobals.LIST_SELECTED = list;
@@ -154,6 +162,7 @@ Ext.define('rewpos.controller.Producto', {
         existRecord.save();
         list.scrollToRecord(existRecord);
         list.select(existRecord);
+        //this.getSearchfield().focus();
     },
     addProducto: function(record, list, clienteId) {
         var mesa = this.getSeleccionView().down('button[name=btnSeleccionMesa]').getText().substr(3);
@@ -178,6 +187,7 @@ Ext.define('rewpos.controller.Producto', {
             success: function(pedido) {
                 Ext.getStore('Pedido').add(pedido);
                 rewpos.Util.unmask(true);
+                //rewpos.app.getController('Producto').getSearchfield().focus();
                 //list.select(pedido);
                 //list.scrollToRecord(pedido);
             },

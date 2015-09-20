@@ -13,6 +13,10 @@ Ext.define('rewpos.view.ProductoList', {
             pullText: 'Recargar',
             releaseText: 'Suelta'
         }],*/
+        /*scrollable: {
+            direction: 'vertical',
+            directionLock: true
+        },*/
         store: 'Producto',
     	itemTpl: new Ext.XTemplate(
             '<div class="-row-list">',

@@ -7,7 +7,7 @@ Ext.define('rewpos.view.AuthView', {
             style: {
                 'margin': '20px auto 0'
             },
-            width: 500,
+            width: 650,
             items: [{
                 xtype: 'passwordfield',
                 label: 'Contraseña',

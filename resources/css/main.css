@@ -319,7 +319,7 @@
 
 .teclado .x-button {
 	margin: 0px 3px;
-	padding: 20px;
+	/*padding: 10px;*/
 	border-top-color: #fff;/*#a6a6a6;*/
 	border-bottom-color: #ddd;
 	background-color: #fff;

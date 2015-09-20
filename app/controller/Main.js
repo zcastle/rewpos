@@ -148,7 +148,12 @@ Ext.define('rewpos.controller.Main', {
                             case 'categoriaList':
                                 break;
                             case 'productoList':
-                                //rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
+                                /*console.log(list);
+                                console.log(list.getHidden());*/
+                                if(!list.getHidden()){
+                                    rewpos.app.getController('Producto').onItemDoubleTapProductoList(null, null, null, record);
+                                    //rewpos.app.getController('Producto').getSearchfield().focus();
+                                }
                                 break;
                             case 'clientesList':
                                 //rewpos.app.getController('ClienteModal').onItemDoubleTapClienteList(list, null, null, record);
@@ -190,10 +195,10 @@ Ext.define('rewpos.controller.Main', {
                 }
                 if(rewpos.AppGlobals.CAJA.get('tipo')=='C') {
                     var mozos = new Array();
-                    mozos.push({
+                    /*mozos.push({
                         text: 'Elegir Mozo',
                         value: 0
-                    });
+                    });*/
                     Ext.Array.forEach(records, function(item) {
                         if (item.get('rol_id')==rewpos.AppGlobals.ROL_ID_MOZO) {
                             mozos.push({
