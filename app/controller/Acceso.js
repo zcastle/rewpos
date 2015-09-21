@@ -24,7 +24,7 @@ Ext.define('rewpos.controller.Acceso', {
                     text: 'Anular Documento',
                     handler: this.getApplication().getController('Pedido').anularDocumento
                 },{
-                    text: 'Cierre Total',
+                    text: 'Cierre Z',
                     handler: this.getApplication().getController('Pedido').cierreParcial
                 },{
                     text: 'Configuracion',
@@ -62,11 +62,20 @@ Ext.define('rewpos.controller.Acceso', {
             });
             this.getSeleccionView().down('selectfield[name=cboMozos]').disable();
         }
-        this.chageViewToPedido();
+        //this.chageViewToPedido();
+        if(rewpos.AppGlobals.CAJERO.get("rol_id")==2){
+            rewpos.Util.showPanel('mainCard', 'authView', 'left');
+        }else{
+            rewpos.Util.showPanel('mainCard', 'pedidoView', 'left');
+        }
     },
-    chageViewToPedido: function() {
-        rewpos.Util.showPanel('mainCard', 'authView', 'left');
-    },
+    /*chageViewToPedido: function() {
+        if(rewpos.AppGlobals.CAJERO.get("rol_id")==2){
+            rewpos.Util.showPanel('mainCard', 'authView', 'left');
+        }else{
+            rewpos.Util.showPanel('mainCard', 'pedidoView', 'left');
+        }
+    },*/
     configuracion: function() {
         Ext.Viewport.hideAllMenus(true); //toggleMenu('right');
         //rewpos.Util.showPanel('mainCard', 'configuracionView', 'left');

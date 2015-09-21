@@ -34,6 +34,7 @@ Ext.define('rewpos.view.AnularDocumentoModal', {
             )
         },{
             xtype: 'textfield',
+            //action: 'observacion',
             label: 'Observacion',
             labelWidth: 160,
             name: 'observacion'

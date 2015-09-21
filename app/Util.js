@@ -73,7 +73,7 @@ Ext.define('rewpos.Util', {
     mask: function(msg, force) {
         if(rewpos.AppGlobals.MASK || force){
             //Ext.Viewport.setMasked(true);
-            var message = msg || 'Cargando...';
+            var message = msg || 'Procesando...';
             Ext.Viewport.setMasked({
               xtype: 'loadmask',
               message: message,

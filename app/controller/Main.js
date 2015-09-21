@@ -254,7 +254,7 @@ Ext.define('rewpos.controller.Main', {
                 text: 'Anular Documento',
                 handler: this.getApplication().getController('Pedido').anularDocumento
             },{
-                text: 'Cierre Parcial',
+                text: 'Cierre X',
                 handler: this.getApplication().getController('Pedido').cierreParcial
             },{
                 text: '' //Configuracion

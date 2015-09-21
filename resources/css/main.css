@@ -545,6 +545,7 @@
 .documentos-row-list {
 	display: -webkit-flex;
 	display: flex;
+	font-size: 0.8em;
 }
 
 .documentos-row-list .field-left {
