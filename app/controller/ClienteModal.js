@@ -6,7 +6,9 @@ Ext.define('rewpos.controller.ClienteModal', {
         refs: {
             clienteModal: 'clienteModal',
             pagosView: 'pagosView',
-            clientesList: 'clienteBuscarModal list'
+            clientesList: 'clienteBuscarModal list',
+            txtRuc: 'clienteModal searchfield[name=ruc]',
+            txtRs: 'clienteModal textfield[name=nombre]'
         },
         control: {
             'clienteModal': {
@@ -185,6 +187,12 @@ Ext.define('rewpos.controller.ClienteModal', {
                     } else {
                         Ext.Viewport.remove(field.up('panel'));
                         Ext.Viewport.add({xtype: 'clienteModal', scrollable: false});
+                        //console.log(parseInt(value));
+                        if(isNaN(parseInt(value))){
+                            this.getTxtRs().setValue(value);
+                        }else{
+                            this.getTxtRuc().setValue(value);
+                        }
                     }
                 },
                 scope: this
