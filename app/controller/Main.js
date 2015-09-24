@@ -117,7 +117,8 @@ Ext.define('rewpos.controller.Main', {
         }
         if(Ext.os.deviceType=='Desktop') {
             $(document.body).keydown(function(event) {
-                if(event.ctrlKey && event.shiftKey && event.which==13){
+                //if(event.ctrlKey && event.shiftKey && event.which==13){ $$_KEY
+                if(event.F8){
                     var oculto = rewpos.app.getController('Main').getPedidoView().isHidden();
                     if(!oculto){
                         rewpos.app.getController('Pedido').pagar(true);
