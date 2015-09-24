@@ -147,7 +147,7 @@ Ext.define('rewpos.controller.AnularDocumentoModal', {
                         
                         //console.log(obs);
                         Ext.Ajax.request({
-                            url: rewpos.AppGlobals.HOST+'venta/anular_documento/',
+                            url: rewpos.AppGlobals.HOST+'venta/anular',
                             method: 'POST',
                             params: {
                                 venta_id: venta_id,
