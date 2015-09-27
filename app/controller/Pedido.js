@@ -485,24 +485,31 @@ Ext.define('rewpos.controller.Pedido', {
             callback: function(request, success, response){
                 rewpos.Util.unmask();
                 var text = Ext.JSON.decode(response.responseText);
-                var atenciones = text.data[0].Atenciones || 0;
-                var atenciones = Ext.data.Types.NUMBER.convert(atenciones);
-                var ventas = text.data[0].Ventas || 0;
-                var ventas = Ext.data.Types.NUMBER.convert(ventas);
+                var records = text.data, record = null;
+                var usuario, total, totales = 0, msg = "";
+                for(i in records){
+                    record = records[i];
+                    usuario = record.usuario;
+                    total = Ext.data.Types.NUMBER.convert(record.total || 0);
+                    totales += total;
+                    total = rewpos.Util.formatValue(total);
+                    msg += '<div class="titulo">'+usuario+'</div><div class="valor">'+total+'</div><br/>';
+                }
+                /*var atenciones = Ext.data.Types.NUMBER.convert(text.data[0].Atenciones || 0);
+                var ventas = Ext.data.Types.NUMBER.convert(text.data[0].Ventas || 0);
                 var total = atenciones+ventas;
 
                 var atenciones = rewpos.Util.formatValue(atenciones);
-                var ventas = rewpos.Util.formatValue(ventas);
-                var total = rewpos.Util.formatValue(total);
-                var cajero = rewpos.AppGlobals.CAJERO.get('nombre')+' '+rewpos.AppGlobals.CAJERO.get('apellido');
+                var ventas = rewpos.Util.formatValue(ventas);*/
+                var totales = rewpos.Util.formatValue(totales);
+                //var cajero = rewpos.AppGlobals.CAJERO.get('nombre')+' '+rewpos.AppGlobals.CAJERO.get('apellido');
                 Ext.Msg.show({
-                    //title: 'Resumen Diario - '+cajero, 
-                    title: 'Resumen Diario', 
+                    //title: 'Resumen Diario - '+cajero,
+                    title: 'Resumen Diario',
                     message: '<div id="resumenMessage">'+
-                    '<div class="titulo">Atenciones:</div><div class="valor">'+atenciones+'</div><br/>'+
-                    '<div class="titulo">Ventas:</div><div class="valor">'+ventas+'</div><br/>'+
+                    msg+
                     '-----------------------------------------------------------<br/>'+
-                    '<div class="titulo">Total:</div><div class="valor">'+total+'</div>'+
+                    '<div class="titulo">Total:</div><div class="valor">'+totales+'</div>'+
                     '</div>',
                     fn: Ext.emptyFn
                 });

@@ -105,19 +105,7 @@ Ext.define('rewpos.controller.Editar', {
                             },
                             scope: this
                         });
-                        /*Ext.Ajax.request({
-                            url: rewpos.AppGlobals.HOST_PRINT+'pedido/remove/'+record.get('id')+'/'+record.get('cantidad'),
-                            disableCaching: false,
-                            useDefaultXhrHeader: false,
-                            callback: function(request, success, response){
-                                var text = Ext.JSON.decode(response.responseText);
-                                if(!text.success) {
-                                    Ext.Msg.alert('Advertencia', 'Error al ELIMINAR PRODUCTO', Ext.emptyFn);
-                                }
-                            }
-                        });*/
                     }
-                    //
                     rewpos.Util.mask();
                     record.erase({
                         success: function() {
