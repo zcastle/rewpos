@@ -87,7 +87,7 @@ Ext.define('rewpos.controller.AnularDocumentoModal', {
             //field.reset();
             caja_id = rewpos.AppGlobals.CAJA_ID;
             url = rewpos.AppGlobals.HOST+'venta/anular/'+caja_id
-            console.log(rewpos.AppGlobals.CAJERO);
+            //console.log(rewpos.AppGlobals.CAJERO);
             if(rewpos.AppGlobals.CAJERO!=null){
                 cajero_id = rewpos.AppGlobals.CAJERO.get('id');
                 url += "/"+cajero_id;
@@ -98,7 +98,9 @@ Ext.define('rewpos.controller.AnularDocumentoModal', {
             Ext.getStore('Venta').load({
                 url: url,
                 callback: function(records) {
-                    this.getList().select(0);
+                    if(records.length>0){
+                        this.getList().select(0);
+                    }
                 },
                 scope: this
             })

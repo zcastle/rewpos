@@ -535,82 +535,58 @@ Ext.define('rewpos.controller.Pedido', {
                     Ext.Viewport.remove(btnOk.up('panel'));
                     rewpos.Util.mask();
                     var cajaId = rewpos.AppGlobals.CAJA_ID;
-                    var urlCierre;
+                    //var urlCierre;
                     if(rewpos.AppGlobals.CAJERO==null){
-                        //var centrocostoId = Ext.getStore('Admin').findRecord('id', adminId).get('centrocosto_id')
-                        //var urlCaja = Ext.getStore('Caja').getProxy().getUrl()+'/'+centrocostoId;
-                        //Ext.getStore('Caja').load({
-                        //    url: urlCaja,
-                        //    callback: function(records, operation, success) {
-                        //        if(records.length==1){
-                                    //cajaId = records[0].get('id')
-                                    //urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId;
-                                    Ext.ModelManager.getModel('rewpos.model.Imprimir').load('cierre/'+cajaId, {
-                                        callback: function(record, operation) {
-                                            if(record.get("error")){
-                                                Ext.Msg.alert('Advertencia', record.get("message"), Ext.emptyFn);
-                                            }else{
-                                                Ext.Ajax.request({
-                                                    url: rewpos.AppGlobals.HOST+'caja/cierre/'+cajaId,
-                                                    callback: function(request, success, response) {
-                                                        rewpos.Util.unmask();
-                                                    }
+                        Ext.ModelManager.getModel('rewpos.model.Imprimir').load('cierre_pre/'+cajaId, {
+                            callback: function(record, operation) {
+                                if(record.get("error")){
+                                    Ext.Msg.alert('Advertencia', record.get("message"), Ext.emptyFn);
+                                }else{
+                                    Ext.Msg.show({
+                                        title: "Confirmacion",
+                                        message: "Desea emitir el CIERRE Z",
+                                        buttons:  [{
+                                            itemId: 'no',
+                                            text: 'No'
+                                        },{
+                                            itemId: 'yes',
+                                            text: 'Si'
+                                        }],
+                                        fn: function(btn) {
+                                            if(btn=='yes'){
+                                                Ext.ModelManager.getModel('rewpos.model.Imprimir').load('cierre/'+cajaId, {
+                                                    callback: function(record, operation) {
+                                                        if(record.get("error")){
+                                                            Ext.Msg.alert('Advertencia', record.get("message"), Ext.emptyFn);
+                                                        }else{
+                                                            Ext.Ajax.request({
+                                                                url: rewpos.AppGlobals.HOST+'caja/cierre/'+cajaId,
+                                                                callback: function(request, success, response) {
+                                                                    rewpos.Util.unmask();
+                                                                }
+                                                            });
+                                                        }
+                                                    },
+                                                    scope: this
                                                 });
                                             }
                                         },
                                         scope: this
                                     });
-                                    /*Ext.Ajax.request({
-                                        url: urlCierre,
-                                        disableCaching: false,
-                                        useDefaultXhrHeader: false,
-                                        callback: function(request, success, response){
-                                            if(success){
-                                                var text = Ext.JSON.decode(response.responseText);
-                                                if(text.success) {
-                                                    Ext.Ajax.request({
-                                                        url: rewpos.AppGlobals.HOST+'caja/cierre/'+cajaId,
-                                                        callback: function(request, success, response) {
+                                }
+                            },
+                            scope: this
+                        });
 
-                                                        }
-                                                    });
-                                                } else {
-                                                    Ext.Msg.alert('Advertencia', 'Error en CIERRE', Ext.emptyFn);
-                                                }
-                                            } else {
-                                                Ext.Msg.alert('Advertencia', rewpos.AppGlobals.MSG_PRINTER_ERROR, Ext.emptyFn);
-                                            }
-                                        }
-                                    });*/
-                        //        } else {
-                        //            Ext.Array.forEach(records, function(item) {
-                                        
-                        //            }, this);
-                        //        }
-                        //    },
-                        //    scope: this
-                        //})
-                        urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId;
+                        //urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId;
                     } else {
                         var cajeroId = rewpos.AppGlobals.CAJERO.get('id');
-                        //urlCierre = rewpos.AppGlobals.HOST_PRINT+'cierre/'+cajaId+'/'+cajeroId
                         Ext.ModelManager.getModel('rewpos.model.Imprimir').load('cierre/'+cajaId+'/'+cajeroId,{
                             callback: function(record, operation) {
                                 rewpos.Util.unmask();
                             },
                             scope: this
                         });
-                        /*Ext.Ajax.request({
-                            url: urlCierre,
-                            disableCaching: false,
-                            useDefaultXhrHeader: false,
-                            callback: function(request, success, response){
-                                var text = Ext.JSON.decode(response.responseText);
-                                if(!text.success) {
-                                    Ext.Msg.alert('Advertencia', 'Error en cierre PARCIAL', Ext.emptyFn);
-                                }
-                            }
-                        });*/
                     }
                 } else {
                     pass.setValue('');

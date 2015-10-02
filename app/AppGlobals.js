@@ -5,16 +5,11 @@ Ext.define('rewpos.AppGlobals', {
     ANIMACION: false,
     DEBUG: false,
     DEV: true,
-    //HOST: 'http://192.168.1.6:2385/',
-    //HOST: 'http://192.168.0.11/rewservices/',
     //HOST: 'http://pos.openbusiness.pe/services/',
-    //HOST: 'http://10.10.10.20:2385/index.php/',
     //PROD
     HOST: 'http://192.168.0.2:8080/rewservices/',
     //DEV
     //HOST: 'http://192.168.0.12:2385/index.php/',
-    //HOST: 'http://10.10.10.2:8080/rewservices/',
-    //HOST: 'http://localhost:3000/api/',
     //HOST_PRINT: 'http://192.168.1.5:8084/REWPrinterPool/',
     //HOST_PRINT: 'http://192.168.1.6:8523/',
     HOST_PRINT: '',
@@ -39,7 +34,7 @@ Ext.define('rewpos.AppGlobals', {
     MAX_MESAS: 100,
     MASK: false,
     LIST_SELECTED: null,
-    DB: null,
+    //DB: null,
     MSG_PRINTER_ERROR: 'Error al imprimir, verificar estado de impresora.',
     PRODUCTO_TOUCH: true
 });
