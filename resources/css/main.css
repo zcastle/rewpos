@@ -574,7 +574,10 @@
 
 .dvProductos .x-dataview-item {
 	/*background: #6085c4;*/
-	background: #f44;
+	/*;
+		#f44
+	*/
+	background: #AEB9BA;
 }
 
 .dvCategorias .x-dataview-item {
@@ -595,6 +598,7 @@
 
 .dvProductos .x-dataview-item .boton {
 	font-size: 0.8em;
+	color: #16224B;
 }
 
 .dvCategorias .x-dataview-item .boton {
