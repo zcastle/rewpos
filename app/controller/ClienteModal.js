@@ -32,10 +32,12 @@ Ext.define('rewpos.controller.ClienteModal', {
                 clearicontap: 'onSearchClearIconTap2'
             },
             'clienteBuscarModal list': {
-                itemdoubletap: 'onItemDoubleTapClienteList'
+                //itemdoubletap: 'onItemDoubleTapClienteList'
+                itemtap: 'onItemDoubleTapClienteList'
             },
             'clienteBuscarModal button': {
-                itemdoubletap: 'onItemDoubleTapClienteList'
+                //itemdoubletap: 'onItemDoubleTapClienteList'
+                itemtap: 'onItemDoubleTapClienteList'
             }
         } 
     },
