@@ -55,10 +55,21 @@ Ext.define('rewpos.controller.Pedido', {
                 if(Ext.getStore('Pedido').getCount()>0 && rewpos.AppGlobals.CAJA.get('tipo')=='C') {
                     var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
                     var cliente = Ext.getStore('Pedido').getAt(0).get('cliente_name');
+
                     if(cliente=='' || cliente==null) {
                         this.getPagosView().down('button[name=btnCliente]').setText('Cliente');
                     } else {
-                        this.getPagosView().down('button[name=btnCliente]').setText(cliente);
+                        var cliente_id = Ext.getStore('Pedido').getAt(0).get('cliente_id');
+                        Ext.ModelManager.getModel('rewpos.model.Cliente').load(cliente_id,{
+                            callback: function(record, operation) {
+                                console.log(record);
+                                var cliente = record.get('nombre')+"<br>";
+                                cliente += record.get('ruc')+"<br>";
+                                cliente += record.get('direccion')+"-"+record.get('ubigeo_name');
+                                this.getPagosView().down('button[name=btnCliente]').setHtml(cliente);
+                            },
+                            scope: this
+                        });
                     }
                     Ext.getStore('Pago').load({
                         url: rewpos.AppGlobals.HOST+'pedido/pago/'+nroatencion+'/'+rewpos.AppGlobals.CAJA_ID,
@@ -391,7 +402,7 @@ Ext.define('rewpos.controller.Pedido', {
                             rewpos.Util.unmask();
                             Ext.getStore('Pedido').each(function(record){
                                 record.set('nroatencion', nrodestino);
-                            });
+                            }); 
                             var res = Ext.JSON.decode(response.responseText);
                             if(res.success){
                                 Ext.Viewport.remove(btnOk.up('panel'));

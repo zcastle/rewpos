@@ -7,9 +7,9 @@ Ext.define('rewpos.AppGlobals', {
     DEV: true,
     //HOST: 'http://pos.openbusiness.pe/services/',
     //PROD
-    HOST: 'http://192.168.0.2:8080/rewservices/',
+    //HOST: 'http://192.168.0.2:8080/rewservices/',
     //DEV
-    //HOST: 'http://192.168.0.14:2385/index.php/',
+    HOST: 'http://192.168.0.14:2385/index.php/',
     //HOST_PRINT: 'http://192.168.1.5:8084/REWPrinterPool/',
     //HOST_PRINT: 'http://192.168.1.6:8523/',
     HOST_PRINT: '',

@@ -31,6 +31,8 @@ Ext.define('rewpos.controller.Pagos', {
             if(btn.getText()=='SOLES' || btn.getText()=='DOLARES' || btn.getText()=='PROPINA' || btn.getText()=='OTROS') return;
             if(btn.getText()=='OTROS') {
                 
+            } else if(btn.getText()=='DESCUENTO') {
+                var modal = Ext.Viewport.add({xtype: 'descuentoModal'});
             } else {
                 var existe = false;
                 var cuenta = 0.0;

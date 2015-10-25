@@ -40,7 +40,7 @@ Ext.application({
         'Main','Toolbar','Comando','Pedido','Mesas','Editar','Pagos',
         'Acceso','Auth','AutorizacionModal','Producto','ClienteModal',
         'CambiarMesaModal','TecladoPrecioModal','AnularDocumentoModal',
-        'ConfigModal','TecladoFull', 'Configuracion'
+        'ConfigModal','TecladoFull', 'Configuracion', 'DescuentoModal'
     ],
     //'Acciones',
     views: [
@@ -50,7 +50,7 @@ Ext.application({
         'ChatView','AutorizacionModal','ClienteModal','CambiarMesaModal','TecladoPrecioModal',
         'AnularDocumentoModal','ProductoTouchView','CategoriaDataView','ProductoDataView',
         'ConfigModal','TecladoFull','ClienteBuscarModal','configuracion.ConfiguracionView',
-        'configuracion.ConfiguracionList','configuracion.MantenimientoProductoList'
+        'configuracion.ConfiguracionList','configuracion.MantenimientoProductoList','DescuentoModal'
     ],
 
     icon: {
