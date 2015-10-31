@@ -62,7 +62,7 @@ Ext.define('rewpos.controller.Pedido', {
                         var cliente_id = Ext.getStore('Pedido').getAt(0).get('cliente_id');
                         Ext.ModelManager.getModel('rewpos.model.Cliente').load(cliente_id,{
                             callback: function(record, operation) {
-                                console.log(record);
+                                //console.log(record);
                                 var cliente = record.get('nombre')+"<br>";
                                 cliente += record.get('ruc')+"<br>";
                                 cliente += record.get('direccion')+"-"+record.get('ubigeo_name');
@@ -74,8 +74,19 @@ Ext.define('rewpos.controller.Pedido', {
                     Ext.getStore('Pago').load({
                         url: rewpos.AppGlobals.HOST+'pedido/pago/'+nroatencion+'/'+rewpos.AppGlobals.CAJA_ID,
                         callback: function() {
-                            rewpos.Util.showPanel('comandoCard', 'pagosView', 'right');
-                        }
+                            var montoPagar = 0;
+                            Ext.getStore('Pedido').each(function(item){
+                                montoPagar += item.get('cantidad')*item.get('precio');
+                            });
+                            var dscto_m = Ext.getStore('Pedido').getAt(0).get('dscto_m');
+                            var dscto_p = Ext.getStore('Pedido').getAt(0).get('dscto_p');
+                            var dscto_id = Ext.getStore('Pedido').getAt(0).get('descuento_tipo_id');
+                            var dscto_name = Ext.getStore('Pedido').getAt(0).get('descuento_tipo_name');
+                            this.getApplication().getController('Pagos').setDescuento(dscto_id, dscto_name, montoPagar, dscto_m, dscto_p, function(){
+                                rewpos.Util.showPanel('comandoCard', 'pagosView', 'right');
+                            });
+                        },
+                        scope: this
                     });
                 }
                 break;
@@ -177,12 +188,19 @@ Ext.define('rewpos.controller.Pedido', {
             valorPedido += record.get('cantidad')*record.get('precio')
         }, this)
         Ext.getStore('Pago').each(function(item){
-            valorPago += item.get('valorpago')
+            if(item.get('moneda_id')==2){
+                valorPago += item.get('valorpago')*rewpos.AppGlobals.TIPO_CAMBIO;
+            }else{
+                valorPago += item.get('valorpago');
+            }
         });
-
+        var dscto_m = Ext.getStore('Pedido').getAt(0).get('dscto_m');
+        console.log(valorPedido);
+        console.log(dscto_m);
+        console.log(valorPago);
         if(valorPago==0.0) {
             mensaje = 'La cuenta se pagara con el monto exacto, desea continuar?';
-        } else if((valorPedido-valorPago)>0) {
+        } else if(((valorPedido-dscto_m)-valorPago)>0) {
             Ext.Msg.alert('Advertencia', 'Debe terminar de pagar la cuenta', Ext.emptyFn);
             return;
         }
@@ -402,7 +420,7 @@ Ext.define('rewpos.controller.Pedido', {
                             rewpos.Util.unmask();
                             Ext.getStore('Pedido').each(function(record){
                                 record.set('nroatencion', nrodestino);
-                            }); 
+                            });
                             var res = Ext.JSON.decode(response.responseText);
                             if(res.success){
                                 Ext.Viewport.remove(btnOk.up('panel'));

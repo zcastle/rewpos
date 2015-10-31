@@ -50,7 +50,8 @@ Ext.application({
         'ChatView','AutorizacionModal','ClienteModal','CambiarMesaModal','TecladoPrecioModal',
         'AnularDocumentoModal','ProductoTouchView','CategoriaDataView','ProductoDataView',
         'ConfigModal','TecladoFull','ClienteBuscarModal','configuracion.ConfiguracionView',
-        'configuracion.ConfiguracionList','configuracion.MantenimientoProductoList','DescuentoModal'
+        'configuracion.ConfiguracionList','configuracion.MantenimientoProductoList','DescuentoModal',
+        'TecladoMonedaMini'
     ],
 
     icon: {

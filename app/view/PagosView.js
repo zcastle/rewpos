@@ -32,35 +32,68 @@ Ext.define('rewpos.view.PagosView', {
                 /*defaults: {
                     xtype: 'button'
                 },*/
-                items: [/*{
-                    layout: 'hbox',
+                items: [{
+                    layout: 'vbox',
                     items: [{
-                        xtype: 'button',
-                        name: 'btnCliente',
-                        text: 'Cliente',
-                        cls: 'button-label-align-left',
-                        flex: 1
+                        id: 'containerTotalMontoPagarAnt',
+                        layout: 'hbox',
+                        cls: 'label',
+                        //hidden: true,
+                        items: [{
+                            xtype: 'label',
+                            html: 'Cuenta',
+                            flex: 1
+                        },{
+                            xtype: 'label',
+                            html: rewpos.AppGlobals.MONEDA_SIMBOLO
+                        },{
+                            xtype: 'label',
+                            id: 'lblTotalMontoPagarAnt',
+                            html: '0.00'
+                        }]
                     },{
-                        xtype: 'button',
-                        name: 'btnLimpiar',
-                        text: 'X',
-                        cls: 'button-label-limpiar'
-                    }]
-                },*/{
-                    //xtype: 'container',
-                    layout: 'hbox',
-                    cls: 'label',
-                    items: [{
-                        xtype: 'label',
-                        html: 'Cuenta',
-                        flex: 1
+                        id: 'containerTotalMontoPagarDescuento',
+                        layout: 'hbox',
+                        //hidden: true,
+                        items: [{
+                            layout: 'hbox',
+                            cls: 'label',
+                            flex: 1,
+                            items: [{
+                                xtype: 'label',
+                                id: 'lblTotalMontoPagarDescuentoTitulo',
+                                html: 'Cuenta',
+                                flex: 1
+                            },{
+                                xtype: 'label',
+                                html: rewpos.AppGlobals.MONEDA_SIMBOLO
+                            },{
+                                xtype: 'label',
+                                id: 'lblTotalMontoPagarDescuento',
+                                html: '0.00'
+                            }]
+                        },{
+                            xtype: 'button',
+                            cls: 'button-label-limpiar-dscto',
+                            name: 'btnTotalMontoPagarDescuentoDel',
+                            text: 'X'
+                        }]
                     },{
-                        xtype: 'label',
-                        html: rewpos.AppGlobals.MONEDA_SIMBOLO
-                    },{
-                        xtype: 'label',
-                        name: 'lblTotalMontoPagar',
-                        html: '0.00'
+                        layout: 'hbox',
+                        cls: 'label',
+                        items: [{
+                            xtype: 'label',
+                            html: 'Cuenta',
+                            flex: 1
+                        },{
+                            xtype: 'label',
+                            html: rewpos.AppGlobals.MONEDA_SIMBOLO
+                        },{
+                            xtype: 'label',
+                            id: 'lblTotalMontoPagar',
+                            name: 'lblTotalMontoPagar',
+                            html: '0.00'
+                        }]
                     }]
                 },{
                     xtype: 'list',
@@ -68,19 +101,19 @@ Ext.define('rewpos.view.PagosView', {
                     //disableSelection: true,
                     flex: 1,
                     itemTpl: new Ext.XTemplate(
-                        '<tpl if="this.isPropina(tipopago)">',
+                        '<tpl if="this.isPropina(tarjeta_credito_name)">',
                             '<div class="-row-list propina">',
                         '<tpl else>',
                             '<div class="-row-list">',
                         '</tpl>',
-                            '{tipopago}&nbsp;',
-                            '<div class="field estilo-dolar">{tipocambio:this.complete}</div>',
-                            '<div class="field flex">{[this.getDolar(values.valorpago, values.tipopago)]}</div>',
-                            '{valorpago:this.formatNumer}',
+                            '{tarjeta_credito_name}&nbsp;',
+                            '<div class="field estilo-dolar">{[this.getDolar(values.valorpago, values.moneda_id)]}</div>',
+                            '<div class="field flex">{tipocambio:this.complete}</div>',
+                            '{[this.getIfDolar(values.valorpago, values.moneda_id)]}',
                         '</div>',
                         {
                             complete: function(item) {
-                                return item==null ? '' : '(TC.'+item+')';
+                                return item==null || item==0 ? '' : '*TC-'+item+'';
                             },
                             formatNumer: function(item) {
                                 return rewpos.Util.toFixed(item, 2);
@@ -88,13 +121,16 @@ Ext.define('rewpos.view.PagosView', {
                             isPropina: function(tipopago){
                                return tipopago == 'PROPINA';
                             },
-                            getDolar: function(valorpago, tipopago) {
-                                return tipopago == 'DOLARES' ? rewpos.Util.toFixed(valorpago/rewpos.AppGlobals.TIPO_CAMBIO, 2) : '';
+                            getDolar: function(valorpago, moneda_id) {
+                                //return moneda_id == 2 ? rewpos.Util.toFixed(valorpago/rewpos.AppGlobals.TIPO_CAMBIO, 2) : '';
+                                return moneda_id == 2 ? rewpos.Util.toFixed(valorpago, 2) : '';
+                            },
+                            getIfDolar: function(valorpago, moneda_id) {
+                                return moneda_id == 2 ? rewpos.Util.toFixed(valorpago*rewpos.AppGlobals.TIPO_CAMBIO, 2) : rewpos.Util.toFixed(valorpago, 2);
                             }
                         }
                     )
                 },{
-                    //xtype: 'container',
                     layout: 'hbox',
                     cls: 'label label-fin',
                     items: [{
@@ -110,7 +146,6 @@ Ext.define('rewpos.view.PagosView', {
                         html: '0.00'
                     }]
                 },{
-                    //xtype: 'container',
                     layout: 'hbox',
                     cls: 'label label-fin',
                     items: [{
@@ -126,7 +161,6 @@ Ext.define('rewpos.view.PagosView', {
                         html: '0.00'
                     }]
                 },{
-                    //xtype: 'container',
                     id: 'containerTotalMontoVuelto',
                     layout: 'hbox',
                     cls: 'label label-fin',
@@ -145,7 +179,7 @@ Ext.define('rewpos.view.PagosView', {
                     }]
                 }]
             },{
-                width: 5
+                width: 3
             },{
                 scrollable: {
                     direction: 'vertical',
@@ -154,72 +188,35 @@ Ext.define('rewpos.view.PagosView', {
                 flex: 1,
                 layout: 'vbox',
                 items: [{
-                    layout: 'hbox',
-                    cls: 'tipoPago',
-                    xtype: 'segmentedbutton',
-                    defaults: {
-                        width: '50%'
-                    },
-                    items: [{
-                        text: 'SOLES',
-                        orden: '1',
-                        pressed: true
-                    },{
-                        text: 'DOLARES',
-                        orden: '2'
-                    },{
-                        text: 'VISA',
-                        orden: '3'
-                    },{
-                        text: 'MASTER',
-                        orden: '4'
-                    },{
-                        text: 'DINERS',
-                        orden: '5'
-                    },{
-                        text: 'AMEX',
-                        orden: '6'
-                    },{
-                        text: 'PROPINA',
-                        orden: '7'
-                    },{
-                        text: 'DESCUENTO' //OTROS
-                    }]
+                    xtype: 'selectfield',
+                    name: 'cboTipoPagoMoneda',
+                    baseCls: 'btn_seleccion',
+                    store: 'Moneda',
+                    valueField : 'id',
+                    displayField : 'nombre'
                 },{
-                    height: 5
+                    xtype: 'selectfield',
+                    name: 'cboTipoPagoTarjeta',
+                    baseCls: 'btn_seleccion',
+                    store: 'Tarjeta_Credito',
+                    valueField : 'id',
+                    displayField : 'nombre'
                 },{
-                    layout: 'hbox',
-                    cls: 'valoresPago',
-                    defaults: {
-                        xtype: 'button',
-                        width: '50%',
-                        name: 'valorPago'
-                    },
-                    items: [{
-                        text: '0.10'
-                    },{
-                        text: '0.20'
-                    },{
-                        text: '0.50'
-                    },{
-                        text: '1.00'
-                    },{
-                        text: '2.00'
-                    },{
-                        text: '5.00'
-                    },{
-                        text: '10.00'
-                    },{
-                        text: '20.00'
-                    },{
-                        text: '50.00'
-                    },{
-                        text: '100.00'
-                    },{
-                        text: '200.00'
-                    },{
-                        text: 'DIGITAR'
-                    }]
+                    xtype: 'selectfield',
+                    name: 'cboDescuento',
+                    baseCls: 'btn_seleccion',
+                    store: 'Descuento_Tipo',
+                    valueField : 'id',
+                    displayField : 'nombre_largo'
+                },{
+                    height: 3
+                },{
+                    xtype: 'numberfield',
+                    minValue: 0
+                },{
+                    height: 3
+                },{
+                    xtype: 'tecladoMonedaMini'
                 }]
             }]
         }]

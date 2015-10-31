@@ -147,12 +147,13 @@ Ext.define('rewpos.controller.ClienteModal', {
             rewpos.Util.mask();
             record.save({
                 callback: function(cliente, operation) {
-                    this.updateCliente(btn,  cliente.get('id'), cliente.get('nombre'));
+                    console.log(cliente);
+                    this.updateCliente(btn,  cliente.get('id'), cliente);
                 }
             }, this);
         }
     },
-    updateCliente: function(btn, cliente_id, cliente_nombre) {
+    updateCliente: function(btn, cliente_id, record) {
         var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
         Ext.Ajax.request({
             url: rewpos.AppGlobals.HOST+'pedido/actualizar/cliente',
@@ -163,10 +164,14 @@ Ext.define('rewpos.controller.ClienteModal', {
             },
             callback: function(){
                 rewpos.Util.unmask();
-                this.getPagosView().down('button[name=btnCliente]').setText(cliente_nombre);
+                var cliente = record.get('nombre')+"<br>";
+                cliente += record.get('ruc')+"<br>";
+                cliente += record.get('direccion')+"-"+record.get('ubigeo_name');
+                this.getPagosView().down('button[name=btnCliente]').setHtml(cliente);
+
                 Ext.getStore('Pedido').each(function(pedido){
                     pedido.set('cliente_id', cliente_id);
-                    pedido.set('cliente_name', cliente_nombre);
+                    pedido.set('cliente_name', record.get('nombre'));
                 });
                 Ext.Viewport.remove(btn.up('panel'));
             },
@@ -183,7 +188,6 @@ Ext.define('rewpos.controller.ClienteModal', {
             Ext.getStore('Cliente').load({
                 url: rewpos.AppGlobals.HOST+'cliente/buscar/'+value,
                 callback: function(records) {
-                    console.log(records);
                     rewpos.Util.unmask(true);
                     if(records.length>0){
                         this.getClientesList().select(0);
@@ -219,7 +223,7 @@ Ext.define('rewpos.controller.ClienteModal', {
         field.focus()
     },
     onItemDoubleTapClienteList: function(item, index, target, record) {
-        this.updateCliente(item,  record.get('id'), record.get('nombre'));
+        this.updateCliente(item,  record.get('id'), record);
     },
     onFocusBuscar: function() {
         rewpos.AppGlobals.LIST_SELECTED = null;

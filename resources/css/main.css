@@ -413,7 +413,20 @@
 
 .button-label-limpiar {
 	border: 1px solid #fff;
-	background: #0099cc;
+	background: #09c;
+}
+
+.button-label-limpiar:hover {
+	cursor: pointer;
+}
+
+.button-label-limpiar-dscto {
+	border: 1px solid #fff;
+	background: #f44;
+}
+
+.button-label-limpiar-dscto:hover {
+	cursor: pointer;
 }
 
 .label {
@@ -428,15 +441,13 @@
 	border-bottom: 0px;
 }
 
-.tipoPago.x-stretched.x-container > .x-inner,
-.valoresPago.x-stretched.x-container > .x-inner{
+.rew-segmentedbutton.x-stretched.x-container > .x-inner {
 	display: block;
 }
 
-.tipoPago .x-button {
-	background: #084b8a;
-	padding: 0.5em 0.6em;
+.rew-segmentedbutton .x-button {
 	float: left;
+	padding: 0.5em 0.6em;
 	border: 1px solid #fff;
 	-webkit-border-radius: 0em;
 	-moz-border-radius: 0em;
@@ -445,42 +456,37 @@
 	border-radius: 0em;
 }
 
-.tipoPago .x-button.x-first,
-.tipoPago .x-button.x-last {
+.rew-segmentedbutton .x-button.x-first,
+.rew-segmentedbutton .x-button.x-last {
 	border-radius: 0em;
 }
 
-.tipoPago .x-button:hover {
-	cursor: pointer;
-}
-
-.tipoPago .x-button-pressed {
-	background: indigo;
-}
-
-.tipoPago .x-button .x-button-label {
+.rew-segmentedbutton .x-button .x-button-label {
 	font-weight: normal;
 }
 
-.valoresPago .x-button {
-	background: purple;
-	padding: 0.5em 0.6em;
-	float: left;
-	border: 1px solid #fff;
-	-webkit-border-radius: 0em;
-	-moz-border-radius: 0em;
-	-ms-border-radius: 0em;
-	-o-border-radius: 0em;
-	border-radius: 0em;
-}
-
-.valoresPago .x-button:hover {
+.rew-segmentedbutton .x-button:hover {
 	cursor: pointer;
-	opacity: 0.5;
 }
 
-.valoresPago .x-button:active {
+.rew-segmentedbutton .x-button:active {
 	opacity: 1;
+}
+
+.rew-segmentedbutton-moneda .x-button{
+	background: #7986CB;
+}
+
+.rew-segmentedbutton-moneda .x-button-pressed {
+	background: #3F51B5;
+}
+
+.rew-segmentedbutton-tipo-pago .x-button {
+	background: #9575CD;
+}
+
+.rew-segmentedbutton-tipo-pago .x-button-pressed {
+	background: #673AB7;
 }
 
 #chatContainer {
@@ -628,6 +634,14 @@
 	background-repeat: no-repeat;
 	background-size: 591px 509px;
 	background-position: center;
+}
+
+.label-x {
+	border: 1px solid #fff;
+}
+
+.label-x:hover {
+	cursor: pointer;
 }
 
 @media screen and (max-width: 1024px) {

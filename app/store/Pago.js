@@ -29,18 +29,26 @@ Ext.define('rewpos.store.Pago', {
         Ext.getStore('Pedido').each(function(item){
             montoPagar += item.get('cantidad')*item.get('precio');
         });
+
+        //this.getApplication().getController('Pedido').getPagosView().down('label[name=lblTotalMontoPagar]').setHtml(rewpos.Util.toFixed(this.getTotales(store), 2));
+
+        var dscto_m = Ext.data.Types.NUMBER.convert(Ext.getStore('Pedido').getAt(0).get('dscto_m'));
+        //console.log(dscto_m);
+        montoPagar -= dscto_m;
+
+        Ext.getCmp('lblTotalMontoPagar').setHtml(rewpos.Util.toFixed(montoPagar), 2);
         
     	this.each(function(item, index, length){
             //console.log(item.get('valorpago'));
             //if(!Ext.isNumber(item.get('valorpago'))) return;
-            if(item.get('tipopago')=='PROPINA') return;
-            //if(item.get('tipopago')=='DOLARES') {
-            //    totalIngresado += item.get('valorpago') * rewpos.AppGlobals.TIPO_CAMBIO;
-            //} else {
+            if(item.get('tarjeta_credito_name')=='PROPINA') return;
+            if(item.get('moneda_id')==2) {
+                totalIngresado += item.get('valorpago') * rewpos.AppGlobals.TIPO_CAMBIO;
+            } else {
                 totalIngresado += item.get('valorpago');
-            //}
+            }
     	});
-        total = montoPagar - totalIngresado;
+        total = montoPagar-totalIngresado;
 
         Ext.getCmp('lblTotalMontoIngresado').setHtml(rewpos.Util.toFixed(totalIngresado, 2));
 

@@ -4,10 +4,12 @@ Ext.define('rewpos.model.Pago', {
         fields: [
         'id',
         'nroatencion',
-        {name: 'caja_id', type: 'int'},
-        'tipopago',
+        'moneda_id',
+        'tarjeta_credito_id',
+        {name: 'tarjeta_credito_name', persist: false},
         {name: 'valorpago', type: 'float'},
         {name: 'tipocambio', type: 'float'},
+        {name: 'caja_id', type: 'int'},
         {name: 'orden', persist: false}
         ],
         proxy: {
