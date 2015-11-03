@@ -16,7 +16,8 @@ Ext.define('rewpos.model.Pedido', {
         {name: 'enviado', defaultValue: 'N'},
         {name: 'numero_cta', defaultValue: '0'},
         {name: 'agrupar', defaultValue: 'N'},
-        {name: 'mover', defaultValue: 'N'}
+        {name: 'mover', defaultValue: 'N'},
+        {name: 'hijos', defaultValue: ''}
         ],
         validations: [
             {type: 'presence', field: 'producto_name'},

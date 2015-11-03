@@ -1,8 +1,8 @@
 Ext.define('rewpos.controller.Pedido', {
     extend: 'Ext.app.Controller',
     config: {
-        stores: ['Mesa','Pedido','Categoria','Producto', 'Cajero', 'Admin'],
-        models: ['Mesa','Pedido','Categoria','Producto'],
+        stores: ['Mesa','Pedido','Categoria','Producto', 'Cajero', 'Admin','Hijo'],
+        models: ['Mesa','Pedido','Categoria','Producto','Hijo'],
         refs: {
             editarForm: 'editarForm',
             seleccionView: 'seleccionView',
@@ -128,7 +128,17 @@ Ext.define('rewpos.controller.Pedido', {
     onItemTapPedidoList: function(list, index, target, record) {
         rewpos.AppGlobals.LIST_SELECTED = list;
         this.getEditarForm().setRecord(record);
-        rewpos.Util.showPanel('comandoCard', 'editarForm', 'right');
+        var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
+        var productoId = record.get("producto_id");
+        //console.log(nroatencion);
+        Ext.getStore('Hijo').load({
+            url: rewpos.AppGlobals.HOST+'producto/hijos/'+nroatencion+'/'+productoId,
+            callback: function(record) {
+                //console.log(record);
+                rewpos.Util.showPanel('comandoCard', 'editarForm', 'right');
+            },
+            scope: this
+        });
     },
     pagar: function(ticket){
         if(Ext.typeOf(ticket)=="object"){
@@ -230,21 +240,10 @@ Ext.define('rewpos.controller.Pedido', {
                             rewpos.Util.unmask(true);
                             var text = Ext.JSON.decode(response.responseText);
                             if(text.success){
-                                this.imprimirTiket(text.data.id, ticket);
                                 Ext.getStore('Pago').removeAll();
                                 Ext.getStore('Pedido').removeAll();
                                 this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(0);
                                 this.getSeleccionView().down('selectfield[name=cboPax]').setValue(1);
-                                /*Ext.getStore('Pedido').load({
-                                    url: rewpos.AppGlobals.HOST+'pedido/'+nroatencion+'/'+rewpos.AppGlobals.CAJA_ID,
-                                    callback: function(records) {
-                                        if(records.length>0){
-                                            this.getSeleccionView().down('selectfield[name=cboMozos]').setValue(records[0].get('mozo_id'));
-                                            this.getSeleccionView().down('selectfield[name=cboPax]').setValue(records[0].get('pax'));
-                                        }
-                                    },
-                                    scope: this
-                                });*/
                                 this.getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
                                 this.getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
                                 if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
@@ -254,6 +253,7 @@ Ext.define('rewpos.controller.Pedido', {
                                 } else {
                                     rewpos.Util.showPanel('comandoCard', 'productoView', 'left');
                                 }
+                                this.imprimirTiket(text.data.id, ticket);
                             } else {
                                 Ext.Msg.alert('Advertencia', 'Error al pagar la cuenta', Ext.emptyFn);
                             }

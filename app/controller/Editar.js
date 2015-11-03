@@ -1,13 +1,16 @@
 Ext.define('rewpos.controller.Editar', {
     extend: 'Ext.app.Controller',
     config: {
-        stores: ['Pedido'],
-        models: ['Pedido'],
+        stores: ['Pedido','Hijo'],
+        models: ['Pedido','Hijo'],
         refs: {
             editarForm: 'editarForm',
             pedidoList: 'pedidoList'
         },
         control: {
+            'editarForm': {
+                initialize: 'onInitialize'
+            },
             'editarForm button[name=btnEditar]': {
                 tap: 'onTapClickEditar'
             },
@@ -21,6 +24,10 @@ Ext.define('rewpos.controller.Editar', {
                 focus: 'onFocusTxtMensaje'
             }
         } 
+    },
+    onInitialize: function(){
+        //console.log("onInitialize");
+        //Ext.getStore('Hijo').load();
     },
     onTapClickEditar: function(btn) {
         var form = this.getEditarForm();
@@ -60,18 +67,6 @@ Ext.define('rewpos.controller.Editar', {
                             },
                             scope: this
                         });
-                        /*Ext.Ajax.request({
-                            url: url,
-                            disableCaching: false,
-                            useDefaultXhrHeader: false,
-                            callback: function(request, success, response){
-                                rewpos.Util.unmask();
-                                var text = Ext.JSON.decode(response.responseText);
-                                if(!text.success) {
-                                    Ext.Msg.alert('Advertencia', 'Error al ENVIAR/REMOVER PRODUCTO', Ext.emptyFn);
-                                }
-                            }
-                        });*/
                     }
                 }
             },

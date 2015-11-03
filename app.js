@@ -51,7 +51,7 @@ Ext.application({
         'AnularDocumentoModal','ProductoTouchView','CategoriaDataView','ProductoDataView',
         'ConfigModal','TecladoFull','ClienteBuscarModal','configuracion.ConfiguracionView',
         'configuracion.ConfiguracionList','configuracion.MantenimientoProductoList','DescuentoModal',
-        'TecladoMonedaMini'
+        'TecladoMonedaMini', 'Multiselect'
     ],
 
     icon: {

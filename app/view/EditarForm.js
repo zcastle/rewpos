@@ -41,9 +41,74 @@ Ext.define('rewpos.view.EditarForm', {
             },{
                 xtype: 'textareafield',
                 name: 'mensaje',
-                placeHolder: 'MENSAJE'
-            }]
-        },{
+                placeHolder: 'MENSAJE'/*,
+                maxHeight: 60*/
+            },{
+                xtype: 'multiselectfield',
+                label: 'Combo',
+                labelWidth: 80,
+                value: '',
+                //placeHolder: 'Seleccionar',
+                //delimiter: ',', 
+                //mode: 'SINGLE', // default is MULTI,
+                // value: ['first','second'] , init value with an array
+                // value: 'first,second', init value with a string
+                /*options: [
+                    {text: 'First Option',  value: 'first'},
+                    {text: 'Second Option', value: 'second'},
+                    {text: 'Third Option',  value: 'third'}
+                ]*/
+                store: 'Hijo',
+                valueField : 'id',
+                displayField : 'nombre'
+            }/*,{
+                xtype: 'container',
+                defaults: {
+                    cls: "check-combo",
+                    labelWidth: '70%',
+                    labelWrap: true
+                },
+                items: [{
+                    xtype: 'checkboxfield',
+                    label: 'Tomato'
+                }, {
+                    xtype: 'checkboxfield',
+                    label: 'Tomato'
+                }, {
+                    xtype: 'checkboxfield',
+                    label: 'Tomato'
+                },{
+                    xtype: 'checkboxfield',
+                    label: 'Tomato'
+                }, {
+                    xtype: 'checkboxfield',
+                    label: 'Tomato'
+                }, {
+                    xtype: 'checkboxfield',
+                    label: 'Tomato'
+                }]
+            }*/]
+        }/*,{
+            xtype: 'dataview',
+            id: 'dataViewHijo',
+            store: 'Hijo',
+            inline: true,
+            //height: "100%",
+            itemTpl: new Ext.XTemplate(
+                '<tpl if="this.isChecked(check)">',
+                    '<div class="hijo ocupada">',
+                '<tpl else>',
+                    '<div class="hijo libre">',
+                '</tpl>',
+                '{nombre}</div>',
+                {
+                    disableFormats: true,
+                    isChecked: function(check){
+                       return check == true;
+                    }
+                }
+            )
+        }*/,{
             layout: {
                 type: 'hbox'
             },

@@ -213,11 +213,11 @@ Ext.define('rewpos.view.PagosView', {
                 },{
                     xtype: 'numberfield',
                     minValue: 0
-                },{
+                }/*,{
                     height: 3
                 },{
                     xtype: 'tecladoMonedaMini'
-                }]
+                }*/]
             }]
         }]
     }
