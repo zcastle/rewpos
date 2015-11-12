@@ -5,6 +5,7 @@ Ext.define('rewpos.controller.Pedido', {
         models: ['Mesa','Pedido','Categoria','Producto','Hijo'],
         refs: {
             editarForm: 'editarForm',
+            editarFormMultiSelectedField: 'editarForm multiselectfield',
             seleccionView: 'seleccionView',
             totalesView: 'totales',
             pagosView: 'pagosView',
@@ -21,7 +22,7 @@ Ext.define('rewpos.controller.Pedido', {
                 change: 'onChangeCbo' 
             },
             'pedidoList': {
-                select: 'onSelectPedidoList',
+                //select: 'onSelectPedidoList',
                 itemtap: 'onItemTapPedidoList'
             }
         } 
@@ -120,10 +121,10 @@ Ext.define('rewpos.controller.Pedido', {
         }*/
     },
     onSelectPedidoList: function(list, record) {
-        if(rewpos.AppGlobals.LIST_SELECTED==null) return;
+        /*if(rewpos.AppGlobals.LIST_SELECTED==null) return;
         if(rewpos.AppGlobals.LIST_SELECTED.getId()=='pedidoList'){
             this.onItemTapPedidoList(list, null, null, record);
-        }
+        }*/
     },
     onItemTapPedidoList: function(list, index, target, record) {
         rewpos.AppGlobals.LIST_SELECTED = list;
@@ -131,10 +132,22 @@ Ext.define('rewpos.controller.Pedido', {
         var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
         var productoId = record.get("producto_id");
         //console.log(nroatencion);
+        //console.log('PASO');
         Ext.getStore('Hijo').load({
             url: rewpos.AppGlobals.HOST+'producto/hijos/'+nroatencion+'/'+productoId,
             callback: function(record) {
-                //console.log(record);
+                var check = [];
+                for (var i = 0; i < record.length; i++) {
+                    if(record[i].get("check")){
+                        check.push(record[i].get("id"));
+                    }
+                };
+                if(record.length>0){
+                    this.getEditarFormMultiSelectedField().setHidden(false);
+                    this.getEditarFormMultiSelectedField().setValue(check);
+                }else{
+                    this.getEditarFormMultiSelectedField().setHidden(true);
+                }
                 rewpos.Util.showPanel('comandoCard', 'editarForm', 'right');
             },
             scope: this

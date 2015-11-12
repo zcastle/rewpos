@@ -45,6 +45,7 @@ Ext.define('rewpos.view.EditarForm', {
                 maxHeight: 60*/
             },{
                 xtype: 'multiselectfield',
+                name: 'hijos',
                 label: 'Combo',
                 labelWidth: 80,
                 value: '',

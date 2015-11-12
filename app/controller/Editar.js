@@ -5,6 +5,7 @@ Ext.define('rewpos.controller.Editar', {
         models: ['Pedido','Hijo'],
         refs: {
             editarForm: 'editarForm',
+            editarFormMultiSelectedField: 'editarForm multiselectfield',
             pedidoList: 'pedidoList'
         },
         control: {
@@ -54,10 +55,8 @@ Ext.define('rewpos.controller.Editar', {
                         var diferencia = Math.abs(newValue - oldValue);
                         var url;
                         if(newValue>oldValue) {
-                            //url = rewpos.AppGlobals.HOST_PRINT+'pedido/add/'+record.get('id')+'/'+diferencia
                             url = 'pedido/add/'+record.get('id')+'/'+diferencia
                         } else {
-                            //url = rewpos.AppGlobals.HOST_PRINT+'pedido/remove/'+record.get('id')+'/'+diferencia
                             url = 'pedido/remove/'+record.get('id')+'/'+diferencia
                         }
                         rewpos.Util.mask();
