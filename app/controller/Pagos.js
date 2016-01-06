@@ -9,7 +9,10 @@ Ext.define('rewpos.controller.Pagos', {
             pagosView: 'pagosView',
             tipoMoneda: 'pagosView selectfield[name=cboTipoPagoMoneda]',
             tipoTarjeta: 'pagosView selectfield[name=cboTipoPagoTarjeta]',
-            descuento: 'pagosView selectfield[name=cboDescuento]'
+            descuento: 'pagosView selectfield[name=cboDescuento]',
+            containerDescuento: 'pagosView container[name=containerDescuento]',
+            dniDescuento: 'pagosView textfield[name=dniDescuento]',
+            nombreDescuento: 'pagosView textfield[name=nombreDescuento]'
         },
         control: {
             'pagosView': {
@@ -35,6 +38,9 @@ Ext.define('rewpos.controller.Pagos', {
             },
             'pagosView button[name=btnTotalMontoPagarDescuentoDel]': {
                 tap: 'onTapDelDscto'
+            },
+            'pagosView selectfield[name=cboDescuento]': {
+                change: 'onChangeCboDescuento'
             }
         } 
     },
@@ -94,7 +100,7 @@ Ext.define('rewpos.controller.Pagos', {
         }
     },*/
     addPago: function(moneda, tarjetaCredito, tarjetaCreditoName, valorPago) {
-        //this.addPago(moneda, tarjetaCredito, valorPago);
+
         var tipoCambio = moneda==2 ? rewpos.AppGlobals.TIPO_CAMBIO : 0;
         Ext.create('rewpos.model.Pago', {
             nroatencion: Ext.getStore('Pedido').getAt(0).get('nroatencion'),
@@ -215,7 +221,21 @@ Ext.define('rewpos.controller.Pagos', {
                     valor_m = montoPagar*(value/100);
                     valor_p = value;
                 }
-                this.setDescuento(recordDescuento.get("id"), recordDescuento.get("nombre"), montoPagar, valor_m, valor_p);
+                var dni, nombre;
+                //console.log(this.getDescuento().getRecord().get('datos'));
+                if(this.getDescuento().getRecord().get('datos')=='S'){
+                    dni = this.getDniDescuento().getValue();
+                    nombre = this.getNombreDescuento().getValue();
+                    if(dni.trim()=="" || nombre.trim()==""){
+                        Ext.Msg.show({
+                            title: 'Advertencia',
+                            message: 'Debe el Numero de DNI y el NOMBRE del cliente',
+                            fn: Ext.emptyFn
+                        });
+                        return;
+                    }
+                }
+                this.setDescuento(recordDescuento.get("id"), recordDescuento.get("nombre"), montoPagar, valor_m, valor_p, null, dni, nombre);
                 this.getDescuento().setValue(1);
             }
 
@@ -229,11 +249,14 @@ Ext.define('rewpos.controller.Pagos', {
         }
         txt.focus();
     },
-    setDescuento: function(id, dscto_name, montoPagar, dscto_m, dscto_p, cb){
+    setDescuento: function(id, dscto_name, montoPagar, dscto_m, dscto_p, cb, dni, nombre){
         Ext.getStore('Pedido').each(function(record){
             record.set('descuento_tipo_id', id);
             record.set('dscto_m', dscto_m);
             record.set('dscto_p', dscto_p);
+            //
+            record.set('dni', dni);
+            record.set('nombre', nombre);
             record.save({
                 callback: function(){
                     if(dscto_m>0){
@@ -282,10 +305,19 @@ Ext.define('rewpos.controller.Pagos', {
             }],
             fn: function(btn) {
                 if(btn=='yes'){
-                    this.setDescuento(0, "", 0, 0, 0);
+                    this.setDescuento(0, "", 0, 0, 0, null, 0, null);
                 }
             },
             scope: this
         });
+    },
+    onChangeCboDescuento: function(cbo, newValue, oldValue){
+        if(cbo.getRecord().get('datos')=='S'){
+            this.getDniDescuento().setValue("");
+            this.getNombreDescuento().setValue("");
+            this.getContainerDescuento().setHidden(false);
+        }else{
+            this.getContainerDescuento().setHidden(true);
+        }
     }
 });

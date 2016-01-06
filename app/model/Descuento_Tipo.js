@@ -1,7 +1,7 @@
 Ext.define('rewpos.model.Descuento_Tipo', {
     extend: 'Ext.data.Model',
     config: {
-        fields: ['id','nombre','nombre_largo','tipo'],
+        fields: ['id','nombre','nombre_largo','datos','tipo'],
         proxy: {
             type: 'rest',
             url: rewpos.AppGlobals.HOST+'descuento_tipo',

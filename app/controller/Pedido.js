@@ -85,7 +85,7 @@ Ext.define('rewpos.controller.Pedido', {
                             var dscto_name = Ext.getStore('Pedido').getAt(0).get('descuento_tipo_name');
                             this.getApplication().getController('Pagos').setDescuento(dscto_id, dscto_name, montoPagar, dscto_m, dscto_p, function(){
                                 rewpos.Util.showPanel('comandoCard', 'pagosView', 'right');
-                            });
+                            }, "", "");
                         },
                         scope: this
                     });

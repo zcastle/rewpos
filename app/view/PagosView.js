@@ -211,7 +211,21 @@ Ext.define('rewpos.view.PagosView', {
                 },{
                     height: 3
                 },{
+                    xtype: 'container',
+                    name: 'containerDescuento',
+                    hidden: true,
+                    items: [{
+                        xtype: 'textfield',
+                        name: 'dniDescuento',
+                        placeHolder: 'DNI'
+                    },{
+                        xtype: 'textfield',
+                        name: 'nombreDescuento',
+                        placeHolder: 'NOMBRE'
+                    }]
+                },{
                     xtype: 'numberfield',
+                    placeHolder: 'Valor Descuento',
                     minValue: 0
                 }/*,{
                     height: 3

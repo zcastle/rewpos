@@ -22,7 +22,7 @@ Ext.define('rewpos.view.configuracion.MantenimientoProductoList', {
         data: [
             {'codigo': '', 'producto_name': 'producto 01', 'precio': 10, 'categoria_name': 'categoria 01'}, 
             {'codigo': '', 'producto_name': 'producto 02', 'precio': 10, 'categoria_name': 'categoria 01'}, 
-            {'codigo': '', 'producto_name': 'producto 03', 'precio': 10, 'categoria_name': 'categoria 01'}, 
+            {'codigo': '', 'producto_name': 'producto 03', 'precio': 10, 'categoria_name': 'categoria 01'}
         ]
     }
 });
