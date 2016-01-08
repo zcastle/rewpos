@@ -18,7 +18,7 @@ Ext.define('rewpos.model.Pedido', {
         {name: 'agrupar', defaultValue: 'N'},
         {name: 'mover', defaultValue: 'N'},
         {name: 'hijos', defaultValue: ''},
-        {name: 'dni', defaultValue: 0},
+        {name: 'dni', defaultValue: ''},
         {name: 'nombre', defaultValue: ''}
         ],
         validations: [

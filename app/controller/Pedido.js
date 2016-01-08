@@ -259,7 +259,10 @@ Ext.define('rewpos.controller.Pedido', {
                                 this.getSeleccionView().down('selectfield[name=cboPax]').setValue(1);
                                 this.getTotalesView().down('label[name=lblTotalItems]').setHtml('TOTAL ITEMS: 0');
                                 this.getSeleccionView().down('button[name=lblTotalMonto]').setText(rewpos.AppGlobals.MONEDA_SIMBOLO+'0.00');
+                                //console.log(rewpos.AppGlobals.PRODUCTO_TOUCH);
                                 if(rewpos.AppGlobals.PRODUCTO_TOUCH) {
+                                    //rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
+                                    rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
                                     rewpos.Util.showPanel('productosCard', 'categoriaDataView', 'left');
                                     //rewpos.Util.showPanel('comandoCard', 'productoTouchView', 'left');
                                     //rewpos.Util.showPanel('comandoCard', 'categoriaDataView', 'left');

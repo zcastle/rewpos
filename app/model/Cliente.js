@@ -1,7 +1,11 @@
 Ext.define('rewpos.model.Cliente', {
     extend: 'Ext.data.Model',
     config: {
-        fields: ['id','ruc','nombre','direccion','ubigeo_id','ubigeo_name'],
+        fields: ['id','ruc','nombre','direccion','ubigeo_id',
+        {name: 'ubigeo_name', persist: false},
+        {name: 'departamento_id', persist: false},
+        {name: 'provincia_id', persist: false}
+        ],
         validations: [
             {type: 'presence', field: 'ruc'},
             {type: 'presence', field: 'nombre'}

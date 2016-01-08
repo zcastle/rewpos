@@ -226,6 +226,7 @@ Ext.define('rewpos.view.PagosView', {
                 },{
                     xtype: 'numberfield',
                     placeHolder: 'Valor Descuento',
+                    name: 'dscto',
                     minValue: 0
                 }/*,{
                     height: 3

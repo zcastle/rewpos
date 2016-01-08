@@ -3,8 +3,8 @@ Ext.define('rewpos.view.ClienteModal', {
     xtype: 'clienteModal',
     config: {
         centered: true,
-        width: 700,
-        height: 340,
+        width: 800,
+        height: 431,
         //hideOnMaskTap: true,
         modal: true,
         items: [{
@@ -12,7 +12,7 @@ Ext.define('rewpos.view.ClienteModal', {
             //title: 'Informacion de Cliente',
             defaults: {
                 xtype: 'textfield',
-                labelWidth: 140
+                labelWidth: 120
             },
             items: [{
                 xtype: 'searchfield',
@@ -25,12 +25,23 @@ Ext.define('rewpos.view.ClienteModal', {
             },{
                 xtype: 'textareafield',
                 label: 'Direccion',
-                maxRows: 4,
+                //maxRows: 2,
                 name: 'direccion'
+            },{
+                xtype: 'selectfield',
+                label: 'Departamento',
+                name: 'departamento_id'
+            },{
+                xtype: 'selectfield',
+                label: 'Provincia',
+                name: 'provincia_id'
             },{
                 xtype: 'selectfield',
                 label: 'Distrito',
                 name: 'ubigeo_id'
+            },{
+                xtype: 'hiddenfield',
+                name: 'ubigeo_name'
             }]
         },{
             /*xtype: 'toolbar',

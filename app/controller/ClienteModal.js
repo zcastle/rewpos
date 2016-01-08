@@ -23,6 +23,9 @@ Ext.define('rewpos.controller.ClienteModal', {
             'clienteModal button': {
                 tap: 'onTapButton'
             },
+            'clienteModal selectfield': {
+                change: 'onChangeSelectfield'
+            },
             'clienteBuscarModal': {
                 initialize: 'onInitializeBuscar'
             },
@@ -41,26 +44,106 @@ Ext.define('rewpos.controller.ClienteModal', {
             }
         } 
     },
+    cargado: false,
+    onChangeSelectfield: function(cbo, newValue, oldValue, e){
+        var dep = this.getClienteModal().down('selectfield[name=departamento_id]').getValue();
+        var pro = this.getClienteModal().down('selectfield[name=provincia_id]').getValue();
+        var dis = this.getClienteModal().down('selectfield[name=ubigeo_id]').getValue();
+        if(dep && pro && dis){
+            console.log("onChangeSelectfield");
+            if(cbo.getName()=='departamento_id'){
+                this.loadProvincias(newValue);
+            }
+            if(cbo.getName()=='provincia_id'){
+                var dep_id = this.getClienteModal().down('selectfield[name=departamento_id]').getValue();
+                this.loadDistrito(dep_id, newValue);
+            }
+        }
+    },
+    loadDepartamentos: function(dep_id, cb) {
+        var dep = new Array();
+        Ext.getStore('Ubigeo').load({
+            url: rewpos.AppGlobals.HOST+'ubigeo',
+            callback: function(records) {
+                Ext.Array.forEach(records, function(record) {
+                    dep.push({text: record.get('nombre'), value: record.get('id')})
+                });
+                this.getClienteModal().down('selectfield[name=departamento_id]').setOptions(dep);
+                if(dep_id){
+                    this.getClienteModal().down('selectfield[name=departamento_id]').setValue(dep_id);
+                }
+                if(cb){
+                    cb();
+                }
+            },
+            scope: this
+        });
+    },
+    loadProvincias: function(dep_id, pro_id, cb){
+        var pro = new Array();
+        Ext.getStore('Ubigeo').load({
+            url: rewpos.AppGlobals.HOST+'ubigeo/'+dep_id,
+            callback: function(records) {
+                Ext.Array.forEach(records, function(record) {
+                    pro.push({text: record.get('nombre'), value: record.get('id')})
+                });
+                this.getClienteModal().down('selectfield[name=provincia_id]').setOptions(pro);
+                if(pro_id){
+                    this.getClienteModal().down('selectfield[name=provincia_id]').setValue(pro_id);
+                }
+                if(cb){
+                    cb();
+                }
+            },
+            scope: this
+        });
+    },
+    loadDistrito: function(dep_id, pro_id, dis_id, cb){
+        var dis = new Array();
+        Ext.getStore('Ubigeo').load({
+            url: rewpos.AppGlobals.HOST+'ubigeo/'+dep_id+'/'+pro_id,
+            callback: function(records) {
+                Ext.Array.forEach(records, function(record) {
+                    dis.push({text: record.get('nombre'), value: record.get('id')})
+                });
+                this.getClienteModal().down('selectfield[name=ubigeo_id]').setOptions(dis);
+                /*if(dis_id){
+                    this.getClienteModal().down('selectfield[name=ubigeo_id]').setValue(dis_id);
+                }*/
+                //this.cargado = true;
+                console.log("loadDistrito: "+this.cargado);
+                if(cb){
+                    cb();
+                }
+            },
+            scope: this
+        });
+    },
+    loadUbigeo: function(){
+        // dep_id = 1392; pro_id = 1393;dis_id = 1394;
+    },
     onInitialize: function(view) {
+        this.cargado = false;
         if(Ext.getStore('Pedido').getCount()>0) {
             var ubigeo = new Array();
-            Ext.getStore('Ubigeo').each(function(item){
-                ubigeo.push({
-                    text: item.get('nombre'),
-                    value: item.get('id')
-                })
-            });
-            view.down('selectfield').setOptions(ubigeo);
-            
             var clienteId = Ext.getStore('Pedido').getAt(0).get('cliente_id');
             if(clienteId>0){
                 Ext.ModelManager.getModel('rewpos.model.Cliente').load(clienteId,{
                     callback: function(record, operation) {
                         var form = this.getClienteModal();
                         if(record) {
-                            form.setRecord(record);
+                            this.loadDepartamentos(record.get('departamento_id'),
+                                this.loadProvincias(record.get('departamento_id'), record.get('provincia_id'),
+                                    this.loadDistrito(record.get('departamento_id'), record.get('provincia_id'), record.get('ubigeo_id'), function(){
+                                        form.setRecord(record);
+                                    })
+                                )
+                            );
+                            
+                            //form.setRecord(record);
                         } else {
-                            form.setRecord(Ext.create('rewpos.model.Cliente',{id: null, ubigeo_id: "1393"}));
+                            //this.loadUbigeo();
+                            form.setRecord(Ext.create('rewpos.model.Cliente',{id: null})); //, ubigeo_id: "1393"
                             form.down('textfield[name=ruc]').focus();
                         }
                     },
@@ -81,6 +164,7 @@ Ext.define('rewpos.controller.ClienteModal', {
         if(value.length==11 || value.length==8) {
             Ext.ModelManager.getModel('rewpos.model.Cliente').load('ruc/'+value,{
                 callback: function(record, operation) {
+                    console.log(record);
                     if(record) {
                         form.setRecord(record);
                     } else {
@@ -123,6 +207,7 @@ Ext.define('rewpos.controller.ClienteModal', {
         }
 
         var record = form.getRecord();
+        values.ubigeo_name = this.getClienteModal().down('selectfield[name=ubigeo_id]').getRecord().get('text');
         record.set(values);
         var errors = record.validate();
         var errorString = '';
@@ -146,13 +231,19 @@ Ext.define('rewpos.controller.ClienteModal', {
         } else {
             rewpos.Util.mask();
             record.save({
-                callback: function(cliente, operation) {
-                    console.log(cliente);
-                    this.updateCliente(btn,  cliente.get('id'), cliente);
+                callback: function(record, operation) {
+                    console.log(record);
+                    this.updateCliente(btn,  record.get('id'), record);
                 }
             }, this);
         }
     },
+    /*setTextBtnCliente: function(nombre, ruc, direccion){
+        var cliente = nombre+"<br>";
+        cliente += ruc+"<br>";
+        cliente += direccion;
+        this.getPagosView().down('button[name=btnCliente]').setHtml(cliente);
+    },*/
     updateCliente: function(btn, cliente_id, record) {
         var nroatencion = Ext.getStore('Pedido').getAt(0).get('nroatencion');
         Ext.Ajax.request({
@@ -168,6 +259,7 @@ Ext.define('rewpos.controller.ClienteModal', {
                 cliente += record.get('ruc')+"<br>";
                 cliente += record.get('direccion')+"-"+record.get('ubigeo_name');
                 this.getPagosView().down('button[name=btnCliente]').setHtml(cliente);
+                //this.setTextBtnCliente(record.get('nombre'), record.get('ruc'), record.get('direccion')+"-"+record.get('ubigeo_name'));
 
                 Ext.getStore('Pedido').each(function(pedido){
                     pedido.set('cliente_id', cliente_id);
@@ -188,27 +280,25 @@ Ext.define('rewpos.controller.ClienteModal', {
             Ext.getStore('Cliente').load({
                 url: rewpos.AppGlobals.HOST+'cliente/buscar/'+value,
                 callback: function(records) {
+                    console.log(records);
                     rewpos.Util.unmask(true);
                     if(records.length>0){
                         this.getClientesList().select(0);
                         rewpos.AppGlobals.LIST_SELECTED = this.getClientesList();
                     } else {
-                        
                         Ext.Viewport.remove(field.up('panel'));
                         Ext.Viewport.add({xtype: 'clienteModal', scrollable: false});
-                        /*if(isNaN(parseInt(value))){
-                            this.getTxtRs().setValue(value);
-                        }else{
-                            this.getTxtRuc().setValue(value);
-                        }*/
-
                         var form = this.getClienteModal();
+                        this.loadDepartamentos(1392,
+                            this.loadProvincias(1392, 1393,
+                                this.loadDistrito(1392, 1393, 1394)
+                            )
+                        );
                         if(isNaN(parseInt(value))){
                             form.setRecord(Ext.create('rewpos.model.Cliente',{id: null, nombre: value}));
                         }else{
                             form.setRecord(Ext.create('rewpos.model.Cliente',{id: null, ruc: value}));
                         }
-
                     }
                 },
                 scope: this

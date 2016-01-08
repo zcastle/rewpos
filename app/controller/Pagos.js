@@ -18,12 +18,6 @@ Ext.define('rewpos.controller.Pagos', {
             'pagosView': {
                 activate: 'onActivate'
             },
-            /*'pagosView button[name=valorPago]': {
-                tap: 'ontapValorPago'
-            },
-            'pagosView segmentedbutton': {
-                toggle: 'onToggleTipoPago'
-            },*/
             'pagosView button[name=btnCliente]': {
                 tap: 'ontapBtnCliente'
             },
@@ -33,7 +27,7 @@ Ext.define('rewpos.controller.Pagos', {
             'pagosView list': {
                 itemdoubletap: 'onItemTapPagoList'
             },
-            'pagosView numberfield': {
+            'pagosView numberfield[name=dscto]': {
                 action: 'onActionNumberField'
             },
             'pagosView button[name=btnTotalMontoPagarDescuentoDel]': {
@@ -52,53 +46,6 @@ Ext.define('rewpos.controller.Pagos', {
         this.getTipoTarjeta().setValue(1);
         this.getDescuento().setValue(1);
     },
-    /*onToggleTipoPago: function(container, btn, pressed){
-        if(pressed) {
-            if(btn.getText()=='SOLES' || btn.getText()=='DOLARES' || btn.getText()=='PROPINA' || btn.getText()=='OTROS') return;
-            if(btn.getText()=='OTROS') {
-                
-            } else if(btn.getText()=='DESCUENTO') {
-                //var modal = Ext.Viewport.add({xtype: 'descuentoModal'});
-            } else {
-                var existe = false;
-                var cuenta = 0.0;
-                var pagado = 0.0;
-                Ext.getStore('Pago').each(function(record, index, length){
-                    pagado += record.get('valorpago');
-                    if(record.get('tipopago')==btn.getText()) {
-                        existe = true;
-                    }
-                }, this)
-                if(!existe){
-                    Ext.getStore('Pedido').each(function(record, index, length){
-                        cuenta += record.get('precio')*record.get('cantidad');
-                    }, this)
-                    var saldo = cuenta - pagado;
-                    if(saldo>0) {
-                        var tipoPago = btn.getText();
-                        var orden = btn.orden;
-                        var valorPago = saldo;
-                        this.addPago(tipoPago, valorPago, orden);
-                    }
-                }
-            }
-        }
-    },
-    ontapValorPago: function(btn) {
-        var tipoPago = this.getBtnPagos().getPressedButtons()[0].getText();
-        var orden = this.getBtnPagos().getPressedButtons()[0].orden;
-        var valorPago = Ext.data.Types.NUMBER.convert(btn.getText());
-        if(tipoPago=='DOLARES') valorPago *= rewpos.AppGlobals.TIPO_CAMBIO;
-        if(tipoPago=='OTROS' || !Ext.isNumber(valorPago)) return;
-        //if(!Ext.isNumber(valorPago)) return;
-        var existRecord = Ext.getStore('Pago').findRecord('tipopago', tipoPago);
-        if (existRecord) {
-            existRecord.set('valorpago', existRecord.get('valorpago')+valorPago);
-            existRecord.save();
-        } else {
-            this.addPago(tipoPago, valorPago, orden);
-        }
-    },*/
     addPago: function(moneda, tarjetaCredito, tarjetaCreditoName, valorPago) {
 
         var tipoCambio = moneda==2 ? rewpos.AppGlobals.TIPO_CAMBIO : 0;
@@ -280,18 +227,6 @@ Ext.define('rewpos.controller.Pagos', {
             });
         });
     },
-    /*setDescuentoLabel: function(dscto_name, montoPagar, dscto_m, dscto_p){
-        if(dscto_m>0){
-            Ext.getCmp('containerTotalMontoPagarAnt').setHidden(false);
-            Ext.getCmp('containerTotalMontoPagarDescuento').setHidden(false);
-            Ext.getCmp('lblTotalMontoPagarAnt').setHtml(rewpos.Util.toFixed(montoPagar, 2));
-            Ext.getCmp('lblTotalMontoPagarDescuentoTitulo').setHtml(dscto_name+" "+dscto_p+"%");
-            Ext.getCmp('lblTotalMontoPagarDescuento').setHtml(rewpos.Util.toFixed(dscto_m, 2));
-        }else{
-            Ext.getCmp('containerTotalMontoPagarAnt').setHidden(true);
-            Ext.getCmp('containerTotalMontoPagarDescuento').setHidden(true);
-        }
-    },*/
     onTapDelDscto: function(){
         Ext.Msg.show({
             title: "Confirmacion", 

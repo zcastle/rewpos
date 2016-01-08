@@ -4,7 +4,7 @@ Ext.define('rewpos.model.Ubigeo', {
         fields: ['id','nombre'],
         proxy: {
             type: 'rest',
-            url: rewpos.AppGlobals.HOST+'ubigeo/lima',
+            url: rewpos.AppGlobals.HOST+'ubigeo',
             reader: {
                 type: 'json',
                 rootProperty: 'data'
